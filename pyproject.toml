@@ -19,7 +19,7 @@ requires-python = ">=3.9"
 dependencies = []
 
 [project.scripts]
-json2qti = "specialagent:main"
+specialagent = "specialagent:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["specialagent.py"]
