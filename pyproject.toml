@@ -22,4 +22,4 @@ dependencies = []
 specialagent = "specialagent:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["specialagent.py"]
+packages = ["specialagent"]
