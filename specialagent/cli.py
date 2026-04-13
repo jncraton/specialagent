@@ -18,7 +18,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     messages: list[str] = []
 
     agent()
-    
+
     return 0
 
 
