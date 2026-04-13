@@ -42,4 +42,4 @@ firejail \
   --rmenv=JOURNAL_STREAM \
   --rmenv=DISPLAY \
   --rmenv=TMUX \
-  python3 agent.py
+  python3 specialagent/agent.py
