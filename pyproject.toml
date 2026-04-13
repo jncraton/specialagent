@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "specialagent"
+version = "0.0.1"
+description = ""
+readme = "readme.md"
+authors = [
+    { name = "Jon Craton", email = "jncraton@gmail.com" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+json2qti = "specialagent:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["specialagent.py"]
