@@ -81,7 +81,9 @@ def agent():
         messages.append(response["candidates"][0]["content"])
 
         if len(function_calls) == 0:
-            print(text_parts[0].get("text", "Task complete."))
+            for text_part in text_parts:
+                print(text_part["text"])
+            print("Task complete.")
             break
 
         for call in function_calls:
