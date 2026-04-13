@@ -22,7 +22,7 @@ def write_file(path, content):
     >>> import tempfile
     >>> with tempfile.NamedTemporaryFile() as tmp:
     ...     write_file(tmp.name, 'test')
-    'File written to '...
+    'File written to ...
     """
     with open(path, "w") as f:
         f.write(content)
