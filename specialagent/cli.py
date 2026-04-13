@@ -17,7 +17,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = _parse_args(argv)
     messages: list[str] = []
 
-    agent()
+    agent(input("Task: "))
 
     return 0
 

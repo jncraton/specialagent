@@ -44,7 +44,14 @@ def call_gemini(messages, tools):
         return json.loads(response.read().decode())
 
 
-def agent():
+def agent(prompt):
+    """
+    >>> agent("/quit")
+    """
+
+    if prompt == "/quit":
+        return
+
     tools = [
         {
             "name": "run_bash",
@@ -70,10 +77,9 @@ def agent():
     ]
 
     messages = []
-    user_input = input("Task: ")
-    messages.append({"role": "user", "parts": [{"text": user_input}]})
+    messages.append({"role": "user", "parts": [{"text": prompt}]})
 
-    while user_input != "/quit":
+    while True:
         response = call_gemini(messages, tools)
         parts = response["candidates"][0]["content"]["parts"]
         text_parts = [p for p in parts if "text" in p]
@@ -116,4 +122,4 @@ def agent():
 
 
 if __name__ == "__main__":
-    agent()
+    agent(input("Task: "))
