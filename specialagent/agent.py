@@ -7,6 +7,7 @@ def run_bash(command):
     """
     Executes a bash command and returns the output.
     >>> run_bash('echo "hello"')
+    echo "hello"
     'hello\\n'
     """
     print(f"{command}")
