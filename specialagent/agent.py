@@ -37,7 +37,7 @@ def call_gemini(messages, tools):
     with urllib.request.urlopen(req) as response:
         return json.loads(response.read().decode())
 
-def main():
+def agent():
     tools = [
         {
             'name': 'run_bash',
@@ -102,4 +102,4 @@ def main():
             })
 
 if __name__ == '__main__':
-    main()
+    agent()
