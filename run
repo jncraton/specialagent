@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Run within firejail sandbox
+
+firejail \
+  --quiet \
+  --noprofile \
+  --caps.drop=all \
+  --seccomp \
+  --machine-id \
+  --disable-mnt \
+  --private-etc=localtime,ca-certificates,ssl,pki \
+  --private-dev \
+  --no3d \
+  --nodbus \
+  --nodvd \
+  --noinput \
+  --nosound \
+  --notv \
+  --nou2f \
+  --novideo \
+  --nonewprivs \
+  --dns=8.8.8.8 \
+  --dns=8.8.4.4 \
+  --protocol=inet,unix \
+  --hostname="hostname" \
+  --private-tmp \
+  --whitelist="$(pwd)" \
+  --whitelist=~/.profile \
+  --read-only=~/.profile \
+  --whitelist=~/.npm \
+  --whitelist=~/.cargo \
+  --read-only=~/.cargo \
+  --whitelist=~/.local/share/pipx \
+  --whitelist=~/.local/bin \
+  --read-only=~/.local/bin \
+  --whitelist=~/.cache/ms-playwright \
+  --whitelist=~/.cache/huggingface \
+  --whitelist=~/.cache/uv \
+  --rmenv=WINDOWID \
+  --rmenv=USER \
+  --rmenv=JOURNAL_STREAM \
+  --rmenv=DISPLAY \
+  --rmenv=TMUX \
+  python3 agent.py
