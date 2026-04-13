@@ -12,3 +12,14 @@ def test_quit(tmp_path, capsys, monkeypatch):
 
     captured = capsys.readouterr()
     assert exit_code == 0
+
+
+def test_prompt_quit(capsys):
+    try:
+        main(["--prompt", "/quit"])
+    except SystemExit as e:
+        exit_code = e.code
+    else:
+        exit_code = 0
+
+    assert exit_code == 0
