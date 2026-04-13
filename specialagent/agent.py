@@ -66,7 +66,7 @@ def agent():
     user_input = input('Task: ')
     messages.append({'role': 'user', 'parts': [{'text': user_input}]})
 
-    while True:
+    while user_input != "/quit":
         response = call_gemini(messages, tools)
         parts = response['candidates'][0]['content']['parts']
         text_parts = [p for p in parts if "text" in p]
