@@ -18,6 +18,10 @@ classifiers = [
 requires-python = ">=3.9"
 dependencies = []
 
+[tool.pytest.ini_options]
+addopts = "--doctest-modules -v"
+doctest_optionflags = 'ELLIPSIS'
+
 [project.scripts]
 specialagent = "specialagent.cli:main"
 
