@@ -19,6 +19,7 @@ def run_bash(command):
 def write_file(path, content):
     """
     Writes content to a file at the specified path.
+
     >>> import tempfile
     >>> with tempfile.NamedTemporaryFile() as tmp:
     ...     write_file(tmp.name, 'test')
