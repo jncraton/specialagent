@@ -54,7 +54,17 @@ def call_gemini(messages, tools):
 
     req = urllib.request.Request(url, data=data, headers=headers)
     with urllib.request.urlopen(req) as response:
-        return json.loads(response.read().decode())["candidates"][0]["content"]
+        res_data = json.loads(response.read().decode())
+        usage = res_data.get("usageMetadata", {})
+
+        print(
+            f"Prompt: {usage.get('promptTokenCount', 0)} | "
+            f"Thinking: {usage.get('thoughtsTokenCount', 0)} | "
+            f"Response: {usage.get('candidatesTokenCount', 0)} | "
+            f"Total: {usage.get('totalTokenCount', 0)}"
+        )
+
+        return res_data["candidates"][0]["content"]
 
 
 def run_function(name, args):
