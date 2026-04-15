@@ -32,7 +32,7 @@ def write_file(path, content):
 
 def finish():
     """
-    Finish interaction with user
+    Finishes interaction with user
     """
 
     pass
