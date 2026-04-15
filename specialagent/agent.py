@@ -30,12 +30,12 @@ def write_file(path, content):
     return f"File written to {path}"
 
 
-def finish(message):
+def success():
     """
-    Sends short, single line concluding message to the user
+    Reports success to the user
     """
 
-    print(message)
+    pass
 
 
 def call_gemini(messages, tools):
@@ -112,9 +112,13 @@ def agent(prompt):
     if prompt == "/quit":
         return
 
-    tools = [build_tool(fn) for fn in ("run_bash", "write_file", "finish")]
+    tools = [build_tool(fn) for fn in ("run_bash", "write_file", "success")]
 
-    messages = [{"role": "user", "parts": [{"text": prompt}]}]
+    messages = [
+        {"role": "user", "parts": [{"text": prompt}]},
+    ]
+
+    
 
     while True:
         response = call_gemini(messages, tools)
@@ -141,7 +145,7 @@ def agent(prompt):
                 }
             )
 
-            if call["functionCall"]["name"] == "finish":
+            if call["functionCall"]["name"] == "success":
                 return
 
 
