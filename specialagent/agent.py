@@ -90,8 +90,7 @@ def agent(prompt):
 
     tools = [build_tool(fn) for fn in ("run_bash", "write_file")]
 
-    messages = []
-    messages.append({"role": "user", "parts": [{"text": prompt}]})
+    messages = [{"role": "user", "parts": [{"text": prompt}]}]
 
     while True:
         response = call_gemini(messages, tools)
