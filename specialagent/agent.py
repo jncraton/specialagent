@@ -4,6 +4,31 @@ import subprocess
 from inspect import signature
 
 
+system = """
+Never comment code or make unnecessary changes. Favor pure functions. Only commit changes if requested. Avoid dependencies.
+
+### JS
+
+Prefer single quotes and avoid semicolons.
+
+### Python.
+
+Follow black. Favor doctest for testing and use docstrings only for doctests.
+
+### SQL
+
+Use lowercase modern style.
+
+### C-like
+
+Use one true brace with two space indentation.
+
+### Web
+
+Favor brutalism via classless, semantic markup and simple styles to maintaining responsiveness and accessibility. Favor inline scripts and styles with no external dependencies. Prefer globally available id variables rather than selectors.
+""".strip()
+
+
 def run_bash(command):
     """
     Executes a bash command and returns the output.
@@ -115,6 +140,7 @@ def agent(prompt):
     tools = [build_tool(fn) for fn in ("run_bash", "write_file", "success")]
 
     messages = [
+        {"role": "user", "parts": [{"text": system}]},
         {"role": "user", "parts": [{"text": prompt}]},
     ]
 
