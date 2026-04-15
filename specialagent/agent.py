@@ -42,6 +42,19 @@ def call_gemini(messages, tools):
         return json.loads(response.read().decode())
 
 
+def run_function(name, args):
+    """
+
+    >>> run_function("run_bash", {"command": "echo hello"})
+    Executing run_bash with {'command': 'echo hello'}
+    'hello\\n'
+    """
+
+    print(f"Executing {name} with {args}")
+
+    return globals().get(name)(**args)
+
+
 def agent(prompt):
     """
     >>> agent("/quit")
@@ -92,17 +105,9 @@ def agent(prompt):
             break
 
         for call in function_calls:
-            name = call["functionCall"]["name"]
-            args = call["functionCall"]["args"]
-
-            print(f"Executing {name} with {args}...")
-
-            if name == "run_bash":
-                result = run_bash(args["command"])
-            elif name == "write_file":
-                result = write_file(args["path"], args["content"])
-            else:
-                result = "Error: unknown tool"
+            result = run_function(
+                call["functionCall"]["name"], call["functionCall"]["args"]
+            )
 
             messages.append(
                 {
@@ -110,7 +115,7 @@ def agent(prompt):
                     "parts": [
                         {
                             "functionResponse": {
-                                "name": name,
+                                "name": call["functionCall"]["name"],
                                 "response": {"content": result},
                             }
                         }
