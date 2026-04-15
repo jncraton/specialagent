@@ -29,6 +29,14 @@ def write_file(path, content):
     return f"File written to {path}"
 
 
+def finish():
+    """
+    Finish interaction with user
+    """
+
+    pass
+
+
 def call_gemini(messages, tools):
     import urllib.request
 
@@ -36,12 +44,16 @@ def call_gemini(messages, tools):
     api_key = os.environ.get("GEMINI_API_KEY")
     headers = {"Content-Type": "application/json", "x-goog-api-key": api_key}
     data = json.dumps(
-        {"contents": messages, "tools": [{"function_declarations": tools}]}
+        {
+            "contents": messages,
+            "tool_config": {"function_calling_config": {"mode": "ANY"}},
+            "tools": [{"function_declarations": tools}],
+        }
     ).encode()
 
     req = urllib.request.Request(url, data=data, headers=headers)
     with urllib.request.urlopen(req) as response:
-        return json.loads(response.read().decode())
+        return json.loads(response.read().decode())["candidates"][0]["content"]
 
 
 def run_function(name, args):
@@ -88,23 +100,15 @@ def agent(prompt):
     if prompt == "/quit":
         return
 
-    tools = [build_tool(fn) for fn in ("run_bash", "write_file")]
+    tools = [build_tool(fn) for fn in ("run_bash", "write_file", "finish")]
 
     messages = [{"role": "user", "parts": [{"text": prompt}]}]
 
     while True:
         response = call_gemini(messages, tools)
-        parts = response["candidates"][0]["content"]["parts"]
-        text_parts = [p for p in parts if "text" in p]
-        function_calls = [p for p in parts if "functionCall" in p]
+        messages.append(response)
 
-        messages.append(response["candidates"][0]["content"])
-
-        if len(function_calls) == 0:
-            for text_part in text_parts:
-                print(text_part["text"])
-            print("Task complete.")
-            break
+        function_calls = [p for p in response["parts"] if "functionCall" in p]
 
         for call in function_calls:
             result = run_function(
@@ -124,6 +128,9 @@ def agent(prompt):
                     ],
                 }
             )
+
+            if call["functionCall"]["name"] == "finish":
+                return
 
 
 if __name__ == "__main__":
