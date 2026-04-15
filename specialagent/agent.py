@@ -30,12 +30,12 @@ def write_file(path, content):
     return f"File written to {path}"
 
 
-def finish():
+def finish(message):
     """
-    Finishes interaction with user
+    Sends short, single line concluding message to the user
     """
 
-    pass
+    print(message)
 
 
 def call_gemini(messages, tools):
