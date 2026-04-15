@@ -6,6 +6,7 @@ import subprocess
 def run_bash(command):
     """
     Executes a bash command and returns the output.
+
     >>> run_bash('echo "hello"')
     'hello\\n'
     """
