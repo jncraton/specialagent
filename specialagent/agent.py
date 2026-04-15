@@ -7,10 +7,8 @@ def run_bash(command):
     """
     Executes a bash command and returns the output.
     >>> run_bash('echo "hello"')
-    echo "hello"
     'hello\\n'
     """
-    print(f"{command}")
 
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     return f"{result.stdout}{result.stderr}"
