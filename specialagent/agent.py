@@ -144,8 +144,6 @@ def agent(prompt):
         {"role": "user", "parts": [{"text": prompt}]},
     ]
 
-    
-
     while True:
         response = call_gemini(messages, tools)
         messages.append(response)
