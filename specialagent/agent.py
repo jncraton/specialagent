@@ -1,6 +1,7 @@
 import json
 import os
 import subprocess
+from inspect import signature
 
 
 def run_bash(command):
@@ -56,6 +57,29 @@ def run_function(name, args):
     return globals().get(name)(**args)
 
 
+def build_tool(name):
+    """
+
+    >>> build_tool("run_bash")
+    {'name': 'run_bash', 'description': 'Executes', 'parameters': {'type': 'object', 'properties': {'command': {'type': 'string'}}, 'required': ['command']}}
+
+    >>> build_tool("write_file")
+    {'name': 'write_file', 'description': 'Writes', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['path', 'content']}}
+    """
+
+    params = list(signature(globals()[name]).parameters.keys())
+
+    return {
+        "name": name,
+        "description": globals()[name].__doc__.split()[0],
+        "parameters": {
+            "type": "object",
+            "properties": {p: {"type": "string"} for p in params},
+            "required": params,
+        },
+    }
+
+
 def agent(prompt):
     """
     >>> agent("/quit")
@@ -64,29 +88,7 @@ def agent(prompt):
     if prompt == "/quit":
         return
 
-    tools = [
-        {
-            "name": "run_bash",
-            "description": "Execute a command in the bash shell",
-            "parameters": {
-                "type": "object",
-                "properties": {"command": {"type": "string"}},
-                "required": ["command"],
-            },
-        },
-        {
-            "name": "write_file",
-            "description": "Write text content to a file path",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "path": {"type": "string"},
-                    "content": {"type": "string"},
-                },
-                "required": ["path", "content"],
-            },
-        },
-    ]
+    tools = [build_tool(fn) for fn in ("run_bash", "write_file")]
 
     messages = []
     messages.append({"role": "user", "parts": [{"text": prompt}]})
