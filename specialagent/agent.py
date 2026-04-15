@@ -74,7 +74,10 @@ def call_gemini(messages, tools):
             "contents": messages,
             "tool_config": {"function_calling_config": {"mode": "ANY"}},
             "tools": [{"function_declarations": tools}],
-            "generationConfig": {"thinkingConfig": {"thinkingLevel": "minimal"}},
+            "generationConfig": {
+                "thinkingConfig": {"thinkingLevel": "minimal"},
+                "temperature": 0.3,
+            },
         }
     ).encode()
 
