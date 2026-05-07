@@ -63,7 +63,7 @@ def success():
     pass
 
 
-def call_gemini(messages, tools):
+def call_model(messages, tools):
     import urllib.request
 
     url = "http://127.0.0.1:8080/v1/chat/completions"
@@ -158,7 +158,7 @@ def agent(prompt):
     ]
 
     while True:
-        response = call_gemini(messages, tools)
+        response = call_model(messages, tools)
         messages.append(response)
 
         tool_calls = response.get("tool_calls", [])
