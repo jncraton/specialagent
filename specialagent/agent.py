@@ -72,7 +72,7 @@ def call_gemini(messages, tools):
     openai_tools = [{"type": "function", "function": tool} for tool in tools]
     data = json.dumps(
         {
-            "model": "gemma-4-26b-a4b-it",
+            "model": "gemma-4-31b-it",
             "messages": messages,
             "tools": openai_tools,
             "tool_choice": "required",
