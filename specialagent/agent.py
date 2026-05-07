@@ -69,12 +69,11 @@ def call_gemini(messages, tools):
     url = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
     api_key = os.environ.get("GEMINI_API_KEY")
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
-    openai_tools = [{"type": "function", "function": tool} for tool in tools]
     data = json.dumps(
         {
             "model": "gemma-4-31b-it",
             "messages": messages,
-            "tools": openai_tools,
+            "tools": [{"type": "function", "function": tool} for tool in tools],
             "tool_choice": "required",
             "temperature": 0.3,
         }
