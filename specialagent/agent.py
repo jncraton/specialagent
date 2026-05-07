@@ -184,6 +184,8 @@ def agent(prompt):
 
             if name == "success":
                 return
+        else:
+            break
 
 
 if __name__ == "__main__":
