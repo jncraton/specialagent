@@ -66,20 +66,33 @@ def success():
 def call_gemini(messages, tools):
     import urllib.request
 
-    url = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
-    api_key = os.environ.get("GEMINI_API_KEY")
-    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
-    data = json.dumps(
-        {
-            "model": "gemma-4-31b-it",
-            "messages": messages,
-            "tools": [{"type": "function", "function": tool} for tool in tools],
-            "tool_choice": "required",
-            "temperature": 0.3,
-        }
-    ).encode()
+    url = "http://127.0.0.1:8080/v1/chat/completions"
+    api_key = ""
+    model = ""
 
-    req = urllib.request.Request(url, data=data, headers=headers)
+    if os.environ.get("GEMINI_API_KEY"):
+        url = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+        api_key = os.environ.get("GEMINI_API_KEY")
+        model = "gemma-4-31b-it"
+
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(
+            {
+                "model": model,
+                "messages": messages,
+                "tools": [{"type": "function", "function": tool} for tool in tools],
+                "tool_choice": "required",
+                "temperature": 0.3,
+            }
+        ).encode(),
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        },
+        method="POST",
+    )
+
     with urllib.request.urlopen(req) as response:
         res_data = json.loads(response.read().decode())
         usage = res_data.get("usage", {})
