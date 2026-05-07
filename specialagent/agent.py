@@ -66,34 +66,32 @@ def success():
 def call_gemini(messages, tools):
     import urllib.request
 
-    url = "https://generativelanguage.googleapis.com/v1beta/models/gemma-4-26b-a4b-it:generateContent"
+    url = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
     api_key = os.environ.get("GEMINI_API_KEY")
-    headers = {"Content-Type": "application/json", "x-goog-api-key": api_key}
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
+    openai_tools = [{"type": "function", "function": tool} for tool in tools]
     data = json.dumps(
         {
-            "contents": messages,
-            "tool_config": {"function_calling_config": {"mode": "ANY"}},
-            "tools": [{"function_declarations": tools}],
-            "generationConfig": {
-                "thinkingConfig": {"thinkingLevel": "minimal"},
-                "temperature": 0.3,
-            },
+            "model": "gemma-4-26b-a4b-it",
+            "messages": messages,
+            "tools": openai_tools,
+            "tool_choice": "required",
+            "temperature": 0.3,
         }
     ).encode()
 
     req = urllib.request.Request(url, data=data, headers=headers)
     with urllib.request.urlopen(req) as response:
         res_data = json.loads(response.read().decode())
-        usage = res_data.get("usageMetadata", {})
+        usage = res_data.get("usage", {})
 
         print(
-            f"Prompt: {usage.get('promptTokenCount', 0)} | "
-            f"Thinking: {usage.get('thoughtsTokenCount', 0)} | "
-            f"Response: {usage.get('candidatesTokenCount', 0)} | "
-            f"Total: {usage.get('totalTokenCount', 0)}"
+            f"Prompt: {usage.get('prompt_tokens', 0)} | "
+            f"Response: {usage.get('completion_tokens', 0)} | "
+            f"Total: {usage.get('total_tokens', 0)}"
         )
 
-        return res_data["candidates"][0]["content"]
+        return res_data["choices"][0]["message"]
 
 
 def run_function(name, args):
@@ -143,36 +141,30 @@ def agent(prompt):
     tools = [build_tool(fn) for fn in ("run_bash", "write_file", "success")]
 
     messages = [
-        {"role": "user", "parts": [{"text": system}]},
-        {"role": "user", "parts": [{"text": prompt}]},
+        {"role": "system", "content": system},
+        {"role": "user", "content": prompt},
     ]
 
     while True:
         response = call_gemini(messages, tools)
         messages.append(response)
 
-        function_calls = [p for p in response["parts"] if "functionCall" in p]
+        tool_calls = response.get("tool_calls", [])
 
-        for call in function_calls:
-            result = run_function(
-                call["functionCall"]["name"], call["functionCall"]["args"]
-            )
+        for tool_call in tool_calls:
+            name = tool_call["function"]["name"]
+            args = json.loads(tool_call["function"]["arguments"])
+            result = run_function(name, args)
 
             messages.append(
                 {
-                    "role": "user",
-                    "parts": [
-                        {
-                            "functionResponse": {
-                                "name": call["functionCall"]["name"],
-                                "response": {"content": result},
-                            }
-                        }
-                    ],
+                    "role": "tool",
+                    "tool_call_id": tool_call["id"],
+                    "content": result,
                 }
             )
 
-            if call["functionCall"]["name"] == "success":
+            if name == "success":
                 return
 
 
