@@ -109,7 +109,7 @@ def call_model(messages, tools):
             return res_data["choices"][0]["message"]
     except urllib.error.HTTPError as e:
         print(f"HTTPError {e.code}: {e.read().decode('utf-8')}")
-        raise
+        exit(1)
 
 
 def run_function(name, args):
