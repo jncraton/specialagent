@@ -185,6 +185,7 @@ def agent(prompt):
             if name == "success":
                 return
         else:
+            print(response)
             break
 
 
