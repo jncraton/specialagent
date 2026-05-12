@@ -181,7 +181,7 @@ def agent(prompt):
     if prompt == "/quit":
         return
 
-    tools = [build_tool(fn) for fn in ("run_bash", "write_file", "success")]
+    tools = [build_tool(fn) for fn in ("run_bash", "write_file", "replace", "success")]
 
     messages = [
         {"role": "system", "content": system},
