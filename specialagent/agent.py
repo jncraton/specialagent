@@ -45,10 +45,15 @@ def write_file(path, content):
     """
     Writes content to a file at the specified path.
 
-    >>> import tempfile
-    >>> with tempfile.NamedTemporaryFile() as tmp:
+    >>> import tempfile, os
+    >>> with tempfile.NamedTemporaryFile(delete=False) as tmp:
     ...     write_file(tmp.name, 'test')
+    ...     path = tmp.name
     'File written to ...
+    >>> with open(path, 'r') as f:
+    ...     f.read()
+    ...     os.remove(path)
+    'test'
     """
     with open(path, "w") as f:
         f.write(content)
