@@ -60,6 +60,28 @@ def write_file(path, content):
     return f"File written to {path}"
 
 
+def replace(path, search, replace):
+    """
+    Replaces text in file
+
+    >>> import tempfile, os
+    >>> with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
+    ...     _ = tmp.write('hello world')
+    ...     path = tmp.name
+    >>> replace(path, 'world', 'there')
+    'Replaced text in ...
+    >>> with open(path, 'r') as f:
+    ...     f.read()
+    ...     os.remove(path)
+    'hello there'
+    """
+    with open(path, "r") as f:
+        content = f.read()
+    with open(path, "w") as f:
+        f.write(content.replace(search, replace))
+    return f"Replaced text in {path}"
+
+
 def success():
     """
     Reports success to the user
