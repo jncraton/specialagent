@@ -77,6 +77,8 @@ def replace(path, search, replace):
     """
     with open(path, "r") as f:
         content = f.read()
+    if not search in content:
+        return f"String not found. Replacement failed in {path}"
     with open(path, "w") as f:
         f.write(content.replace(search, replace))
     return f"Replaced text in {path}"
