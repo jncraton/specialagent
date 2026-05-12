@@ -209,9 +209,9 @@ def agent(prompt):
 
             if name == "success":
                 return
-        else:
+
+        if not tool_calls:
             print(response)
-            break
 
 
 if __name__ == "__main__":
