@@ -190,9 +190,8 @@ def agent(prompt, system=""):
             print(response)
 
 
-if __name__ == "__main__":
-    import os
 
+if __name__ == "__main__":
     system = ""
 
     try:
