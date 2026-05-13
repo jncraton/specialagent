@@ -26,6 +26,7 @@ firejail \
   --hostname="hostname" \
   --private-tmp \
   --whitelist="$(pwd)" \
+  --whitelist=~/.agents \
   --whitelist=~/.profile \
   --read-only=~/.profile \
   --whitelist=~/.npm \
