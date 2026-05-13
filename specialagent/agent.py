@@ -124,7 +124,7 @@ def call_model(messages, tools):
         method="POST",
     )
 
-    print(f"Sent {len(req.data)} bytes...")
+    print(f"Sent {len(req.data)} bytes to {model}...")
 
     try:
         with urllib.request.urlopen(req) as response:
