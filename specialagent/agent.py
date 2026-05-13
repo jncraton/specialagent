@@ -4,6 +4,9 @@ import subprocess
 from inspect import signature
 
 
+SKILLS = {}
+
+
 def exec(command):
     """
     Executes a bash command and returns the output.
@@ -59,6 +62,12 @@ def replace(path, search, replace):
         f.write(content.replace(search, replace))
 
     return f"Replaced {count} in {path}"
+
+
+def load_skill(description):
+    """
+    Loads a skill by name
+    """
 
 
 def exit():
@@ -190,21 +199,16 @@ def agent(prompt, system=""):
             print(response)
 
 
-def describe_skills(base_dir):
-    skills = "## Available Skills\n\n"
+def discover_skills():
+    for base_dir in [os.path.expanduser("~/.agents/skills")]:
+        for skill in os.listdir(base_dir):
+            content = open(os.path.join(base_dir, skill, "SKILL.md")).read()
+            desc = content.partition("description:")[-1].splitlines()[0].strip()
+            SKILLS[skill] = desc
 
-    skills = {}
+    print(f"Discovered {len(SKILLS)} skills")
 
-    for skill in os.listdir(base_dir):
-        content = open(os.path.join(base_dir, skill, "SKILL.md")).read()
-        desc = content.partition("description:")[-1].splitlines()[0].strip()
-        skills[skill] = desc
-
-    print(f"Found {len(skills)} skills")
-
-    return "## Available Skills\n\n" + "\n".join(
-        f"- {k}: {v}" for k, v in skills.items()
-    )
+    return len(SKILLS)
 
 
 if __name__ == "__main__":
@@ -216,6 +220,9 @@ if __name__ == "__main__":
     except FileNotFoundError:
         pass
 
-    system += "\n\n" + describe_skills(os.path.expanduser("~/.agents/skills"))
+    if discover_skills():
+        system += "\n\n## Available Skills\n\n" + "\n".join(
+            f"- {k}: {v}" for k, v in SKILLS.items()
+        )
 
     agent(input("Task: "), system)
