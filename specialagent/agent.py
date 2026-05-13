@@ -72,14 +72,9 @@ def exit():
 def call_model(messages, tools):
     import urllib.request
 
-    url = "http://127.0.0.1:8080/v1/chat/completions"
-    api_key = ""
-    model = ""
-
-    if os.environ.get("GEMINI_API_KEY"):
-        url = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
-        api_key = os.environ.get("GEMINI_API_KEY")
-        model = "gemma-4-31b-it"
+    url = os.environ.get("LLM_BASE_URL", "http://127.0.0.1:8080/v1/chat/completions")
+    api_key = os.environ.get("LLM_API_KEY", "")
+    model = os.environ.get("LLM_MODEL", "gemma-4-31b-it")
 
     req = urllib.request.Request(
         url,
