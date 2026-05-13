@@ -7,11 +7,11 @@ from inspect import signature
 SKILLS = {}
 
 
-def exec(command):
+def run_bash(command):
     """
     Executes a bash command and returns the output.
 
-    >>> exec('echo "hello"')
+    >>> run_bash('echo "hello"')
     'hello\\n'
     """
 
@@ -127,8 +127,8 @@ def call_model(messages, tools):
 def run_function(name, args):
     """
 
-    >>> run_function("exec", {"command": "echo hello"})
-    Calling exec with {'command': 'echo hello'}
+    >>> run_function("run_bash", {"command": "echo hello"})
+    Calling run_bash with {'command': 'echo hello'}
     'hello\\n'
     """
 
@@ -140,8 +140,8 @@ def run_function(name, args):
 def build_tool(name):
     """
 
-    >>> build_tool("exec")
-    {'name': 'exec', 'description': 'Executes', 'parameters': {'type': 'object', 'properties': {'command': {'type': 'string'}}, 'required': ['command']}}
+    >>> build_tool("run_bash")
+    {'name': 'run_bash', 'description': 'Executes', 'parameters': {'type': 'object', 'properties': {'command': {'type': 'string'}}, 'required': ['command']}}
 
     >>> build_tool("write")
     {'name': 'write', 'description': 'Writes', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['path', 'content']}}
@@ -169,7 +169,7 @@ def agent(prompt, system=""):
         return
 
     tools = [
-        build_tool(fn) for fn in ("exec", "write", "replace", "read_skill", "exit")
+        build_tool(fn) for fn in ("run_bash", "write", "replace", "read_skill", "exit")
     ]
 
     messages = [
