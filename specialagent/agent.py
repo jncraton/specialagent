@@ -203,8 +203,10 @@ def discover_skills():
     for base_dir in [os.path.expanduser("~/.agents/skills")]:
         for skill in os.listdir(base_dir):
             content = open(os.path.join(base_dir, skill, "SKILL.md")).read()
-            desc = content.partition("description:")[-1].splitlines()[0].strip()
-            SKILLS[skill] = desc
+            SKILLS[skill] = {
+                "desc": content.partition("description:")[-1].splitlines()[0].strip(),
+                "content": content,
+            }
 
     print(f"Discovered {len(SKILLS)} skills")
 
@@ -222,7 +224,7 @@ if __name__ == "__main__":
 
     if discover_skills():
         system += "\n\n## Available Skills\n\n" + "\n".join(
-            f"- {k}: {v}" for k, v in SKILLS.items()
+            f"- {k}: {v['desc']}" for k, v in SKILLS.items()
         )
 
     agent(input("Task: "), system)
