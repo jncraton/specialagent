@@ -29,11 +29,11 @@ Favor brutalism via classless, semantic markup and simple styles to maintaining 
 """.strip()
 
 
-def run_bash(command):
+def exec(command):
     """
     Executes a bash command and returns the output.
 
-    >>> run_bash('echo "hello"')
+    >>> exec('echo "hello"')
     'hello\\n'
     """
 
@@ -41,13 +41,13 @@ def run_bash(command):
     return f"{result.stdout}{result.stderr}"
 
 
-def write_file(path, content):
+def write(path, content):
     """
     Writes content to a file at the specified path.
 
     >>> import tempfile, os
     >>> with tempfile.NamedTemporaryFile(delete=False) as tmp:
-    ...     write_file(tmp.name, 'test')
+    ...     write(tmp.name, 'test')
     ...     path = tmp.name
     'File written to ...
     >>> with open(path, 'r') as f:
@@ -144,12 +144,12 @@ def call_model(messages, tools):
 def run_function(name, args):
     """
 
-    >>> run_function("run_bash", {"command": "echo hello"})
-    Executing run_bash with {'command': 'echo hello'}
+    >>> run_function("exec", {"command": "echo hello"})
+    Calling exec with {'command': 'echo hello'}
     'hello\\n'
     """
 
-    print(f"Executing {name} with {args}")
+    print(f"Calling {name} with {args}")
 
     return globals().get(name)(**args)
 
@@ -157,11 +157,11 @@ def run_function(name, args):
 def build_tool(name):
     """
 
-    >>> build_tool("run_bash")
-    {'name': 'run_bash', 'description': 'Executes', 'parameters': {'type': 'object', 'properties': {'command': {'type': 'string'}}, 'required': ['command']}}
+    >>> build_tool("exec")
+    {'name': 'exec', 'description': 'Executes', 'parameters': {'type': 'object', 'properties': {'command': {'type': 'string'}}, 'required': ['command']}}
 
-    >>> build_tool("write_file")
-    {'name': 'write_file', 'description': 'Writes', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['path', 'content']}}
+    >>> build_tool("write")
+    {'name': 'write', 'description': 'Writes', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['path', 'content']}}
     """
 
     params = list(signature(globals()[name]).parameters.keys())
@@ -185,7 +185,7 @@ def agent(prompt):
     if prompt == "/quit":
         return
 
-    tools = [build_tool(fn) for fn in ("run_bash", "write_file", "replace", "success")]
+    tools = [build_tool(fn) for fn in ("exec", "write", "replace", "success")]
 
     messages = [
         {"role": "system", "content": system},
