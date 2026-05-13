@@ -192,7 +192,7 @@ def agent(prompt, system=""):
                 {
                     "role": "tool",
                     "tool_call_id": tool_call["id"],
-                    "content": result,
+                    "content": result.partition("\n---")[2],
                 }
             )
 
