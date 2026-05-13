@@ -66,7 +66,7 @@ def replace(path, search, replace):
 
 def read_skill(name):
     """
-    Reads skill content by name
+    Reads skill document by name
     """
 
     return SKILLS[name]["content"]
@@ -228,8 +228,11 @@ if __name__ == "__main__":
 
     if discover_skills():
         system += (
-            "\n\n## Skills\n\nSkills updated, detailed instructions. If a skill should be used, read it using read_skill before doing any thinking or planning. Skills can't be called and don't generate content for you, but they are critical to read before planning a response. The following skills are available:\n\n"
-            + "\n".join(f"- {k}: {v['desc']}" for k, v in SKILLS.items())
+            "\n\n## read_skill\n\nSkill documents are available with more detailed instructions. If a document appears useful, read it immediately using read_skill. Available documents:\n\n"
+            + "\n".join(
+                f"- {k}: Supplemental informational document. {v['desc']}"
+                for k, v in SKILLS.items()
+            )
         )
 
     agent(input("Task: "), system)
