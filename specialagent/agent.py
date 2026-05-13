@@ -4,31 +4,6 @@ import subprocess
 from inspect import signature
 
 
-system = """
-Never comment code or make unnecessary changes. Favor pure functions. Only commit changes if requested. Avoid dependencies.
-
-### JS
-
-Prefer single quotes and avoid semicolons.
-
-### Python.
-
-Follow black. Favor doctest for testing and use docstrings only for doctests.
-
-### SQL
-
-Use lowercase modern style.
-
-### C-like
-
-Use one true brace with two space indentation.
-
-### Web
-
-Favor brutalism via classless, semantic markup and simple styles to maintaining responsiveness and accessibility. Favor inline scripts and styles with no external dependencies. Prefer globally available id variables rather than selectors.
-""".strip()
-
-
 def exec(command):
     """
     Executes a bash command and returns the output.
@@ -179,7 +154,7 @@ def build_tool(name):
     }
 
 
-def agent(prompt):
+def agent(prompt, system=""):
     """
     >>> agent("/quit")
     """
@@ -221,4 +196,14 @@ def agent(prompt):
 
 
 if __name__ == "__main__":
-    agent(input("Task: "))
+    import os
+
+    system = ""
+
+    try:
+        system = open(os.path.expanduser("~/.agents/AGENTS.md")).read()
+        print(f"Loaded {len(system)} byte AGENTS.md")
+    except FileNotFoundError:
+        pass
+
+    agent(input("Task: "), system)
