@@ -13,7 +13,7 @@ A minimalist [LLM](https://en.wikipedia.org/wiki/Large_language_model)-driven [a
 ## Features
 
 - Zero-dependency Python implementation
-- Tool use. The agent current has 4 tools:
+- Tool use. The agent has 4 tools:
   - `exec` - Run `bash` commands
   - `write` - Overwrites the contents of a file
   - `replace` - Find and replace in file
