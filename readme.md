@@ -1,12 +1,14 @@
 # specialagent
 
-A minimalist autonomous agent
+A minimalist autonomous LLM-driven agent
 
 [![Lint](https://github.com/jncraton/specialagent/actions/workflows/lint.yml/badge.svg)](https://github.com/jncraton/specialagent/actions/workflows/lint.yml)
 [![Test](https://github.com/jncraton/specialagent/actions/workflows/test.yml/badge.svg)](https://github.com/jncraton/specialagent/actions/workflows/test.yml)
 [![Deploy](https://github.com/jncraton/specialagent/actions/workflows/deploy.yml/badge.svg)](https://github.com/jncraton/specialagent/actions/workflows/deploy.yml)
 [![Release](https://github.com/jncraton/specialagent/actions/workflows/release.yml/badge.svg)](https://github.com/jncraton/specialagent/actions/workflows/release.yml)
 [![PyPI](https://github.com/jncraton/specialagent/actions/workflows/pypi.yml/badge.svg)](https://github.com/jncraton/specialagent/actions/workflows/pypi.yml)
+
+![Agent Diagram](https://upload.wikimedia.org/wikipedia/commons/3/3f/IntelligentAgent-SimpleReflex.png)
 
 ## Features
 
