@@ -189,19 +189,23 @@ def agent(prompt, system=""):
         if not tool_calls:
             print(response)
 
+
 def describe_skills(base_dir):
     skills = "## Available Skills\n\n"
 
     skills = {}
 
     for skill in os.listdir(base_dir):
-        content = open(os.path.join(base_dir, skill, 'SKILL.md')).read()
+        content = open(os.path.join(base_dir, skill, "SKILL.md")).read()
         desc = content.partition("description:")[-1].splitlines()[0].strip()
         skills[skill] = desc
 
     print(f"Found {len(skills)} skills")
 
-    return "## Available Skills\n\n" + '\n'.join(f"- {k}: {v}" for k,v in skills.items())
+    return "## Available Skills\n\n" + "\n".join(
+        f"- {k}: {v}" for k, v in skills.items()
+    )
+
 
 if __name__ == "__main__":
     system = ""
