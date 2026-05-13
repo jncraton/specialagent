@@ -69,7 +69,7 @@ def replace(path, search, replace):
     ...     _ = tmp.write('hello world')
     ...     path = tmp.name
     >>> replace(path, 'world', 'there')
-    'Replaced text in ...
+    'Replaced 1 in ...
     >>> with open(path, 'r') as f:
     ...     f.read()
     ...     os.remove(path)
@@ -77,11 +77,13 @@ def replace(path, search, replace):
     """
     with open(path, "r") as f:
         content = f.read()
-    if not search in content:
-        return f"String not found. Replacement failed in {path}"
+
+    count = content.count(search)
+
     with open(path, "w") as f:
         f.write(content.replace(search, replace))
-    return f"Replaced text in {path}"
+
+    return f"Replaced {count} in {path}"
 
 
 def success():
