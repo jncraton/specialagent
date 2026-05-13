@@ -1,6 +1,6 @@
 # specialagent
 
-A minimalist autonomous LLM-driven agent
+A minimalist [LLM](https://en.wikipedia.org/wiki/Large_language_model)-driven [agent](https://en.wikipedia.org/wiki/Intelligent_agent)
 
 [![Lint](https://github.com/jncraton/specialagent/actions/workflows/lint.yml/badge.svg)](https://github.com/jncraton/specialagent/actions/workflows/lint.yml)
 [![Test](https://github.com/jncraton/specialagent/actions/workflows/test.yml/badge.svg)](https://github.com/jncraton/specialagent/actions/workflows/test.yml)
