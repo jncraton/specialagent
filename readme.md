@@ -12,8 +12,12 @@ A minimalist [LLM](https://en.wikipedia.org/wiki/Large_language_model)-driven [a
 
 ## Features
 
-- Function calling for shell access and file operations
 - Zero-dependency Python implementation
+- Tool use. The agent current has 4 tools:
+  - `exec` - Run `bash` commands
+  - `write` - Overwrites the contents of a file
+  - `replace` - Find and replace in file
+  - `success` - Terminate session and report success to user
 
 ## Security
 
