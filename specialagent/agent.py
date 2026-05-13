@@ -61,9 +61,9 @@ def replace(path, search, replace):
     return f"Replaced {count} in {path}"
 
 
-def success():
+def exit():
     """
-    Reports success to the user
+    Exit session
     """
 
     pass
@@ -162,7 +162,7 @@ def agent(prompt, system=""):
     if prompt == "/quit":
         return
 
-    tools = [build_tool(fn) for fn in ("exec", "write", "replace", "success")]
+    tools = [build_tool(fn) for fn in ("exec", "write", "replace", "exit")]
 
     messages = [
         {"role": "system", "content": system},
@@ -188,7 +188,7 @@ def agent(prompt, system=""):
                 }
             )
 
-            if name == "success":
+            if name == "exit":
                 return
 
         if not tool_calls:

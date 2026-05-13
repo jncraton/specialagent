@@ -18,7 +18,7 @@ Designed with educational use in mind, this agent harness is intentionally only 
   - `exec` - Run `bash` commands
   - `write` - Overwrites the contents of a file
   - `replace` - Find and replace in file
-  - `success` - Terminate session and report success to user
+  - `exit` - Terminate session
 
 ## Security
 
