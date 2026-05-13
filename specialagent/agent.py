@@ -72,9 +72,9 @@ def read_skill(name):
     return SKILLS[name]["content"]
 
 
-def exit():
+def stop():
     """
-    Exit session
+    Complete session
     """
 
     pass
@@ -169,7 +169,7 @@ def agent(prompt, system=""):
         return
 
     tools = [
-        build_tool(fn) for fn in ("run_bash", "write", "replace", "read_skill", "exit")
+        build_tool(fn) for fn in ("run_bash", "write", "replace", "read_skill", "stop")
     ]
 
     messages = [
@@ -196,7 +196,7 @@ def agent(prompt, system=""):
                 }
             )
 
-            if name == "exit":
+            if name == "stop":
                 return
 
         if not tool_calls:
