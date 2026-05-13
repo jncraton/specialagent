@@ -37,8 +37,10 @@ pipx specialagent
 
 ## Configuration
 
-In its default configuration, the agent will attempt to use the default model hosted at `http://127.0.0.1:8080/v1/chat/completions` (the llama.cpp default). If a Gemini key is provided, the agent will instead use Gemma 4 31B hosted on AI Studio.
+In its default configuration, the agent will attempt to use the model hosted at `http://127.0.0.1:8080/v1/chat/completions` (the llama.cpp default). Alternatives may be provided by env variables. For example, to use Gemma 4 31B hosted on AI Studio:
 
 ```sh
-export GEMINI_API_KEY='your-api-key-here'
+export LLM_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/chat/completions
+export LLM_API_KEY=your-api-key-here
+export LLM_MODEL=gemma-4-31b-it
 ```
