@@ -64,12 +64,12 @@ def replace(path, search, replace):
     return f"Replaced {count} in {path}"
 
 
-def load_skill(description):
+def read_skill(name):
     """
-    Loads a skill by name
+    Reads skill content by name
     """
 
-    return SKILLS[description]
+    return SKILLS[name]["content"]
 
 
 def exit():
@@ -168,7 +168,9 @@ def agent(prompt, system=""):
     if prompt == "/quit":
         return
 
-    tools = [build_tool(fn) for fn in ("exec", "write", "replace", "exit")]
+    tools = [
+        build_tool(fn) for fn in ("exec", "write", "replace", "read_skill", "exit")
+    ]
 
     messages = [
         {"role": "system", "content": system},
@@ -225,8 +227,9 @@ if __name__ == "__main__":
         pass
 
     if discover_skills():
-        system += "\n\n## Available Skills\n\n" + "\n".join(
-            f"- {k}: {v['desc']}" for k, v in SKILLS.items()
+        system += (
+            "\n\n## Skills\n\nSkills updated, detailed instructions. If a skill should be used, read it using read_skill before doing any thinking or planning. Skills can't be called and don't generate content for you, but they are critical to read before planning a response. The following skills are available:\n\n"
+            + "\n".join(f"- {k}: {v['desc']}" for k, v in SKILLS.items())
         )
 
     agent(input("Task: "), system)
