@@ -8,11 +8,12 @@ A minimalist [LLM](https://en.wikipedia.org/wiki/Large_language_model)-driven [a
 [![Release](https://github.com/jncraton/specialagent/actions/workflows/release.yml/badge.svg)](https://github.com/jncraton/specialagent/actions/workflows/release.yml)
 [![PyPI](https://github.com/jncraton/specialagent/actions/workflows/pypi.yml/badge.svg)](https://github.com/jncraton/specialagent/actions/workflows/pypi.yml)
 
+Designed with educational use in mind, this agent harness is intentionally only a few hundred lines of readable, dependency-free Python.
+
 ![Agent Diagram](https://upload.wikimedia.org/wikipedia/commons/3/3f/IntelligentAgent-SimpleReflex.png)
 
 ## Features
 
-- Zero-dependency Python implementation
 - Tool use. The agent has 4 tools:
   - `exec` - Run `bash` commands
   - `write` - Overwrites the contents of a file
