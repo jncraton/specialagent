@@ -69,6 +69,8 @@ def load_skill(description):
     Loads a skill by name
     """
 
+    return SKILLS[description]
+
 
 def exit():
     """
