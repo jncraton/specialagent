@@ -8,7 +8,7 @@
 
 A minimalist [LLM](https://en.wikipedia.org/wiki/Large_language_model)-driven [agent](https://en.wikipedia.org/wiki/Intelligent_agent)
 
-> An agent is just something that acts (agent comes from the Latin agere, to do). Of course, all computer programs do something, but computer agents are expected to do more: operate autonomously, perceive their environment, persist over a prolonged time period, adapt to change, and create and pursue goals.
+> An agent is just something that acts (agent comes from the Latin [agere](https://en.wiktionary.org/wiki/ago#Verb), to do). Of course, all computer programs do something, but computer agents are expected to do more: operate autonomously, perceive their environment, persist over a prolonged time period, adapt to change, and create and pursue goals.
 >
 > [Russel & Norvig, 1995](https://en.wikipedia.org/wiki/Artificial_Intelligence:_A_Modern_Approach)
 
