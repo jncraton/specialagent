@@ -25,9 +25,9 @@ def write(path, content):
 
     >>> import tempfile
     >>> file = tempfile.NamedTemporaryFile()
-
     >>> write(file.name, 'test')
     'File written to ...
+
     >>> open(file.name, 'r').read()
     'test'
     """
@@ -40,15 +40,14 @@ def replace(path, search, replace):
     """
     Replaces text in file
 
-    >>> import tempfile, os
-    >>> with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
-    ...     _ = tmp.write('hello world')
-    ...     path = tmp.name
-    >>> replace(path, 'world', 'there')
+    >>> import tempfile
+    >>> file = tempfile.NamedTemporaryFile(buffering=0)
+    >>> file.write(b'hello world')
+    11
+    >>> replace(file.name, 'world', 'there')
     'Replaced 1 in ...
-    >>> with open(path, 'r') as f:
-    ...     f.read()
-    ...     os.remove(path)
+
+    >>> open(file.name).read()
     'hello there'
     """
     with open(path, "r") as f:
