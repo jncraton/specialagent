@@ -23,14 +23,12 @@ def write(path, content):
     """
     Writes content to a file at the specified path.
 
-    >>> import tempfile, os
-    >>> with tempfile.NamedTemporaryFile(delete=False) as tmp:
-    ...     write(tmp.name, 'test')
-    ...     path = tmp.name
+    >>> import tempfile
+    >>> file = tempfile.NamedTemporaryFile()
+
+    >>> write(file.name, 'test')
     'File written to ...
-    >>> with open(path, 'r') as f:
-    ...     f.read()
-    ...     os.remove(path)
+    >>> open(file.name, 'r').read()
     'test'
     """
     with open(path, "w") as f:
