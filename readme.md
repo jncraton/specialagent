@@ -12,7 +12,7 @@ A minimalist [LLM](https://en.wikipedia.org/wiki/Large_language_model)-driven [a
 >
 > [Russel & Norvig, 1995](https://en.wikipedia.org/wiki/Artificial_Intelligence:_A_Modern_Approach)
 
-Designed with educational use in mind, this agent harness is intentionally only a few hundred lines of readable, dependency-free Python.
+Designed with educational use in mind, this agent harness is intentionally only a few hundred lines of readable, dependency-free Python. It acts on its environment by running shell commands and receives output of those commands as percepts to drive subsequent actions.
 
 ![Agent Diagram](https://upload.wikimedia.org/wikipedia/commons/3/3f/IntelligentAgent-SimpleReflex.png)
 
@@ -27,6 +27,7 @@ Designed with educational use in mind, this agent harness is intentionally only 
 ## Security
 
 This package allows LLMs to directly execute shell commands. It should never be used without appropriate sandboxing.
+
 ## Usage
 
 ```sh
