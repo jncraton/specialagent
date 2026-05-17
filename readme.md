@@ -1,12 +1,16 @@
 # specialagent
 
-A minimalist [LLM](https://en.wikipedia.org/wiki/Large_language_model)-driven [agent](https://en.wikipedia.org/wiki/Intelligent_agent)
-
 [![Lint](https://github.com/jncraton/specialagent/actions/workflows/lint.yml/badge.svg)](https://github.com/jncraton/specialagent/actions/workflows/lint.yml)
 [![Test](https://github.com/jncraton/specialagent/actions/workflows/test.yml/badge.svg)](https://github.com/jncraton/specialagent/actions/workflows/test.yml)
 [![Deploy](https://github.com/jncraton/specialagent/actions/workflows/deploy.yml/badge.svg)](https://github.com/jncraton/specialagent/actions/workflows/deploy.yml)
 [![Release](https://github.com/jncraton/specialagent/actions/workflows/release.yml/badge.svg)](https://github.com/jncraton/specialagent/actions/workflows/release.yml)
 [![PyPI](https://github.com/jncraton/specialagent/actions/workflows/pypi.yml/badge.svg)](https://github.com/jncraton/specialagent/actions/workflows/pypi.yml)
+
+A minimalist [LLM](https://en.wikipedia.org/wiki/Large_language_model)-driven [agent](https://en.wikipedia.org/wiki/Intelligent_agent)
+
+> An agent is just something that acts (agent comes from the Latin agere, to do). Of course, all computer programs do something, but computer agents are expected to do more: operate autonomously, perceive their environment, persist over a prolonged time period, adapt to change, and create and pursue goals.
+>
+> [Russel & Norvig, 1995](https://en.wikipedia.org/wiki/Artificial_Intelligence:_A_Modern_Approach)
 
 Designed with educational use in mind, this agent harness is intentionally only a few hundred lines of readable, dependency-free Python.
 
