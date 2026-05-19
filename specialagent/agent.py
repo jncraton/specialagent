@@ -61,14 +61,6 @@ def replace(path, search, replace):
     return f"Replaced {count} in {path}"
 
 
-def read_skill(name):
-    """
-    Reads skill document by name
-    """
-
-    return SKILLS[name]["content"]
-
-
 def stop():
     """
     Complete session
@@ -165,9 +157,7 @@ def agent(prompt, system=""):
     if prompt == "/quit":
         return
 
-    tools = [
-        build_tool(fn) for fn in ("run_bash", "write", "replace", "read_skill", "stop")
-    ]
+    tools = [build_tool(fn) for fn in ("run_bash", "write", "replace", "stop")]
 
     messages = [
         {"role": "system", "content": system},
@@ -203,8 +193,9 @@ def agent(prompt, system=""):
 def discover_skills():
     for base_dir in [os.path.expanduser("~/.agents/skills")]:
         for skill in os.listdir(base_dir):
-            content = open(os.path.join(base_dir, skill, "SKILL.md")).read()
-            SKILLS[skill] = {
+            skill_path = os.path.join(base_dir, skill, "SKILL.md")
+            content = open(skill_path).read()
+            SKILLS[skill_path] = {
                 "desc": content.partition("description:")[-1].splitlines()[0].strip(),
                 "content": content,
             }
@@ -225,11 +216,8 @@ if __name__ == "__main__":
 
     if discover_skills():
         system += (
-            "\n\n## read_skill\n\nSkill documents are available with more detailed instructions. If a document appears useful, read it immediately using read_skill. Available documents:\n\n"
-            + "\n".join(
-                f"- {k}: Supplemental informational document. {v['desc']}"
-                for k, v in SKILLS.items()
-            )
+            "\n\n## Skills\n\nSkill documents are available to provide additional capabilities with specialized knowledge and workflows. Read appropriate skills before starting matching workflows. Available skills:\n\n"
+            + "\n".join(f"- {k}: {v['desc']}" for k, v in SKILLS.items())
         )
 
     agent(input("Task: "), system)
