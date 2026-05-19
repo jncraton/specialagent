@@ -1,0 +1,4 @@
+#!/bin/sh
+
+rm -f quiz*
+echo Use the qti skill to make a quiz about Python functions and save as quiz.zip | ./run
