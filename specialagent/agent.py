@@ -1,6 +1,7 @@
 import json
 import os
 import subprocess
+import time
 from inspect import signature
 
 
@@ -96,21 +97,22 @@ def call_model(messages, tools):
 
     print(f"Prompting {model} with {len(req.data)} bytes...")
 
-    try:
-        with urllib.request.urlopen(req) as response:
-            res_data = json.loads(response.read().decode())
-            usage = res_data.get("usage", {})
+    for backoff in [0, 1, 2] + [4] * 64:
+        try:
+            with urllib.request.urlopen(req) as response:
+                res_data = json.loads(response.read().decode())
+                usage = res_data.get("usage", {})
 
-            print(
-                f"Prompt: {usage.get('prompt_tokens', 0)} | "
-                f"Response: {usage.get('completion_tokens', 0)} | "
-                f"Total: {usage.get('total_tokens', 0)}"
-            )
+                print(
+                    f"Prompt: {usage.get('prompt_tokens', 0)} | "
+                    f"Response: {usage.get('completion_tokens', 0)} | "
+                    f"Total: {usage.get('total_tokens', 0)}"
+                )
 
-            return res_data["choices"][0]["message"]
-    except urllib.error.HTTPError as e:
-        print(f"HTTPError {e.code}: {e.read().decode('utf-8')}")
-        exit(1)
+                return res_data["choices"][0]["message"]
+        except urllib.error.HTTPError as e:
+            print(f"HTTPError {e.code}: {e.read().decode('utf-8')}")
+        time.sleep(backoff)
 
 
 def run_function(name, args):
