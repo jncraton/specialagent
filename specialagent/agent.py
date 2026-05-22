@@ -219,7 +219,7 @@ if __name__ == "__main__":
     if discover_skills():
         system += (
             "\n\n## Skills\n\nSkill documents are available to provide additional capabilities with specialized knowledge and workflows. Read appropriate skills before starting matching workflows. Available skills:\n\n"
-            + "\n".join(f"- {k}: {v['desc']}" for k, v in SKILLS.items())
+            + "\n".join(f"- `cat {k}`: {v['desc']}" for k, v in SKILLS.items())
         )
 
     agent(input("Task: "), system)
