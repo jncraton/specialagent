@@ -38,6 +38,7 @@ firejail \
   --whitelist=~/.cache/ms-playwright \
   --whitelist=~/.cache/huggingface \
   --whitelist=~/.cache/uv \
+  --whitelist=~/.cache/pipx \
   --whitelist=~/personal/skills \
   --rmenv=WINDOWID \
   --rmenv=USER \
