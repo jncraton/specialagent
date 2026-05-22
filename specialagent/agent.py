@@ -189,7 +189,7 @@ def agent(prompt, system=""):
                 return
 
         if not tool_calls:
-            print(response)
+            return
 
 
 def discover_skills():
