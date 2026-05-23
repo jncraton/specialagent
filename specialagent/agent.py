@@ -75,7 +75,7 @@ def call_model(messages, tools):
 
     url = os.environ.get("LLM_BASE_URL", "http://127.0.0.1:8080/v1/chat/completions")
     api_key = os.environ.get("LLM_API_KEY", "")
-    model = os.environ.get("LLM_MODEL", "gemma-4-31b-it")
+    model = os.environ.get("LLM_MODEL", "")
 
     req = urllib.request.Request(
         url,
@@ -95,7 +95,7 @@ def call_model(messages, tools):
         method="POST",
     )
 
-    print(f"Prompting {model} with {len(req.data)} bytes...")
+    print(f"Prompting LLM with {len(req.data)} bytes...")
 
     for backoff in [0, 1, 2] + [4] * 64:
         try:
