@@ -62,14 +62,6 @@ def replace(path, search, replace):
     return f"Replaced {count} in {path}"
 
 
-def stop():
-    """
-    Complete session
-    """
-
-    pass
-
-
 def call_model(messages, tools):
     import urllib.request
 
@@ -84,7 +76,6 @@ def call_model(messages, tools):
                 "model": model,
                 "messages": messages,
                 "tools": [{"type": "function", "function": tool} for tool in tools],
-                "tool_choice": "required",
                 "temperature": 0.0,
             }
         ).encode(),
@@ -157,7 +148,7 @@ def agent(prompt, system=""):
     if prompt == "/quit":
         return
 
-    tools = [build_tool(fn) for fn in ("run_bash", "write", "replace", "stop")]
+    tools = [build_tool(fn) for fn in ("run_bash", "write", "replace")]
 
     messages = [
         {"role": "system", "content": system},
@@ -183,10 +174,8 @@ def agent(prompt, system=""):
                 }
             )
 
-            if name == "stop":
-                return
-
         if not tool_calls:
+            print(f"LLM assistant message: {response['content']}")
             return
 
 
