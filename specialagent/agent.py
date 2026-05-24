@@ -85,9 +85,7 @@ def call_model(messages, tools):
                 "messages": messages,
                 "tools": [{"type": "function", "function": tool} for tool in tools],
                 "tool_choice": "required",
-                "temperature": 1.0,
-                "top_p": 0.95,
-                "top_k": 64,
+                "temperature": 0.0,
             }
         ).encode(),
         headers={
