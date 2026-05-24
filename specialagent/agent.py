@@ -5,9 +5,6 @@ import time
 from inspect import signature
 
 
-SKILLS = {}
-
-
 def run_bash(command):
     """
     Executes a bash command and returns the output.
@@ -180,18 +177,18 @@ def agent(prompt, system=""):
 
 
 def discover_skills():
+    skills = {}
+
     for base_dir in [os.path.expanduser("~/.agents/skills")]:
         for skill in os.listdir(base_dir):
             skill_path = os.path.join(base_dir, skill, "SKILL.md")
             content = open(skill_path).read()
-            SKILLS[skill_path] = {
+            skills[skill_path] = {
                 "desc": content.partition("description:")[-1].splitlines()[0].strip(),
                 "content": content,
             }
 
-    print(f"Discovered {len(SKILLS)} skills")
-
-    return len(SKILLS)
+    return skills
 
 
 if __name__ == "__main__":
@@ -203,10 +200,12 @@ if __name__ == "__main__":
     except FileNotFoundError:
         pass
 
-    if discover_skills():
+    if skills := discover_skills():
+        print(f"Discovered {len(skills)} skills")
+
         system += (
             "\n\n## Skills\n\nSkill documents are available to provide additional specialized knowledge and workflows. Read appropriate skills using cat before starting matching workflows. Available skills:\n\n"
-            + "\n".join(f"- `cat {k}`: {v['desc']}" for k, v in SKILLS.items())
+            + "\n".join(f"- `cat {k}`: {v['desc']}" for k, v in skills.items())
         )
 
     agent(input("Task: "), system)
