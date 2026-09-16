@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 from typing import Sequence
 
-from .agent import agent
+from .agent import agent, editor_input, get_system
 
 
 def _parse_args(args: Sequence[str] | None = None) -> argparse.Namespace:
@@ -18,7 +18,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = _parse_args(argv)
     messages: list[str] = []
 
-    agent(args.prompt or input("Task: "))
+    agent(editor_input(""), get_system())
 
     return 0
 

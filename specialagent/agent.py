@@ -210,15 +210,12 @@ def discover_skills():
 
     return skills
 
-
-if __name__ == "__main__":
-    system = ""
-
+def get_system():
     try:
         system = open(os.path.expanduser("~/.agents/AGENTS.md")).read()
         print(f"Loaded {len(system)} byte AGENTS.md")
     except FileNotFoundError:
-        pass
+        system = ""
 
     if skills := discover_skills():
         print(f"Discovered {len(skills)} skills")
@@ -228,4 +225,8 @@ if __name__ == "__main__":
             + "\n".join(f"- `cat {k}`: {v['desc']}" for k, v in skills.items())
         )
 
-    agent(editor_input(""), system)
+    return system
+
+
+if __name__ == "__main__":
+    agent(editor_input(""), get_system())
