@@ -227,7 +227,7 @@ def get_system():
         print(f"Discovered {len(skills)} skills")
 
         system += (
-            "\n\n## Skills\n\nSkill documents are available to provide additional specialized knowledge and workflows. Read appropriate skills using cat before starting matching workflows. Available skills:\n\n"
+            "\n\n## Skills\n\nRead appropriate skills using cat before starting matching tasks. Available skills:\n\n"
             + "\n".join(f"- `cat {k}`: {v['desc']}" for k, v in skills.items())
         )
 
