@@ -199,14 +199,17 @@ def agent(prompt, system=""):
 def discover_skills():
     skills = {}
 
-    for base_dir in [os.path.expanduser("~/.agents/skills")]:
-        for skill in os.listdir(base_dir):
-            skill_path = os.path.join(base_dir, skill, "SKILL.md")
-            content = open(skill_path).read()
-            skills[skill_path] = {
-                "desc": content.partition("description:")[-1].splitlines()[0].strip(),
-                "content": content,
-            }
+    try:
+        for base_dir in [os.path.expanduser("~/.agents/skills")]:
+            for skill in os.listdir(base_dir):
+                skill_path = os.path.join(base_dir, skill, "SKILL.md")
+                content = open(skill_path).read()
+                skills[skill_path] = {
+                    "desc": content.partition("description:")[-1].splitlines()[0].strip(),
+                    "content": content,
+                }
+    except FileNotFoundError:
+        pass
 
     return skills
 
