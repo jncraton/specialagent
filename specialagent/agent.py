@@ -158,11 +158,11 @@ def build_tool(name):
 
 
 def prefetch(prompt):
-    """ Create synthetic assistant and tool messages prefetching mentioned file
+    """Create synthetic assistant and tool messages prefetching mentioned file
 
     >>> prefetch("Say hi")
     []
-    
+
     >>> len(prefetch("Check readme.md"))
     2
 
@@ -176,9 +176,9 @@ def prefetch(prompt):
     messages = []
 
     for path in set(prompt.split()):
-        if not '.' in path or path.endswith('.') or len(path) < 4:
+        if not "." in path or path.endswith(".") or len(path) < 4:
             continue
-        
+
         try:
             with open(path, encoding="utf-8", errors="replace") as file:
                 content = file.read()
@@ -197,9 +197,7 @@ def prefetch(prompt):
                         "type": "function",
                         "function": {
                             "name": "run_bash",
-                            "arguments": json.dumps(
-                                {"command": f"cat {path}"}
-                            ),
+                            "arguments": json.dumps({"command": f"cat {path}"}),
                         },
                     }
                 ],
@@ -215,6 +213,7 @@ def prefetch(prompt):
         )
 
     return messages
+
 
 def agent(prompt, system=""):
     """
@@ -234,8 +233,10 @@ def agent(prompt, system=""):
     messages.extend(prefetch(prompt))
 
     for message in messages:
-        for tool in message.get('tool_calls', []):
-            print(f"Called {tool['function']['name']} with {tool['function']['arguments']}")
+        for tool in message.get("tool_calls", []):
+            print(
+                f"Called {tool['function']['name']} with {tool['function']['arguments']}"
+            )
 
     while True:
         response = call_model(messages, tools)
