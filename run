@@ -32,6 +32,10 @@ firejail \
   --whitelist=~/.npm \
   --whitelist=~/.cargo \
   --read-only=~/.cargo \
+  --whitelist=~/.config/micro \
+  --read-only=~/.config/micro \
+  --whitelist=~/.secure/config/.config/micro \
+  --read-only=~/.secure/config/.config/micro \
   --whitelist=~/.local/share/pipx \
   --whitelist=~/.local/bin \
   --read-only=~/.local/bin \
