@@ -175,7 +175,7 @@ def prefetch(prompt):
 
     messages = []
 
-    for path in prompt.split():
+    for path in set(prompt.split()):
         if not '.' in path or path.endswith('.') or len(path) < 4:
             continue
         
