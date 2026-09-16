@@ -210,6 +210,7 @@ def discover_skills():
 
     return skills
 
+
 def get_system():
     try:
         system = open(os.path.expanduser("~/.agents/AGENTS.md")).read()
