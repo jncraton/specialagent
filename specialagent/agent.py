@@ -205,7 +205,9 @@ def discover_skills():
                 skill_path = os.path.join(base_dir, skill, "SKILL.md")
                 content = open(skill_path).read()
                 skills[skill_path] = {
-                    "desc": content.partition("description:")[-1].splitlines()[0].strip(),
+                    "desc": content.partition("description:")[-1]
+                    .splitlines()[0]
+                    .strip(),
                     "content": content,
                 }
     except FileNotFoundError:
