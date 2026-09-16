@@ -18,7 +18,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = _parse_args(argv)
     messages: list[str] = []
 
-    agent(editor_input(""), get_system())
+    agent(args.prompt or editor_input(""), get_system())
 
     return 0
 
