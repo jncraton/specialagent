@@ -175,10 +175,11 @@ def prefetch(prompt):
 
     messages = []
 
-    for path in set(prompt.split()):
-        if not "." in path or path.endswith(".") or len(path) < 4:
-            continue
+    files = set(
+        f for f in prompt.split() if "." in f and not f.endswith(".") and len(f) >= 4
+    )
 
+    for path in files:
         try:
             with open(path, encoding="utf-8", errors="replace") as file:
                 content = file.read()
