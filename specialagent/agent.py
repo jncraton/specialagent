@@ -157,6 +157,61 @@ def build_tool(name):
     }
 
 
+def prefetch(prompt):
+    """ Create synthetic assistant and tool messages prefetching mentioned file
+
+    >>> prefetch("Say hi")
+    []
+    
+    >>> len(prefetch("Check readme.md"))
+    2
+    """
+
+    messages = []
+
+    for path in prompt.split():
+        if not '.' in path or path.endswith('.') or len(path) < 4:
+            continue
+        
+        try:
+            with open(path, encoding="utf-8", errors="replace") as file:
+                content = file.read()
+        except FileNotFoundError:
+            continue
+
+        tool_call_id = f"read_{path}"
+
+        messages.append(
+            {
+                "role": "assistant",
+                "content": None,
+                "tool_calls": [
+                    {
+                        "id": tool_call_id,
+                        "type": "function",
+                        "function": {
+                            "name": "run_bash",
+                            "arguments": json.dumps(
+                                {"command": f"cat {path}"}
+                            ),
+                        },
+                    }
+                ],
+            }
+        )
+
+        messages.append(
+            {
+                "role": "tool",
+                "tool_call_id": tool_call_id,
+                "content": content,
+            }
+        )
+
+        print(f"Prefetched {path}")
+
+    return messages
+
 def agent(prompt, system=""):
     """
     >>> agent("/quit")
@@ -171,6 +226,8 @@ def agent(prompt, system=""):
         {"role": "system", "content": system},
         {"role": "user", "content": prompt},
     ]
+
+    messages.extend(prefetch(prompt))
 
     while True:
         response = call_model(messages, tools)
