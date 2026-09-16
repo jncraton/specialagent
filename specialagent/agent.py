@@ -165,6 +165,12 @@ def prefetch(prompt):
     
     >>> len(prefetch("Check readme.md"))
     2
+
+    >>> prefetch("Check readme.md")[0]['role']
+    'assistant'
+
+    >>> prefetch("Check readme.md")[1]['role']
+    'tool'
     """
 
     messages = []
