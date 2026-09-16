@@ -1,8 +1,28 @@
 import json
 import os
 import subprocess
+import shlex
+import tempfile
 import time
 from inspect import signature
+
+
+def editor_input(initial=""):
+    """Open $EDITOR with initial text and return the edited text."""
+
+    fd, path = tempfile.mkstemp(suffix=".md", text=True)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as file:
+            file.write(initial)
+
+        subprocess.run(
+            shlex.split(os.environ.get("EDITOR", "nano")) + [path], check=True
+        )
+
+        with open(path, encoding="utf-8") as file:
+            return file.read()
+    finally:
+        os.unlink(path)
 
 
 def run_bash(command):
@@ -208,4 +228,4 @@ if __name__ == "__main__":
             + "\n".join(f"- `cat {k}`: {v['desc']}" for k, v in skills.items())
         )
 
-    agent(input("Task: "), system)
+    agent(editor_input(""), system)
