@@ -214,8 +214,6 @@ def prefetch(prompt):
             }
         )
 
-        print(f"Prefetched {path}")
-
     return messages
 
 def agent(prompt, system=""):
@@ -234,6 +232,10 @@ def agent(prompt, system=""):
     ]
 
     messages.extend(prefetch(prompt))
+
+    for message in messages:
+        for tool in message.get('tool_calls', []):
+            print(f"Called {tool['function']['name']} with {tool['function']['arguments']}")
 
     while True:
         response = call_model(messages, tools)
