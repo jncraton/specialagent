@@ -190,7 +190,7 @@ def prefetch(prompt, extra=[]):
     files.update(extra)
 
     for skill in discover_skills():
-        if skill.split('/')[-2] in prompt[:100]:
+        if skill.split("/")[-2] in prompt[:100]:
             files.add(skill)
 
     for path in files:
