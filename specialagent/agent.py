@@ -157,7 +157,7 @@ def build_tool(name):
     }
 
 
-def prefetch(prompt):
+def prefetch(prompt, extra=[]):
     """Create synthetic assistant and tool messages prefetching mentioned file
 
     >>> prefetch("Say hi")
@@ -171,6 +171,15 @@ def prefetch(prompt):
 
     >>> prefetch("Check readme.md")[1]['role']
     'tool'
+
+    >>> len(prefetch("hi", ['makefile']))
+    2
+
+    >>> prefetch("hi", ['makefile'])[0]['role']
+    'assistant'
+
+    >>> prefetch("hi", ['makefile'])[1]['role']
+    'tool'
     """
 
     messages = []
@@ -178,6 +187,7 @@ def prefetch(prompt):
     files = set(
         f for f in prompt.split() if "." in f and not f.endswith(".") and len(f) >= 4
     )
+    files.update(extra)
 
     for path in files:
         try:
@@ -231,7 +241,7 @@ def agent(prompt, system=""):
         {"role": "user", "content": prompt},
     ]
 
-    messages.extend(prefetch(prompt))
+    messages.extend(prefetch(prompt, ["makefile", "Makefile"]))
 
     for message in messages:
         for tool in message.get("tool_calls", []):
