@@ -37,9 +37,9 @@ def run_bash(command):
     return f"{result.stdout}{result.stderr}"
 
 
-def write(path, content):
+def write(filename, content):
     """
-    Writes content to file at path
+    Writes content to file specified by filename
 
     >>> import tempfile
     >>> file = tempfile.NamedTemporaryFile()
@@ -49,9 +49,9 @@ def write(path, content):
     >>> open(file.name, 'r').read()
     'test'
     """
-    with open(path, "w") as f:
+    with open(filename, "w") as f:
         f.write(content)
-    return f"File written to {path}"
+    return f"File written to {filename}"
 
 
 def replace(path, search, replace):
@@ -141,7 +141,7 @@ def build_tool(name):
     {'name': 'run_bash', 'description': 'Executes bash command and returns output', 'parameters': {'type': 'object', 'properties': {'command': {'type': 'string'}}, 'required': ['command']}}
 
     >>> build_tool("write")
-    {'name': 'write', 'description': 'Writes content to file at path', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['path', 'content']}}
+    {'name': 'write', 'description': 'Writes content to file specified by filename', 'parameters': {'type': 'object', 'properties': {'filename': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['filename', 'content']}}
     """
 
     params = list(signature(globals()[name]).parameters.keys())
