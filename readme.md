@@ -18,11 +18,11 @@ Designed with educational use in mind, this agent harness is intentionally only 
 
 ## Features
 
-- Tool use. The agent has 4 tools:
+- Tool use
   - `exec` - Run `bash` commands
   - `write` - Overwrites the contents of a file
   - `replace` - Find and replace in file
-- Prefetching to make obvious tools calls before calling an LLM
+- Prefetching
   - Run `cat {filename}` for any mentioned files that exist
   - Run `cat {skill.md}` for any skills mentioned by name near the start of the prompt
   - Run `cat makefile` and similar for common project files
