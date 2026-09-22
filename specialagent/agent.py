@@ -27,7 +27,7 @@ def editor_input(initial=""):
 
 def run_bash(command):
     """
-    Executes a bash command and returns the output.
+    Executes bash command and returns output
 
     >>> run_bash('echo "hello"')
     'hello\\n'
@@ -39,7 +39,7 @@ def run_bash(command):
 
 def write(path, content):
     """
-    Writes content to a file at the specified path.
+    Writes content to file at path
 
     >>> import tempfile
     >>> file = tempfile.NamedTemporaryFile()
@@ -138,17 +138,17 @@ def build_tool(name):
     """
 
     >>> build_tool("run_bash")
-    {'name': 'run_bash', 'description': 'Executes', 'parameters': {'type': 'object', 'properties': {'command': {'type': 'string'}}, 'required': ['command']}}
+    {'name': 'run_bash', 'description': 'Executes bash command and returns output', 'parameters': {'type': 'object', 'properties': {'command': {'type': 'string'}}, 'required': ['command']}}
 
     >>> build_tool("write")
-    {'name': 'write', 'description': 'Writes', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['path', 'content']}}
+    {'name': 'write', 'description': 'Writes content to file at path', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['path', 'content']}}
     """
 
     params = list(signature(globals()[name]).parameters.keys())
 
     return {
         "name": name,
-        "description": globals()[name].__doc__.split()[0],
+        "description": globals()[name].__doc__.splitlines()[1].strip(),
         "parameters": {
             "type": "object",
             "properties": {p: {"type": "string"} for p in params},
