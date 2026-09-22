@@ -253,6 +253,12 @@ def agent(prompt, system=""):
                 f"Called {tool['function']['name']} with {tool['function']['arguments']}"
             )
 
+    try:
+        with open('.specialagent.last.prompt.txt', 'w') as f:
+            f.write(prompt)
+    except PermissionError:
+        print("Unable to write last prompt")
+
     while True:
         response = call_model(messages, tools)
         messages.append(response)
