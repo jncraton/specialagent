@@ -263,7 +263,7 @@ def agent(prompt="", system=""):
             )
 
     try:
-        with open('.specialagent.last.prompt.txt', 'w') as f:
+        with open(".specialagent.last.prompt.txt", "w") as f:
             f.write(prompt)
     except PermissionError:
         print("Unable to write last prompt")
