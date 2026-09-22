@@ -230,10 +230,19 @@ def prefetch(prompt, extra=[]):
     return messages
 
 
-def agent(prompt, system=""):
+def agent(prompt="", system=""):
     """
     >>> agent("/quit")
     """
+
+    if not prompt:
+        try:
+            with open(".specialagent.last.prompt.txt") as f:
+                lastprompt = f.read()
+        except FileNotFoundError:
+            lastprompt = ""
+
+        prompt = editor_input(lastprompt)
 
     if prompt == "/quit":
         return
@@ -322,4 +331,4 @@ def get_system():
 
 
 if __name__ == "__main__":
-    agent(editor_input(""), get_system())
+    agent()
