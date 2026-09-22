@@ -37,13 +37,13 @@ def run_bash(command):
     return f"{result.stdout}{result.stderr}"
 
 
-def write(filename, content):
+def write_file(filename, content):
     """
     Writes content to file specified by filename
 
     >>> import tempfile
     >>> file = tempfile.NamedTemporaryFile()
-    >>> write(file.name, 'test')
+    >>> write_file(file.name, 'test')
     'File written to ...
 
     >>> open(file.name, 'r').read()
@@ -140,8 +140,8 @@ def build_tool(name):
     >>> build_tool("run_bash")
     {'name': 'run_bash', 'description': 'Executes bash command and returns output', 'parameters': {'type': 'object', 'properties': {'command': {'type': 'string'}}, 'required': ['command']}}
 
-    >>> build_tool("write")
-    {'name': 'write', 'description': 'Writes content to file specified by filename', 'parameters': {'type': 'object', 'properties': {'filename': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['filename', 'content']}}
+    >>> build_tool("write_file")
+    {'name': 'write_file', 'description': 'Writes content to file specified by filename', 'parameters': {'type': 'object', 'properties': {'filename': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['filename', 'content']}}
     """
 
     params = list(signature(globals()[name]).parameters.keys())
