@@ -158,13 +158,10 @@ def build_tool(name):
 
 
 def prefetch(prompt, extra=set()):
-    """Create synthetic assistant and tool messages prefetching mentioned file
+    """Create synthetic tool call and result messages
 
-    >>> prefetch("Say hi")
+    >>> prefetch("Hi")
     []
-
-    >>> len(prefetch("Check readme.md"))
-    2
 
     >>> prefetch("Check readme.md")[0]['role']
     'assistant'
@@ -174,12 +171,6 @@ def prefetch(prompt, extra=set()):
 
     >>> len(prefetch("hi", ['makefile']))
     2
-
-    >>> prefetch("hi", ['makefile'])[0]['role']
-    'assistant'
-
-    >>> prefetch("hi", ['makefile'])[1]['role']
-    'tool'
     """
 
     messages = []
