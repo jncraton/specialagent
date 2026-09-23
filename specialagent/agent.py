@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import subprocess
 import shlex
 import tempfile
@@ -125,11 +126,10 @@ def run_function(name, args):
     """
 
     >>> run_function("run_bash", {"command": "echo hello"})
-    Calling run_bash with {'command': 'echo hello'}
     'hello\\n'
     """
 
-    print(f"Calling {name} with {args}")
+    print(f"Calling {name} with {args}", file=sys.stderr)
 
     return globals().get(name)(**args)
 
@@ -183,28 +183,20 @@ def prefetch(prompt, extra=set()):
         if skill.split("/")[-2] in prompt[:100]:
             files.add(skill)
 
-    for path in files:
-        try:
-            with open(path, encoding="utf-8", errors="replace") as file:
-                content = file.read()
-        except FileNotFoundError:
-            continue
+    files = {f for f in files if os.path.isfile(f)}
+    tool_calls = [
+        {"name": "run_bash", "arguments": {"command": f"cat {f}"}} for f in files
+    ]
 
-        tool_call_id = f"read_{path}"
+    for tool_call_id, tool_call in enumerate(tool_calls):
+        result = run_function(tool_call["name"], tool_call["arguments"])
 
         messages.append(
             {
                 "role": "assistant",
                 "content": None,
                 "tool_calls": [
-                    {
-                        "id": tool_call_id,
-                        "type": "function",
-                        "function": {
-                            "name": "run_bash",
-                            "arguments": json.dumps({"command": f"cat {path}"}),
-                        },
-                    }
+                    {"id": str(tool_call_id), "type": "function", "function": tool_call}
                 ],
             }
         )
@@ -212,8 +204,8 @@ def prefetch(prompt, extra=set()):
         messages.append(
             {
                 "role": "tool",
-                "tool_call_id": tool_call_id,
-                "content": content,
+                "tool_call_id": str(tool_call_id),
+                "content": result,
             }
         )
 
