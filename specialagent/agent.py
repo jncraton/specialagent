@@ -176,21 +176,26 @@ def prefetch(prompt, extra=set()):
     files.update(set(f[:-1] for f in files))
     files.update(extra)
 
+    files = [f for f in files if os.path.isfile(f)]
+
+    tool_calls = []
+
     for skill in discover_skills():
         if skill.split("/")[-2] in prompt[:100]:
-            files.add(skill)
+            tool_calls.append(
+                {"name": "run_bash", "arguments": {"command": f"cat {skill}"}}
+            )
 
-    files = {f for f in files if os.path.isfile(f)}
-    tool_calls = [
-        {"name": "run_bash", "arguments": {"command": f"cat {f}"}} for f in files
-    ]
-    tool_calls.insert(
-        0,
+    tool_calls += [
         {
             "name": "run_bash",
             "arguments": {"command": "find . -maxdepth 2 -type f | head -n 100"},
         },
-    )
+    ]
+
+    tool_calls += [
+        {"name": "run_bash", "arguments": {"command": f"cat {f}"}} for f in files
+    ]
 
     for tool_call_id, tool_call in enumerate(tool_calls):
         result = run_function(tool_call["name"], tool_call["arguments"])
