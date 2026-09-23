@@ -157,7 +157,7 @@ def build_tool(name):
     }
 
 
-def prefetch(prompt, extra=[]):
+def prefetch(prompt, extra=set()):
     """Create synthetic assistant and tool messages prefetching mentioned file
 
     >>> prefetch("Say hi")
