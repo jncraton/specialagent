@@ -184,7 +184,13 @@ def prefetch(prompt, extra=set()):
     tool_calls = [
         {"name": "run_bash", "arguments": {"command": f"cat {f}"}} for f in files
     ]
-    tool_calls.insert(0, {"name": "run_bash", "arguments": {"command": "find . -maxdepth 2 -type f | head -n 100"}})
+    tool_calls.insert(
+        0,
+        {
+            "name": "run_bash",
+            "arguments": {"command": "find . -maxdepth 2 -type f | head -n 100"},
+        },
+    )
 
     for tool_call_id, tool_call in enumerate(tool_calls):
         result = run_function(tool_call["name"], tool_call["arguments"])
