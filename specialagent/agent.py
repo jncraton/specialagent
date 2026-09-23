@@ -189,7 +189,9 @@ def prefetch(prompt, extra=set()):
     tool_calls += [
         {
             "name": "run_bash",
-            "arguments": {"command": "find . -maxdepth 2 -type f | head -n 100"},
+            "arguments": {
+                "command": "find . -maxdepth 2 -type f -printf '%P\n' | head -n 100"
+            },
         },
     ]
 
