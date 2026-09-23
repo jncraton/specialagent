@@ -238,12 +238,6 @@ def agent(prompt="", system=None):
 
     messages.extend(prefetch(prompt, ["makefile", "Makefile"]))
 
-    for message in messages:
-        for tool in message.get("tool_calls", []):
-            print(
-                f"Called {tool['function']['name']} with {tool['function']['arguments']}"
-            )
-
     try:
         with open(".specialagent.last.prompt.txt", "w") as f:
             f.write(prompt)
