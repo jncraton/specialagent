@@ -44,14 +44,14 @@ def write_file(filename, content):
     >>> import tempfile
     >>> file = tempfile.NamedTemporaryFile()
     >>> write_file(file.name, 'test')
-    'File written to ...
+    'Wrote to ...
 
     >>> open(file.name, 'r').read()
     'test'
     """
     with open(filename, "w") as f:
         f.write(content)
-    return f"File written to {filename}"
+    return f"Wrote to {filename}"
 
 
 def replace(path, search, replace):
