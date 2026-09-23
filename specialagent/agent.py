@@ -230,7 +230,7 @@ def prefetch(prompt, extra=[]):
     return messages
 
 
-def agent(prompt="", system=""):
+def agent(prompt="", system=None):
     """
     >>> agent("/quit")
     """
@@ -247,7 +247,7 @@ def agent(prompt="", system=""):
     if prompt == "/quit":
         return
 
-    if not system:
+    if system == None:
         system = get_system()
 
     tools = [build_tool(fn) for fn in ("run_bash", "write_file", "replace")]
