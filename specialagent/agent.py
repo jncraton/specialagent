@@ -247,6 +247,9 @@ def agent(prompt="", system=""):
     if prompt == "/quit":
         return
 
+    if not system:
+        system = get_system()
+
     tools = [build_tool(fn) for fn in ("run_bash", "write_file", "replace")]
 
     messages = [
