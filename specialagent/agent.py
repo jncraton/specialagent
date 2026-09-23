@@ -184,9 +184,8 @@ def prefetch(prompt, extra=set()):
 
     messages = []
 
-    files = set(
-        f for f in prompt.split() if "." in f and not f.endswith(".") and len(f) >= 4
-    )
+    files = set(f for f in prompt.split() if "." in f and len(f) >= 4)
+    files.update(set(f[:-1] for f in files))
     files.update(extra)
 
     for skill in discover_skills():
