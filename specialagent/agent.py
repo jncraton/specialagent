@@ -275,6 +275,9 @@ def agent(prompt="", system=None):
                 }
             )
 
+        with open(".specialagent.last.session.json", "w") as f:
+            f.write(json.dumps(messages))
+
         if not tool_calls:
             print(f"LLM assistant message: {response['content']}")
             return
