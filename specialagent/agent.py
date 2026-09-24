@@ -191,7 +191,7 @@ def prefetch(prompt, extra=set()):
     tool_calls.append(
         build_tool_call(
             "run_bash",
-            {"command": "find . -maxdepth 2 -type f -printf '%P \n' | head -n 100"},
+            {"command": "find . -maxdepth 2 -type f -printf '%P\n' | head -n 100"},
         )
     )
 
