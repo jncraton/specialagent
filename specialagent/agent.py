@@ -183,24 +183,28 @@ def prefetch(prompt, extra=set()):
     for skill in discover_skills():
         if skill.split("/")[-2] in prompt[:100]:
             tool_calls.append(
-                {"name": "run_bash", "arguments": {"command": f"cat {skill}"}}
+                {
+                    "name": "run_bash",
+                    "arguments": json.dumps({"command": f"cat {skill}"}),
+                }
             )
 
     tool_calls += [
         {
             "name": "run_bash",
-            "arguments": {
-                "command": "find . -maxdepth 2 -type f -printf '%P\n' | head -n 100"
-            },
+            "arguments": json.dumps(
+                {"command": "find . -maxdepth 2 -type f -printf '%P \n' | head -n 100"}
+            ),
         },
     ]
 
     tool_calls += [
-        {"name": "run_bash", "arguments": {"command": f"cat {f}"}} for f in files
+        {"name": "run_bash", "arguments": json.dumps({"command": f"cat {f}"})}
+        for f in files
     ]
 
     for tool_call_id, tool_call in enumerate(tool_calls):
-        result = run_function(tool_call["name"], tool_call["arguments"])
+        result = run_function(tool_call["name"], json.loads(tool_call["arguments"]))
 
         messages.append(
             {
