@@ -157,6 +157,10 @@ def build_tool(name):
     }
 
 
+def build_tool_call(name, arguments):
+    return {"name": name, "arguments": json.dumps(arguments)}
+
+
 def prefetch(prompt, extra=set()):
     """Create synthetic tool call and result messages
 
@@ -182,26 +186,16 @@ def prefetch(prompt, extra=set()):
 
     for skill in discover_skills():
         if skill.split("/")[-2] in prompt[:100]:
-            tool_calls.append(
-                {
-                    "name": "run_bash",
-                    "arguments": json.dumps({"command": f"cat {skill}"}),
-                }
-            )
+            tool_calls.append(build_tool_call("run_bash", {"command": f"cat {skill}"}))
 
-    tool_calls += [
-        {
-            "name": "run_bash",
-            "arguments": json.dumps(
-                {"command": "find . -maxdepth 2 -type f -printf '%P \n' | head -n 100"}
-            ),
-        },
-    ]
+    tool_calls.append(
+        build_tool_call(
+            "run_bash",
+            {"command": "find . -maxdepth 2 -type f -printf '%P \n' | head -n 100"},
+        )
+    )
 
-    tool_calls += [
-        {"name": "run_bash", "arguments": json.dumps({"command": f"cat {f}"})}
-        for f in files
-    ]
+    tool_calls += [build_tool_call("run_bash", {"command": f"cat {f}"}) for f in files]
 
     for tool_call_id, tool_call in enumerate(tool_calls):
         result = run_function(tool_call["name"], json.loads(tool_call["arguments"]))
