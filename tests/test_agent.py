@@ -100,9 +100,7 @@ def test_agent_executes_tool_call_then_calls_model_again(
                 "type": "function",
                 "function": {
                     "name": "run_bash",
-                    "arguments": json.dumps(
-                        {"command": "echo hello"}
-                    ),
+                    "arguments": json.dumps({"command": "echo hello"}),
                 },
             }
         ],
@@ -172,9 +170,7 @@ def test_agent_executes_multiple_tool_calls(tmp_path, monkeypatch):
                 "type": "function",
                 "function": {
                     "name": "run_bash",
-                    "arguments": json.dumps(
-                        {"command": "echo one"}
-                    ),
+                    "arguments": json.dumps({"command": "echo one"}),
                 },
             },
             {
@@ -306,9 +302,7 @@ def test_agent_uses_editor_when_prompt_is_empty(
 
     specialagent.agent("", system="system")
 
-    editor_input.assert_called_once_with(
-        ".specialagent.last.prompt.txt"
-    )
+    editor_input.assert_called_once_with(".specialagent.last.prompt.txt")
 
     assert call_model.snapshots[0] == [
         {
