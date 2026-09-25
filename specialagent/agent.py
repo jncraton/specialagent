@@ -205,33 +205,6 @@ def get_prompt_files(prompt):
     return re.findall(r"\b[\w-]+\.[\w.-]+\b", prompt)
 
 
-def prefetch(prompt, extra=set()):
-    """Create synthetic tool call and result messages
-
-    >>> prefetch("Check readme.md")[0]['role']
-    'assistant'
-
-    >>> prefetch("Check readme.md")[1]['role']
-    'tool'
-
-    >>> len(prefetch("hi", ['makefile'])) > len(prefetch("hi"))
-    True
-    """
-
-    messages = []
-
-    for skill in get_prompt_skills(prompt, discover_skills()):
-        messages += prefetch_sh(f"cat {skill}")
-
-    messages += prefetch_sh("find . -maxdepth 2 -type f -printf '%P\n' | head -n 100")
-
-    for f in set(get_prompt_files(prompt)) | set(extra):
-        if os.path.isfile(f):
-            messages += prefetch_sh(f"cat {f}")
-
-    return messages
-
-
 def agent(prompt="", system=None):
     """
     Main agent loop
@@ -249,7 +222,14 @@ def agent(prompt="", system=None):
         {"role": "user", "content": prompt},
     ]
 
-    messages.extend(prefetch(prompt, ["makefile", "Makefile"]))
+    for skill in get_prompt_skills(prompt, discover_skills()):
+        messages += prefetch_sh(f"cat {skill}")
+
+    messages += prefetch_sh("find . -maxdepth 2 -type f -printf '%P\n' | head -n 100")
+
+    for f in set(get_prompt_files(prompt)) | set("makefile", "Makefile"):
+        if os.path.isfile(f):
+            messages += prefetch_sh(f"cat {f}")
 
     while True:
         response = call_model(messages)
