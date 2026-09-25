@@ -242,6 +242,9 @@ def agent(prompt="", system=None):
     >>> agent("/quit")
     """
 
+    if prompt == "/quit":
+        return
+
     if not prompt:
         try:
             with open(".specialagent.last.prompt.txt") as f:
@@ -250,9 +253,6 @@ def agent(prompt="", system=None):
             lastprompt = ""
 
         prompt = editor_input(lastprompt)
-
-    if prompt == "/quit":
-        return
 
     system = sytem or get_system()
 
