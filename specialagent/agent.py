@@ -4,28 +4,17 @@ import glob
 import sys
 import re
 import subprocess
-import shlex
-import tempfile
 import time
 from inspect import signature
 
 
-def editor_input(initial=""):
+def editor_input(path):
     """Open $EDITOR with initial text and return the edited text."""
 
-    fd, path = tempfile.mkstemp(suffix=".md", text=True)
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8") as file:
-            file.write(initial)
+    subprocess.run([os.environ.get("EDITOR", "nano"), path], check=True)
 
-        subprocess.run(
-            shlex.split(os.environ.get("EDITOR", "nano")) + [path], check=True
-        )
-
-        with open(path, encoding="utf-8") as file:
-            return file.read()
-    finally:
-        os.unlink(path)
+    with open(path, encoding="utf-8") as file:
+        return file.read()
 
 
 def run_bash(command):
@@ -246,14 +235,7 @@ def agent(prompt="", system=None):
     if prompt == "/quit":
         return
 
-    if not prompt:
-        try:
-            with open(".specialagent.last.prompt.txt") as f:
-                lastprompt = f.read()
-        except FileNotFoundError:
-            lastprompt = ""
-
-        prompt = editor_input(lastprompt)
+    prompt = prompt or editor_input(".specialagent.last.prompt.txt")
 
     tools = [build_tool(fn) for fn in ("run_bash", "write_file", "replace")]
 
