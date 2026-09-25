@@ -153,31 +153,34 @@ def build_tool(name):
     }
 
 
-def synthesize_tool_call(name, arguments):
+def prefetch_sh(cmd):
     """
     Return a pair of messages synthesizing a completed tool call
 
-    >>> synthesize_tool_call("run_bash", {"command": "echo hello"})[1]["content"]
+    >>> prefetch_sh("echo hello")[1]["content"]
     'hello\\n'
     """
-    synthesize_tool_call.idx += 1
+    prefetch_sh.idx += 1
     return [
         {
             "role": "assistant",
             "content": None,
             "tool_calls": [
                 {
-                    "id": str(synthesize_tool_call.idx),
+                    "id": str(prefetch_sh.idx),
                     "type": "function",
-                    "function": {"name": name, "arguments": json.dumps(arguments)},
+                    "function": {
+                        "name": "run_bash",
+                        "arguments": json.dumps({"command": cmd}),
+                    },
                 }
             ],
         },
-        run_tool(name, arguments, synthesize_tool_call.idx),
+        run_tool("run_bash", {"command": cmd}, prefetch_sh.idx),
     ]
 
 
-synthesize_tool_call.idx = 0
+prefetch_sh.idx = 0
 
 
 def get_prompt_skills(prompt, skills):
@@ -218,16 +221,13 @@ def prefetch(prompt, extra=set()):
     messages = []
 
     for skill in get_prompt_skills(prompt, discover_skills()):
-        messages += synthesize_tool_call("run_bash", {"command": f"cat {skill}"})
+        messages += prefetch_sh(f"cat {skill}")
 
-    messages += synthesize_tool_call(
-        "run_bash",
-        {"command": "find . -maxdepth 2 -type f -printf '%P\n' | head -n 100"},
-    )
+    messages += prefetch_sh("find . -maxdepth 2 -type f -printf '%P\n' | head -n 100")
 
     for f in set(get_prompt_files(prompt)) | set(extra):
         if os.path.isfile(f):
-            messages += synthesize_tool_call("run_bash", {"command": f"cat {f}"})
+            messages += prefetch_sh(f"cat {f}")
 
     return messages
 
