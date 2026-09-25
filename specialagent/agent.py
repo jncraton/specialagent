@@ -102,7 +102,8 @@ def call_model(messages, tools=None):
                 usage = res_data.get("usage", {})
 
                 print(
-                    f"LLM generated {usage.get('completion_tokens', 0)} tokens following {usage.get('prompt_tokens', 0)} input tokens"
+                    f"LLM generated {usage.get('completion_tokens', 0)} tokens "
+                    f"following {usage.get('prompt_tokens', 0)} input tokens"
                 )
 
                 return res_data["choices"][0]["message"]
