@@ -255,12 +255,10 @@ def agent(prompt="", system=None):
 
         prompt = editor_input(lastprompt)
 
-    system = system or get_system()
-
     tools = [build_tool(fn) for fn in ("run_bash", "write_file", "replace")]
 
     messages = [
-        {"role": "system", "content": system},
+        {"role": "system", "content": system or get_system()},
         {"role": "user", "content": prompt},
     ]
 
