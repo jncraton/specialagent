@@ -71,8 +71,10 @@ def replace(path, search, replace):
     return f"Replaced {count} in {path}"
 
 
-def call_model(messages, tools):
+def call_model(messages, tools=None):
     import urllib.request
+
+    tools = tools or [build_tool(fn) for fn in ("run_bash", "write_file", "replace")]
 
     req = urllib.request.Request(
         os.environ.get("LLM_BASE_URL", "http://127.0.0.1:8080/v1/chat/completions"),
@@ -233,8 +235,6 @@ def agent(prompt="", system=None):
 
     prompt = prompt or editor_input(".specialagent.last.prompt.txt")
 
-    tools = [build_tool(fn) for fn in ("run_bash", "write_file", "replace")]
-
     messages = [
         {"role": "system", "content": system or get_system()},
         {"role": "user", "content": prompt},
@@ -249,7 +249,7 @@ def agent(prompt="", system=None):
         print("Unable to write last prompt")
 
     while True:
-        response = call_model(messages, tools)
+        response = call_model(messages)
         messages.append(response)
 
         tool_calls = response.get("tool_calls", [])
