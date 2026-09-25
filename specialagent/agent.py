@@ -143,6 +143,7 @@ def run_tool(name, args, tool_call_id):
 
 def build_tool(name):
     """
+    Build tool description for initial API call
 
     >>> build_tool("run_bash")
     {'name': 'run_bash', 'description': 'Executes bash command and returns output', 'parameters': {'type': 'object', 'properties': {'command': {'type': 'string'}}, 'required': ['command']}}
@@ -166,6 +167,8 @@ def build_tool(name):
 
 def synthesize_tool_call(name, arguments):
     """
+    Return a pair of messages synthesizing a completed tool call
+
     >>> synthesize_tool_call("run_bash", {"command": "echo hello"})[1]["content"]
     'hello\\n'
     """
@@ -227,6 +230,8 @@ def prefetch(prompt, extra=set()):
 
 def agent(prompt="", system=None):
     """
+    Main agent loop
+
     >>> agent("/quit")
     """
 
