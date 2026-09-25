@@ -241,12 +241,6 @@ def agent(prompt="", system=None):
 
     messages.extend(prefetch(prompt, ["makefile", "Makefile"]))
 
-    try:
-        with open(".specialagent.last.prompt.txt", "w") as f:
-            f.write(prompt)
-    except PermissionError:
-        print("Unable to write last prompt")
-
     while True:
         response = call_model(messages)
         messages.append(response)
