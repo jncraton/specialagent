@@ -292,7 +292,7 @@ def get_system():
         print(f"Discovered {len(skills)} skills")
 
         system += (
-            "\n\n## Skills\n\cat matching skills before starting tasks:\n\n"
+            "\n\n## Skills\n\ncat matching skills before starting tasks:\n\n"
             + "\n".join(f"- `cat {k}`: {v['desc']}" for k, v in skills.items())
         )
 
