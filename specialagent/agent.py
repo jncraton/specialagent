@@ -254,7 +254,7 @@ def agent(prompt="", system=None):
 
         prompt = editor_input(lastprompt)
 
-    system = sytem or get_system()
+    system = system or get_system()
 
     tools = [build_tool(fn) for fn in ("run_bash", "write_file", "replace")]
 
