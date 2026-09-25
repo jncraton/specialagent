@@ -1,5 +1,6 @@
 import json
 import os
+import glob
 import sys
 import re
 import subprocess
@@ -291,23 +292,14 @@ def agent(prompt="", system=None):
 
 
 def discover_skills():
-    skills = {}
-
-    try:
-        for base_dir in [os.path.expanduser("~/.agents/skills")]:
-            for skill in os.listdir(base_dir):
-                skill_path = os.path.join(base_dir, skill, "SKILL.md")
-                content = open(skill_path).read()
-                skills[skill_path] = {
-                    "desc": content.partition("description:")[-1]
-                    .splitlines()[0]
-                    .strip(),
-                    "content": content,
-                }
-    except FileNotFoundError:
-        pass
-
-    return skills
+    return {
+        path: {
+            "desc": content.partition("description:")[2].splitlines()[0].strip(),
+            "content": content,
+        }
+        for path in glob.glob(os.path.expanduser("~/.agents/skills/*/SKILL.md"))
+        if (content := open(path).read())
+    }
 
 
 def get_system(skill_info=True):
