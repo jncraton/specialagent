@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import re
 import subprocess
 import shlex
 import tempfile
@@ -192,6 +193,17 @@ def synthesize_tool_call(name, arguments):
 synthesize_tool_call.idx = 0
 
 
+def get_prompt_files(prompt):
+    """
+    Heuristic to grab everything that looks like a file from a prompt
+
+    >>> get_prompt_files("Read readme.md. Check test.c, delete.")
+    ['readme.md', 'test.c']
+    """
+
+    return re.findall(r"\b[\w-]+\.[\w.-]+\b", prompt)
+
+
 def prefetch(prompt, extra=set()):
     """Create synthetic tool call and result messages
 
@@ -207,11 +219,6 @@ def prefetch(prompt, extra=set()):
 
     messages = []
 
-    files = set(f for f in prompt.split() if "." in f and len(f) >= 4)
-    files.update(set(f[:-1] for f in files))
-
-    files = [f for f in files | set(extra) if os.path.isfile(f)]
-
     for skill in discover_skills():
         if skill.split("/")[-2] in prompt[:100]:
             messages += synthesize_tool_call("run_bash", {"command": f"cat {skill}"})
@@ -221,8 +228,9 @@ def prefetch(prompt, extra=set()):
         {"command": "find . -maxdepth 2 -type f -printf '%P\n' | head -n 100"},
     )
 
-    for f in files:
-        messages += synthesize_tool_call("run_bash", {"command": f"cat {f}"})
+    for f in set(get_prompt_files(prompt)) | set(extra):
+        if os.path.isfile(f):
+            messages += synthesize_tool_call("run_bash", {"command": f"cat {f}"})
 
     return messages
 
