@@ -122,16 +122,22 @@ def call_model(messages, tools):
         time.sleep(backoff)
 
 
-def run_function(name, args):
+def run_tool(name, args, tool_call_id):
     """
 
-    >>> run_function("run_bash", {"command": "echo hello"})
-    'hello\\n'
+    >>> run_tool("run_bash", {"command": "echo hello"}, "1")
+    {'role': 'tool', 'tool_call_id': '1', 'content': 'hello\\n'}
     """
 
     print(f"Calling {name} with {args}", file=sys.stderr)
 
-    return globals().get(name)(**args)
+    result = globals().get(name)(**args)
+
+    return {
+        "role": "tool",
+        "tool_call_id": str(tool_call_id),
+        "content": result,
+    }
 
 
 def build_tool(name):
@@ -198,8 +204,6 @@ def prefetch(prompt, extra=set()):
     tool_calls += [format_tool_call("run_bash", {"command": f"cat {f}"}) for f in files]
 
     for tool_call_id, tool_call in enumerate(tool_calls):
-        result = run_function(tool_call["name"], json.loads(tool_call["arguments"]))
-
         messages.append(
             {
                 "role": "assistant",
@@ -211,11 +215,9 @@ def prefetch(prompt, extra=set()):
         )
 
         messages.append(
-            {
-                "role": "tool",
-                "tool_call_id": str(tool_call_id),
-                "content": result,
-            }
+            run_tool(
+                tool_call["name"], json.loads(tool_call["arguments"]), tool_call_id
+            )
         )
 
     return messages
@@ -265,15 +267,7 @@ def agent(prompt="", system=None):
         for tool_call in tool_calls:
             name = tool_call["function"]["name"]
             args = json.loads(tool_call["function"]["arguments"])
-            result = run_function(name, args)
-
-            messages.append(
-                {
-                    "role": "tool",
-                    "tool_call_id": tool_call["id"],
-                    "content": result,
-                }
-            )
+            messages.append(run_tool(name, args, tool_call["id"]))
 
         with open(".specialagent.last.session.json", "w") as f:
             f.write(json.dumps(messages))
