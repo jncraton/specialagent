@@ -167,6 +167,28 @@ def format_tool_call(name, arguments):
     return {"name": name, "arguments": json.dumps(arguments)}
 
 
+TOOL_AUTO_ID = 0
+
+
+def synthesize_tool_call(name, arguments):
+    global TOOL_AUTO_ID
+    TOOL_AUTO_ID += 1
+    return [
+        {
+            "role": "assistant",
+            "content": None,
+            "tool_calls": [
+                {
+                    "id": str(TOOL_AUTO_ID),
+                    "type": "function",
+                    "function": format_tool_call(name, arguments),
+                }
+            ],
+        },
+        run_tool(name, arguments, TOOL_AUTO_ID),
+    ]
+
+
 def prefetch(prompt, extra=set()):
     """Create synthetic tool call and result messages
 
@@ -188,37 +210,17 @@ def prefetch(prompt, extra=set()):
 
     files = [f for f in files if os.path.isfile(f)]
 
-    tool_calls = []
-
     for skill in discover_skills():
         if skill.split("/")[-2] in prompt[:100]:
-            tool_calls.append(format_tool_call("run_bash", {"command": f"cat {skill}"}))
+            messages += synthesize_tool_call("run_bash", {"command": f"cat {skill}"})
 
-    tool_calls.append(
-        format_tool_call(
-            "run_bash",
-            {"command": "find . -maxdepth 2 -type f -printf '%P\n' | head -n 100"},
-        )
+    messages += synthesize_tool_call(
+        "run_bash",
+        {"command": "find . -maxdepth 2 -type f -printf '%P\n' | head -n 100"},
     )
 
-    tool_calls += [format_tool_call("run_bash", {"command": f"cat {f}"}) for f in files]
-
-    for tool_call_id, tool_call in enumerate(tool_calls):
-        messages.append(
-            {
-                "role": "assistant",
-                "content": None,
-                "tool_calls": [
-                    {"id": str(tool_call_id), "type": "function", "function": tool_call}
-                ],
-            }
-        )
-
-        messages.append(
-            run_tool(
-                tool_call["name"], json.loads(tool_call["arguments"]), tool_call_id
-            )
-        )
+    for f in files:
+        messages += synthesize_tool_call("run_bash", {"command": f"cat {f}"})
 
     return messages
 
