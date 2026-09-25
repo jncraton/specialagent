@@ -74,15 +74,11 @@ def replace(path, search, replace):
 def call_model(messages, tools):
     import urllib.request
 
-    url = os.environ.get("LLM_BASE_URL", "http://127.0.0.1:8080/v1/chat/completions")
-    api_key = os.environ.get("LLM_API_KEY", "")
-    model = os.environ.get("LLM_MODEL", "")
-
     req = urllib.request.Request(
-        url,
+        os.environ.get("LLM_BASE_URL", "http://127.0.0.1:8080/v1/chat/completions"),
         data=json.dumps(
             {
-                "model": model,
+                "model": os.environ.get("LLM_MODEL", ""),
                 "messages": messages,
                 "tools": [{"type": "function", "function": tool} for tool in tools],
                 "temperature": 0.0,
@@ -90,7 +86,7 @@ def call_model(messages, tools):
         ).encode(),
         headers={
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
+            "Authorization": f"Bearer {os.environ.get('LLM_API_KEY', '')}",
         },
         method="POST",
     )
