@@ -180,6 +180,17 @@ def synthesize_tool_call(name, arguments):
 synthesize_tool_call.idx = 0
 
 
+def get_prompt_skills(prompt, skills):
+    """
+    Get skill directly mentioned by name in a prompt
+
+    >>> get_prompt_skills("Use search and gen-deck", {"s/search/SKILL.md": "", "s/bad/SKILL.md": "", "s/gen-deck/SKILL.md": ""})
+    ['s/search/SKILL.md', 's/gen-deck/SKILL.md']
+    """
+
+    return [s for s in skills if s.split("/")[-2] in prompt[:100]]
+
+
 def get_prompt_files(prompt):
     """
     Heuristic to grab everything that looks like a file from a prompt
@@ -206,7 +217,7 @@ def prefetch(prompt, extra=set()):
 
     messages = []
 
-    for skill in filter(lambda s: s.split("/")[-2] in prompt[:100], discover_skills()):
+    for skill in get_prompt_skills(prompt, discover_skills()):
         messages += synthesize_tool_call("run_bash", {"command": f"cat {skill}"})
 
     messages += synthesize_tool_call(
