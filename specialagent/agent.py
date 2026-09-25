@@ -311,14 +311,14 @@ def discover_skills():
     return skills
 
 
-def get_system():
+def get_system(skill_info=True):
     try:
         system = open(os.path.expanduser("~/.agents/AGENTS.md")).read()
         print(f"Loaded {len(system)} byte AGENTS.md")
     except FileNotFoundError:
         system = ""
 
-    if skills := discover_skills():
+    if skills := skill_info and discover_skills():
         print(f"Discovered {len(skills)} skills")
 
         system += (
