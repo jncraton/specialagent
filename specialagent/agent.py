@@ -163,10 +163,6 @@ def build_tool(name):
     }
 
 
-def format_tool_call(name, arguments):
-    return {"name": name, "arguments": json.dumps(arguments)}
-
-
 def synthesize_tool_call(name, arguments):
     synthesize_tool_call.idx += 1
     return [
@@ -177,7 +173,7 @@ def synthesize_tool_call(name, arguments):
                 {
                     "id": str(synthesize_tool_call.idx),
                     "type": "function",
-                    "function": format_tool_call(name, arguments),
+                    "function": {"name": name, "arguments": json.dumps(arguments)},
                 }
             ],
         },
