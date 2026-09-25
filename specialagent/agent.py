@@ -209,9 +209,8 @@ def prefetch(prompt, extra=set()):
 
     files = set(f for f in prompt.split() if "." in f and len(f) >= 4)
     files.update(set(f[:-1] for f in files))
-    files.update(extra)
 
-    files = [f for f in files if os.path.isfile(f)]
+    files = [f for f in files | set(extra) if os.path.isfile(f)]
 
     for skill in discover_skills():
         if skill.split("/")[-2] in prompt[:100]:
