@@ -227,7 +227,7 @@ def agent(prompt="", system=None):
 
     messages += prefetch_sh("find . -maxdepth 2 -type f -printf '%P\n' | head -n 100")
 
-    for f in set(get_prompt_files(prompt)) | set("makefile", "Makefile"):
+    for f in set(get_prompt_files(prompt)) | {"makefile", "Makefile"}:
         if os.path.isfile(f):
             messages += prefetch_sh(f"cat {f}")
 
