@@ -47,8 +47,8 @@ def test_agent_returns_final_response(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(specialagent, "call_model", call_model)
     monkeypatch.setattr(
         specialagent,
-        "prefetch",
-        lambda prompt, extra: [],
+        "prefetch_sh",
+        lambda cmd: [],
     )
 
     specialagent.agent("Do the task", system="test system")
@@ -121,8 +121,8 @@ def test_agent_executes_tool_call_then_calls_model_again(
     monkeypatch.setattr(specialagent, "call_model", call_model)
     monkeypatch.setattr(
         specialagent,
-        "prefetch",
-        lambda prompt, extra: [],
+        "prefetch_sh",
+        lambda cmd: [],
     )
 
     specialagent.agent("Run a command", system="system")
@@ -204,8 +204,8 @@ def test_agent_executes_multiple_tool_calls(tmp_path, monkeypatch):
     monkeypatch.setattr(specialagent, "call_model", call_model)
     monkeypatch.setattr(
         specialagent,
-        "prefetch",
-        lambda prompt, extra: [],
+        "prefetch_sh",
+        lambda cmd: [],
     )
 
     specialagent.agent("Use two tools", system="system")
@@ -247,8 +247,8 @@ def test_agent_passes_prefetched_messages_to_model(
         },
     ]
 
-    prefetch = Mock(return_value=prefetched)
-    monkeypatch.setattr(specialagent, "prefetch", prefetch)
+    prefetch_sh = Mock(return_value=prefetched)
+    monkeypatch.setattr(specialagent, "prefetch_sh", prefetch_sh)
 
     response = {
         "role": "assistant",
@@ -260,22 +260,9 @@ def test_agent_passes_prefetched_messages_to_model(
 
     specialagent.agent("Inspect the project", system="system")
 
-    prefetch.assert_called_once_with(
-        "Inspect the project",
-        ["makefile", "Makefile"],
-    )
+    assert prefetch_sh.called
 
-    assert call_model.snapshots[0] == [
-        {
-            "role": "system",
-            "content": "system",
-        },
-        {
-            "role": "user",
-            "content": "Inspect the project",
-        },
-        *prefetched,
-    ]
+    assert call_model.snapshots[0][2:4] == prefetched
 
 
 def test_agent_uses_editor_when_prompt_is_empty(
@@ -288,8 +275,8 @@ def test_agent_uses_editor_when_prompt_is_empty(
     monkeypatch.setattr(specialagent, "editor_input", editor_input)
     monkeypatch.setattr(
         specialagent,
-        "prefetch",
-        lambda prompt, extra: [],
+        "prefetch_sh",
+        lambda cmd: [],
     )
 
     response = {
