@@ -164,6 +164,10 @@ def build_tool(name):
 
 
 def synthesize_tool_call(name, arguments):
+    """
+    >>> synthesize_tool_call("run_bash", {"command": "echo hello"})[1]["content"]
+    'hello\\n'
+    """
     synthesize_tool_call.idx += 1
     return [
         {
