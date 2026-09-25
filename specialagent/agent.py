@@ -198,11 +198,11 @@ def get_prompt_files(prompt):
     """
     Heuristic to grab everything that looks like a file from a prompt
 
-    >>> get_prompt_files("Read readme.md. Check test.c, delete.")
-    ['readme.md', 'test.c']
+    >>> get_prompt_files("Read readme.md. Check test/test.c, delete.")
+    ['readme.md', 'test/test.c']
     """
 
-    return re.findall(r"\b[\w-]+\.[\w.-]+\b", prompt)
+    return re.findall(r"\b[\w/-]+\.[\w./-]+\b", prompt)
 
 
 def agent(prompt="", system=None):
