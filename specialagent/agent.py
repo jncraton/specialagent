@@ -124,6 +124,7 @@ def call_model(messages, tools):
 
 def run_tool(name, args, tool_call_id):
     """
+    Run tool with args producing formatted response object
 
     >>> run_tool("run_bash", {"command": "echo hello"}, "1")
     {'role': 'tool', 'tool_call_id': '1', 'content': 'hello\\n'}
