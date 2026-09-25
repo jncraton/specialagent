@@ -173,7 +173,7 @@ def prefetch_sh(cmd):
                         "name": "run_bash",
                         "arguments": json.dumps({"command": cmd}),
                     },
-                }
+                },
             ],
         },
         run_tool("run_bash", {"command": cmd}, prefetch_sh.idx),
