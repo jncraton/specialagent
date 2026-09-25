@@ -93,7 +93,7 @@ def call_model(messages, tools=None):
         method="POST",
     )
 
-    print(f"Prompting LLM with {len(req.data)} bytes...")
+    print(f"\nPrompting LLM with {len(req.data)} bytes...")
 
     for backoff in [0, 1, 2] + [4] * 64:
         try:
@@ -101,10 +101,8 @@ def call_model(messages, tools=None):
                 res_data = json.loads(response.read().decode())
                 usage = res_data.get("usage", {})
 
-                print(
-                    f"LLM generated {usage.get('completion_tokens', 0)} tokens "
-                    f"following {usage.get('prompt_tokens', 0)} input tokens"
-                )
+                print(f"- Read {usage.get('prompt_tokens', 0)} input tokens")
+                print(f"- Generated {usage.get('completion_tokens', 0)} tokens")
 
                 return res_data["choices"][0]["message"]
         except urllib.error.HTTPError as e:
