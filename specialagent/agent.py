@@ -167,26 +167,25 @@ def format_tool_call(name, arguments):
     return {"name": name, "arguments": json.dumps(arguments)}
 
 
-TOOL_AUTO_ID = 0
-
-
 def synthesize_tool_call(name, arguments):
-    global TOOL_AUTO_ID
-    TOOL_AUTO_ID += 1
+    synthesize_tool_call.idx += 1
     return [
         {
             "role": "assistant",
             "content": None,
             "tool_calls": [
                 {
-                    "id": str(TOOL_AUTO_ID),
+                    "id": str(synthesize_tool_call.idx),
                     "type": "function",
                     "function": format_tool_call(name, arguments),
                 }
             ],
         },
-        run_tool(name, arguments, TOOL_AUTO_ID),
+        run_tool(name, arguments, synthesize_tool_call.idx),
     ]
+
+
+synthesize_tool_call.idx = 0
 
 
 def prefetch(prompt, extra=set()):
