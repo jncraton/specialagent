@@ -206,9 +206,8 @@ def prefetch(prompt, extra=set()):
 
     messages = []
 
-    for skill in discover_skills():
-        if skill.split("/")[-2] in prompt[:100]:
-            messages += synthesize_tool_call("run_bash", {"command": f"cat {skill}"})
+    for skill in filter(lambda s: s.split("/")[-2] in prompt[:100], discover_skills()):
+        messages += synthesize_tool_call("run_bash", {"command": f"cat {skill}"})
 
     messages += synthesize_tool_call(
         "run_bash",
