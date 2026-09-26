@@ -246,10 +246,9 @@ def agent(prompt="", system=None):
             messages += prefetch_sh(f"cat {f}")
 
     while True:
-        response = call_model(messages)
-        messages.append(response)
+        messages.append(call_model(messages))
 
-        tool_calls = response.get("tool_calls", [])
+        tool_calls = messages[-1].get("tool_calls", [])
 
         for tool_call in tool_calls:
             name = tool_call["function"]["name"]
@@ -259,7 +258,7 @@ def agent(prompt="", system=None):
         Path(".specialagent.last.session.json").write_text(json.dumps(messages))
 
         if not tool_calls:
-            print(f"LLM assistant message: {response['content']}")
+            print(f"LLM assistant message: {messages[-1]['content']}")
             return
 
 
