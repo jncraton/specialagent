@@ -3,7 +3,6 @@ import json
 from copy import deepcopy
 from unittest.mock import Mock
 
-
 specialagent = importlib.import_module("specialagent.agent")
 
 
