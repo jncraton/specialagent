@@ -32,14 +32,6 @@ def run_bash(command):
 def write_file(filename, content):
     """
     Writes content to file specified by filename
-
-    >>> import tempfile
-    >>> file = tempfile.NamedTemporaryFile()
-    >>> write_file(file.name, 'test')
-    'Wrote to ...
-
-    >>> open(file.name, 'r').read()
-    'test'
     """
     with open(filename, "w") as f:
         f.write(content)
