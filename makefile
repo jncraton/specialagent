@@ -1,5 +1,5 @@
 test:
-	uvx pytest
+	uvx pytest -qx --no-header
 
 lint:
 	uvx black --check .
