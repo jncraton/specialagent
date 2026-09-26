@@ -236,7 +236,7 @@ def agent(prompt="", system=None):
     for skill in get_prompt_skills(prompt, discover_skills()):
         messages += prefetch_sh(f"cat {skill}")
 
-    messages += prefetch_sh("find . -maxdepth 2 -type f -printf '%P\n' | head -n 100")
+    messages += prefetch_sh("(git ls-files || ls) | head -n 30")
 
     for f in set(get_prompt_files(prompt)) | {"makefile", "Makefile"}:
         if os.path.isfile(f):
