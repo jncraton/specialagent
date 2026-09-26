@@ -10,4 +10,4 @@ test:
 	uvx pytest
 
 clean:
-	rm -rf .venv uv.lock .pytest_cache **/__pycache__ build dist *.egg-info
+	rm -rf .pytest_cache **/__pycache__
