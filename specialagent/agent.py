@@ -10,13 +10,6 @@ from pathlib import Path
 from contextlib import suppress
 
 
-def editor_input(path):
-    """Open $EDITOR with initial text and return the edited text."""
-
-    subprocess.run([os.environ.get("EDITOR", "nano"), path], check=True)
-    return Path(path).read_text()
-
-
 def run_bash(command):
     """
     Executes bash command and returns output
@@ -97,25 +90,6 @@ def call_model(messages, tools=None):
         time.sleep(backoff)
 
 
-def run_tool(name, args, tool_call_id):
-    """
-    Run tool with args producing formatted response object
-
-    >>> run_tool("run_bash", {"command": "echo hello"}, "1")
-    {'role': 'tool', 'tool_call_id': '1', 'content': 'hello\\n'}
-    """
-
-    print(f"Calling {name} with {args}", file=sys.stderr)
-
-    result = globals().get(name)(**args)
-
-    return {
-        "role": "tool",
-        "tool_call_id": str(tool_call_id),
-        "content": result,
-    }
-
-
 def build_tool(name):
     """
     Build tool description for initial API call
@@ -137,6 +111,25 @@ def build_tool(name):
             "properties": {p: {"type": "string"} for p in params},
             "required": params,
         },
+    }
+
+
+def run_tool(name, args, tool_call_id):
+    """
+    Run tool with args producing formatted response object
+
+    >>> run_tool("run_bash", {"command": "echo hello"}, "1")
+    {'role': 'tool', 'tool_call_id': '1', 'content': 'hello\\n'}
+    """
+
+    print(f"Calling {name} with {args}", file=sys.stderr)
+
+    result = globals().get(name)(**args)
+
+    return {
+        "role": "tool",
+        "tool_call_id": str(tool_call_id),
+        "content": result,
     }
 
 
@@ -170,15 +163,31 @@ def prefetch_sh(cmd):
 prefetch_sh.idx = 0
 
 
-def get_prompt_skills(prompt, skills):
-    """
-    Get skill directly mentioned by name in a prompt
+def get_system(system=""):
+    with suppress(FileNotFoundError):
+        system += open(os.path.expanduser("~/.agents/AGENTS.md")).read()
+        print(f"Loaded {len(system)} byte AGENTS.md")
 
-    >>> get_prompt_skills("Use search and gen-deck", {"s/search/SKILL.md": "", "s/bad/SKILL.md": "", "s/gen-deck/SKILL.md": ""})
-    ['s/search/SKILL.md', 's/gen-deck/SKILL.md']
-    """
+    if skills := discover_skills():
+        print(f"Discovered {len(skills)} skills")
 
-    return [s for s in skills if s.split("/")[-2] in prompt[:100]]
+        system += (
+            "\n\n## Skills\n\ncat matching skills before starting tasks:\n\n"
+            + "\n".join(f"- `cat {k}`: {v['desc']}" for k, v in skills.items())
+        )
+
+    return system
+
+
+def discover_skills():
+    return {
+        path: {
+            "desc": content.partition("description:")[2].splitlines()[0].strip(),
+            "content": content,
+        }
+        for path in glob.glob(os.path.expanduser("~/.agents/skills/*/SKILL.md"))
+        if (content := open(path).read())
+    }
 
 
 def get_prompt_files(prompt):
@@ -190,6 +199,24 @@ def get_prompt_files(prompt):
     """
 
     return re.findall(r"\b[\w/-]+\.[\w./-]+\b", prompt)
+
+
+def get_prompt_skills(prompt, skills):
+    """
+    Get skill directly mentioned by name in a prompt
+
+    >>> get_prompt_skills("Use search and gen-deck", {"s/search/SKILL.md": "", "s/bad/SKILL.md": "", "s/gen-deck/SKILL.md": ""})
+    ['s/search/SKILL.md', 's/gen-deck/SKILL.md']
+    """
+
+    return [s for s in skills if s.split("/")[-2] in prompt[:100]]
+
+
+def editor_input(path):
+    """Open $EDITOR with initial text and return the edited text."""
+
+    subprocess.run([os.environ.get("EDITOR", "nano"), path], check=True)
+    return Path(path).read_text()
 
 
 def agent(prompt="", system=None):
@@ -234,33 +261,6 @@ def agent(prompt="", system=None):
         if not tool_calls:
             print(f"LLM assistant message: {response['content']}")
             return
-
-
-def discover_skills():
-    return {
-        path: {
-            "desc": content.partition("description:")[2].splitlines()[0].strip(),
-            "content": content,
-        }
-        for path in glob.glob(os.path.expanduser("~/.agents/skills/*/SKILL.md"))
-        if (content := open(path).read())
-    }
-
-
-def get_system(system=""):
-    with suppress(FileNotFoundError):
-        system += open(os.path.expanduser("~/.agents/AGENTS.md")).read()
-        print(f"Loaded {len(system)} byte AGENTS.md")
-
-    if skills := discover_skills():
-        print(f"Discovered {len(skills)} skills")
-
-        system += (
-            "\n\n## Skills\n\ncat matching skills before starting tasks:\n\n"
-            + "\n".join(f"- `cat {k}`: {v['desc']}" for k, v in skills.items())
-        )
-
-    return system
 
 
 if __name__ == "__main__":
