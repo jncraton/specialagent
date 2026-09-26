@@ -94,9 +94,6 @@ def build_tool(name):
     """
     Build tool description for initial API call
 
-    >>> build_tool("run_bash")
-    {'name': 'run_bash', 'description': 'Executes bash command and returns output', 'parameters': {'type': 'object', 'properties': {'command': {'type': 'string'}}, 'required': ['command']}}
-
     >>> build_tool("write_file")
     {'name': 'write_file', 'description': 'Writes content to file specified by filename', 'parameters': {'type': 'object', 'properties': {'filename': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['filename', 'content']}}
     """
