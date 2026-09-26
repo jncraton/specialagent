@@ -2,10 +2,10 @@ test:
 	uvx pytest
 
 lint:
-	uvx black --check specialagent tests
+	uvx black --check .
 
 format:
-	uvx black specialagent tests
+	uvx black .
 
 clean:
 	rm -rf .pytest_cache **/__pycache__
