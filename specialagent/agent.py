@@ -6,15 +6,14 @@ import re
 import subprocess
 import time
 from inspect import signature
+from pathlib import Path
 
 
 def editor_input(path):
     """Open $EDITOR with initial text and return the edited text."""
 
     subprocess.run([os.environ.get("EDITOR", "nano"), path], check=True)
-
-    with open(path, encoding="utf-8") as file:
-        return file.read()
+    return Path(path).read_text()
 
 
 def run_bash(command):
@@ -33,12 +32,11 @@ def write_file(filename, content):
     """
     Writes content to file specified by filename
     """
-    with open(filename, "w") as f:
-        f.write(content)
+    Path(filename).write_text(content)
     return f"Wrote to {filename}"
 
 
-def replace(path, search, replace):
+def replace(filename, search, replace):
     """
     Replaces text in file
 
@@ -52,15 +50,11 @@ def replace(path, search, replace):
     >>> open(file.name).read()
     'hello there'
     """
-    with open(path, "r") as f:
-        content = f.read()
-
+    content = Path(filename).read_text()
     count = content.count(search)
+    Path(filename).write_text(content.replace(search, replace))
 
-    with open(path, "w") as f:
-        f.write(content.replace(search, replace))
-
-    return f"Replaced {count} in {path}"
+    return f"Replaced {count} in {filename}"
 
 
 def call_model(messages, tools=None):
