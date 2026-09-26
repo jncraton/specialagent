@@ -5,18 +5,8 @@ build-backend = "hatchling.build"
 [project]
 name = "specialagent"
 version = "0.30.0"
-description = ""
 readme = "readme.md"
-authors = [
-    { name = "Jon Craton", email = "jncraton@gmail.com" }
-]
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
 requires-python = ">=3.9"
-dependencies = []
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules -v"
