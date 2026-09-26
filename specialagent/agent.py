@@ -51,6 +51,27 @@ def replace(filename, search, replace):
     return f"Replaced {count} in {filename}"
 
 
+def build_tool(name):
+    """
+    Build tool description for initial API call
+
+    >>> build_tool("write_file")
+    {'name': 'write_file', 'description': 'Writes content to file specified by filename', 'parameters': {'type': 'object', 'properties': {'filename': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['filename', 'content']}}
+    """
+
+    params = list(signature(globals()[name]).parameters.keys())
+
+    return {
+        "name": name,
+        "description": globals()[name].__doc__.splitlines()[1].strip(),
+        "parameters": {
+            "type": "object",
+            "properties": {p: {"type": "string"} for p in params},
+            "required": params,
+        },
+    }
+
+
 def call_model(messages, tools=None):
     import urllib.request
 
@@ -88,27 +109,6 @@ def call_model(messages, tools=None):
         except urllib.error.HTTPError as e:
             print(f"HTTPError {e.code}: {e.read().decode('utf-8')}")
         time.sleep(backoff)
-
-
-def build_tool(name):
-    """
-    Build tool description for initial API call
-
-    >>> build_tool("write_file")
-    {'name': 'write_file', 'description': 'Writes content to file specified by filename', 'parameters': {'type': 'object', 'properties': {'filename': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['filename', 'content']}}
-    """
-
-    params = list(signature(globals()[name]).parameters.keys())
-
-    return {
-        "name": name,
-        "description": globals()[name].__doc__.splitlines()[1].strip(),
-        "parameters": {
-            "type": "object",
-            "properties": {p: {"type": "string"} for p in params},
-            "required": params,
-        },
-    }
 
 
 def run_tool(name, args, tool_call_id):
