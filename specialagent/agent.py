@@ -7,6 +7,7 @@ import subprocess
 import time
 from inspect import signature
 from pathlib import Path
+from contextlib import suppress
 
 
 def editor_input(path):
@@ -246,12 +247,10 @@ def discover_skills():
     }
 
 
-def get_system():
-    try:
-        system = open(os.path.expanduser("~/.agents/AGENTS.md")).read()
+def get_system(system=""):
+    with suppress(FileNotFoundError):
+        system += open(os.path.expanduser("~/.agents/AGENTS.md")).read()
         print(f"Loaded {len(system)} byte AGENTS.md")
-    except FileNotFoundError:
-        system = ""
 
     if skills := discover_skills():
         print(f"Discovered {len(skills)} skills")
