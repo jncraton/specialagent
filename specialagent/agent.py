@@ -170,7 +170,7 @@ def get_system(system=""):
 
         system += (
             "\n\n## Skills\n\ncat matching skills before starting tasks:\n\n"
-            + "\n".join(f"- `cat {k}`: {v['desc']}" for k, v in skills.items())
+            + "\n\n".join(f"{v['desc']}: cat {k}" for k, v in skills.items())
         )
 
     return system
