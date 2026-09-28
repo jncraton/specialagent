@@ -83,7 +83,7 @@ def call_model(messages):
                 "model": os.environ.get("LLM_MODEL", ""),
                 "messages": messages,
                 "tools": [{"type": "function", "function": tool} for tool in tools],
-                "temperature": 0.0,
+                "temperature": 0,
             }
         ).encode(),
         headers={
