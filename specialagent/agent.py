@@ -13,7 +13,7 @@ def exec(command):
     """
     Execute bash command
 
-    >>> exec('echo "hello"')
+    >>> exec("echo hello")
     'hello'
     """
 
