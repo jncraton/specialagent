@@ -65,7 +65,7 @@ def test_agent_returns_final_response(tmp_path, monkeypatch, capsys):
         },
     ]
 
-    assert "LLM assistant message: The task is complete." in capsys.readouterr().out
+    assert "The task is complete." in capsys.readouterr().out
 
     saved_messages = json.loads(
         (tmp_path / ".specialagent.last.session.json").read_text()

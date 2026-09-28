@@ -240,21 +240,18 @@ def agent(prompt="", system=None):
         if os.path.isfile(f):
             messages += prefetch_sh(f"cat {f}")
 
-    while True:
-        messages.append(call_model(messages))
+    messages.append(call_model(messages))
 
-        tool_calls = messages[-1].get("tool_calls", [])
-
+    while tool_calls := messages[-1].get("tool_calls", []):
         for tool_call in tool_calls:
             name = tool_call["function"]["name"]
             args = json.loads(tool_call["function"]["arguments"])
             messages.append(run_tool(name, args, tool_call["id"]))
 
-        Path(".specialagent.last.session.json").write_text(json.dumps(messages))
+        messages.append(call_model(messages))
 
-        if not tool_calls:
-            print(f"LLM assistant message: {messages[-1]['content']}")
-            return
+    Path(".specialagent.last.session.json").write_text(json.dumps(messages))
+    print(messages[-1]["content"])
 
 
 if __name__ == "__main__":
