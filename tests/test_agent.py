@@ -170,10 +170,7 @@ def test_agent_executes_multiple_tool_calls(tmp_path, monkeypatch):
     ]
 
 
-def test_agent_passes_prefetched_messages_to_model(
-    tmp_path,
-    monkeypatch,
-):
+def test_agent_passes_prefetched_messages_to_model(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
 
     prefetched = [
@@ -207,22 +204,14 @@ def test_agent_passes_prefetched_messages_to_model(
     assert call_model.snapshots[0][2:4] == prefetched
 
 
-def test_agent_uses_editor_when_prompt_is_empty(
-    tmp_path,
-    monkeypatch,
-):
+def test_agent_uses_editor_when_prompt_is_empty(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
 
     editor_input = Mock(return_value="prompt from editor")
     monkeypatch.setattr(specialagent, "editor_input", editor_input)
     monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: [])
 
-    response = {
-        "role": "assistant",
-        "content": "Done.",
-    }
-
-    call_model = recording_model([response])
+    call_model = recording_model([{"role": "assistant", "content": "done"}])
     monkeypatch.setattr(specialagent, "call_model", call_model)
 
     specialagent.agent("", system="system")
@@ -230,12 +219,6 @@ def test_agent_uses_editor_when_prompt_is_empty(
     editor_input.assert_called_once_with(".specialagent.last.prompt.txt")
 
     assert call_model.snapshots[0] == [
-        {
-            "role": "system",
-            "content": "system",
-        },
-        {
-            "role": "user",
-            "content": "prompt from editor",
-        },
+        {"role": "system", "content": "system"},
+        {"role": "user", "content": "prompt from editor"},
     ]
