@@ -19,7 +19,7 @@ def run_bash(command):
     """
 
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    return f"{result.stdout}{result.stderr}"
+    return result.stdout + result.stderr
 
 
 def write_file(filename, content):
