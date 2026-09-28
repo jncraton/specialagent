@@ -172,7 +172,7 @@ def get_system(system=""):
 
 def discover_skills():
     return {
-        f'{Path("~") / Path(path).relative_to(Path.home())}': {
+        f"{Path('~') / Path(path).relative_to(Path.home())}": {
             "desc": content.partition("description:")[2].splitlines()[0].strip(),
             "content": content,
         }
