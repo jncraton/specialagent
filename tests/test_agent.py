@@ -135,28 +135,18 @@ def test_agent_executes_multiple_tool_calls(tmp_path, monkeypatch):
         ],
     }
 
-    final_response = {
-        "role": "assistant",
-        "content": "Both tools completed.",
-    }
+    final_response = {"role": "assistant", "content": "done"}
 
-    call_model = recording_model(
-        [
-            response_with_tools,
-            final_response,
-        ]
-    )
+    call_model = recording_model([response_with_tools, final_response])
 
     monkeypatch.setattr(specialagent, "call_model", call_model)
     monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: [])
 
-    specialagent.agent("Use two tools", system="system")
+    specialagent.agent("p", system="s")
 
     assert (tmp_path / "output.txt").read_text() == "hello"
 
-    second_messages = call_model.snapshots[1]
-
-    assert second_messages[-2:] == [
+    assert call_model.snapshots[1][-2:] == [
         {
             "role": "tool",
             "tool_call_id": "bash-call",
