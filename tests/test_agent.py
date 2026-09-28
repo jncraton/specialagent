@@ -74,7 +74,7 @@ def test_agent_executes_tool_call_then_calls_model_again(
         "content": None,
         "tool_calls": [
             {
-                "id": "call-1",
+                "id": "1",
                 "type": "function",
                 "function": {
                     "name": "exec",
@@ -95,36 +95,18 @@ def test_agent_executes_tool_call_then_calls_model_again(
         lambda cmd: [],
     )
 
-    specialagent.agent("Run a command", system="system")
+    specialagent.agent("p", system="s")
 
     assert call_model.call_count == 2
 
     assert call_model.snapshots[0] == [
-        {
-            "role": "system",
-            "content": "system",
-        },
-        {
-            "role": "user",
-            "content": "Run a command",
-        },
+        {"role": "system", "content": "s"},
+        {"role": "user", "content": "p"},
     ]
 
-    assert call_model.snapshots[1] == [
-        {
-            "role": "system",
-            "content": "system",
-        },
-        {
-            "role": "user",
-            "content": "Run a command",
-        },
+    assert call_model.snapshots[1] == call_model.snapshots[0] + [
         first_response,
-        {
-            "role": "tool",
-            "tool_call_id": "call-1",
-            "content": "hello",
-        },
+        {"role": "tool", "tool_call_id": "1", "content": "hello"},
     ]
 
 
