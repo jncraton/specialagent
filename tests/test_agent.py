@@ -222,7 +222,7 @@ def test_agent_executes_multiple_tool_calls(tmp_path, monkeypatch):
         {
             "role": "tool",
             "tool_call_id": "write-call",
-            "content": "Wrote to output.txt",
+            "content": None,
         },
     ]
 

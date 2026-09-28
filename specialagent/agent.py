@@ -27,7 +27,6 @@ def write_file(filename, content):
     Write content to file
     """
     Path(filename).write_text(content)
-    return f"Wrote to {filename}"
 
 
 def replace(filename, search, replace):
