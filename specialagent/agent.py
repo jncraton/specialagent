@@ -98,7 +98,7 @@ def call_model(messages):
     for delay in range(20):
         try:
             with urllib.request.urlopen(req) as response:
-                res_data = json.loads(response.read().decode())
+                res_data = json.load(response)
                 usage = res_data.get("usage", {})
 
                 print(f"- Read {usage.get('prompt_tokens', 0)} input tokens")
