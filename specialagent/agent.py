@@ -64,6 +64,7 @@ def build_tool(name):
         "description": globals()[name].__doc__.splitlines()[1].strip(),
         "parameters": {
             "type": "object",
+            "additionalProperties": False,
             "properties": {p: {"type": "string"} for p in params},
             "required": params,
         },
