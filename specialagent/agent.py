@@ -242,11 +242,10 @@ def agent(prompt="", system=None):
 
     messages.append(call_model(messages))
 
-    while tool_calls := messages[-1].get("tool_calls", []):
-        for tool_call in tool_calls:
-            name = tool_call["function"]["name"]
-            args = json.loads(tool_call["function"]["arguments"])
-            messages.append(run_tool(name, args, tool_call["id"]))
+    while tools := messages[-1].get("tool_calls", []):
+        for tool in tools:
+            args = json.loads(tool["function"]["arguments"])
+            messages.append(run_tool(tool["function"]["name"], args, tool["id"]))
 
         messages.append(call_model(messages))
 
