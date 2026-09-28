@@ -9,11 +9,11 @@ from pathlib import Path
 from contextlib import suppress
 
 
-def run_bash(command):
+def exec(command):
     """
     Execute bash command
 
-    >>> run_bash('echo "hello"')
+    >>> exec('echo "hello"')
     'hello\\n'
     """
 
@@ -74,7 +74,7 @@ def build_tool(name):
 def call_model(messages):
     import urllib.request
 
-    tools = [build_tool(fn) for fn in ("run_bash", "writeFile", "replace")]
+    tools = [build_tool(fn) for fn in ("exec", "writeFile", "replace")]
 
     req = urllib.request.Request(
         os.environ.get("LLM_BASE_URL", "http://localhost:8080/v1/chat/completions"),
@@ -114,7 +114,7 @@ def run_tool(name, args, identifier):
     """
     Run tool with args producing formatted response object
 
-    >>> run_tool("run_bash", {"command": "echo hello"}, "1")
+    >>> run_tool("exec", {"command": "echo hello"}, "1")
     {'role': 'tool', 'tool_call_id': '1', 'content': 'hello\\n'}
     """
 
@@ -146,13 +146,13 @@ def prefetch_sh(cmd):
                     "id": str(prefetch_sh.idx),
                     "type": "function",
                     "function": {
-                        "name": "run_bash",
+                        "name": "exec",
                         "arguments": json.dumps({"command": cmd}),
                     },
                 },
             ],
         },
-        run_tool("run_bash", {"command": cmd}, prefetch_sh.idx),
+        run_tool("exec", {"command": cmd}, prefetch_sh.idx),
     ]
 
 

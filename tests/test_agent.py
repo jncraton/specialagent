@@ -98,7 +98,7 @@ def test_agent_executes_tool_call_then_calls_model_again(
                 "id": "call-1",
                 "type": "function",
                 "function": {
-                    "name": "run_bash",
+                    "name": "exec",
                     "arguments": json.dumps({"command": "echo hello"}),
                 },
             }
@@ -168,7 +168,7 @@ def test_agent_executes_multiple_tool_calls(tmp_path, monkeypatch):
                 "id": "bash-call",
                 "type": "function",
                 "function": {
-                    "name": "run_bash",
+                    "name": "exec",
                     "arguments": json.dumps({"command": "echo one"}),
                 },
             },
