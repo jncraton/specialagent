@@ -1,6 +1,5 @@
 import json
 import os
-import glob
 import sys
 import re
 import subprocess
@@ -181,8 +180,8 @@ def discover_skills():
             "desc": content.partition("description:")[2].splitlines()[0].strip(),
             "content": content,
         }
-        for path in glob.glob(os.path.expanduser("~/.agents/skills/*/SKILL.md"))
-        if (content := open(path).read())
+        for path in Path("~/.agents/skills").expanduser().glob("*/SKILL.md")
+        if (content := path.read_text())
     }
 
 
