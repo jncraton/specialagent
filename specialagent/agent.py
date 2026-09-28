@@ -165,7 +165,7 @@ def get_system(system=""):
         print(f"Loaded {len(system)} byte AGENTS.md")
 
     if skills := discover_skills():
-        print(f"Discovered {len(skills)} skills")
+        print(f"Found {len(skills)} skills")
 
         system += (
             "\n\n## Skills\n\ncat matching skills before starting tasks:\n\n"
