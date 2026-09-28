@@ -21,16 +21,16 @@ def run_bash(command):
     return result.stdout + result.stderr
 
 
-def write_file(path, content):
+def write_file(filename, content):
     """
-    Write content to path
+    Write content to filename
     """
-    Path(path).write_text(content)
+    Path(filename).write_text(content)
 
 
 def replace(filename, search, replace):
     """
-    Replace text in file
+    Replace text in filename
 
     >>> import tempfile
     >>> file = tempfile.NamedTemporaryFile(buffering=0)
@@ -54,7 +54,7 @@ def build_tool(name):
     Build tool description for initial API call
 
     >>> build_tool("write_file")
-    {'name': 'write_file', 'description': 'Write content to path', 'parameters': {'type': 'object', 'additionalProperties': False, 'properties': {'path': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['path', 'content']}}
+    {'name': 'write_file', 'description': 'Write content to filename', 'parameters': {'type': 'object', 'additionalProperties': False, 'properties': {'filename': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['filename', 'content']}}
     """
 
     params = list(signature(globals()[name]).parameters.keys())
