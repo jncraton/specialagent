@@ -87,11 +87,7 @@ def test_agent_executes_tool_call_then_calls_model_again(
     call_model = recording_model([first_response, final_response])
 
     monkeypatch.setattr(specialagent, "call_model", call_model)
-    monkeypatch.setattr(
-        specialagent,
-        "prefetch_sh",
-        lambda cmd: [],
-    )
+    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: [])
 
     specialagent.agent("p", system="s")
 
@@ -152,11 +148,7 @@ def test_agent_executes_multiple_tool_calls(tmp_path, monkeypatch):
     )
 
     monkeypatch.setattr(specialagent, "call_model", call_model)
-    monkeypatch.setattr(
-        specialagent,
-        "prefetch_sh",
-        lambda cmd: [],
-    )
+    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: [])
 
     specialagent.agent("Use two tools", system="system")
 
@@ -223,11 +215,7 @@ def test_agent_uses_editor_when_prompt_is_empty(
 
     editor_input = Mock(return_value="prompt from editor")
     monkeypatch.setattr(specialagent, "editor_input", editor_input)
-    monkeypatch.setattr(
-        specialagent,
-        "prefetch_sh",
-        lambda cmd: [],
-    )
+    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: [])
 
     response = {
         "role": "assistant",
