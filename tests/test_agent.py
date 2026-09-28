@@ -176,7 +176,7 @@ def test_agent_executes_multiple_tool_calls(tmp_path, monkeypatch):
                 "id": "write-call",
                 "type": "function",
                 "function": {
-                    "name": "write_file",
+                    "name": "writeFile",
                     "arguments": json.dumps(
                         {
                             "filename": "output.txt",

@@ -21,7 +21,7 @@ def run_bash(command):
     return result.stdout + result.stderr
 
 
-def write_file(filename, content):
+def writeFile(filename, content):
     """
     Write content to filename
     """
@@ -53,8 +53,8 @@ def build_tool(name):
     """
     Build tool description for initial API call
 
-    >>> build_tool("write_file")
-    {'name': 'write_file', 'description': 'Write content to filename', 'parameters': {'type': 'object', 'additionalProperties': False, 'properties': {'filename': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['filename', 'content']}}
+    >>> build_tool("writeFile")
+    {'name': 'writeFile', 'description': 'Write content to filename', 'parameters': {'type': 'object', 'additionalProperties': False, 'properties': {'filename': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['filename', 'content']}}
     """
 
     params = list(signature(globals()[name]).parameters.keys())
@@ -74,7 +74,7 @@ def build_tool(name):
 def call_model(messages):
     import urllib.request
 
-    tools = [build_tool(fn) for fn in ("run_bash", "write_file", "replace")]
+    tools = [build_tool(fn) for fn in ("run_bash", "writeFile", "replace")]
 
     req = urllib.request.Request(
         os.environ.get("LLM_BASE_URL", "http://localhost:8080/v1/chat/completions"),
