@@ -110,7 +110,7 @@ def call_model(messages):
         time.sleep(delay)
 
 
-def run_tool(name, args, tool_call_id):
+def run_tool(name, args, identifier):
     """
     Run tool with args producing formatted response object
 
@@ -124,7 +124,7 @@ def run_tool(name, args, tool_call_id):
 
     return {
         "role": "tool",
-        "tool_call_id": str(tool_call_id),
+        "tool_call_id": str(identifier),
         "content": result,
     }
 
