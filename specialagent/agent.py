@@ -21,11 +21,11 @@ def run_bash(command):
     return result.stdout + result.stderr
 
 
-def write_file(filename, content):
+def write_file(path, content):
     """
-    Write content to file
+    Write content to path
     """
-    Path(filename).write_text(content)
+    Path(path).write_text(content)
 
 
 def replace(filename, search, replace):
@@ -54,7 +54,7 @@ def build_tool(name):
     Build tool description for initial API call
 
     >>> build_tool("write_file")
-    {'name': 'write_file', 'description': 'Write content to file', 'parameters': {'type': 'object', 'properties': {'filename': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['filename', 'content']}}
+    {'name': 'write_file', 'description': 'Write content to path', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['path', 'content']}}
     """
 
     params = list(signature(globals()[name]).parameters.keys())

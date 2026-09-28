@@ -179,7 +179,7 @@ def test_agent_executes_multiple_tool_calls(tmp_path, monkeypatch):
                     "name": "write_file",
                     "arguments": json.dumps(
                         {
-                            "filename": "output.txt",
+                            "path": "output.txt",
                             "content": "hello",
                         }
                     ),
