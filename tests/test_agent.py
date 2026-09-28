@@ -46,10 +46,7 @@ def test_agent_returns_final_response(tmp_path, monkeypatch, capsys):
     call_model.assert_called_once()
 
     assert call_model.snapshots[0] == [
-        {
-            "role": "system",
-            "content": "s",
-        },
+        {"role": "system", "content": "s"},
         {"role": "user", "content": "p"},
     ]
 
@@ -87,17 +84,9 @@ def test_agent_executes_tool_call_then_calls_model_again(
         ],
     }
 
-    final_response = {
-        "role": "assistant",
-        "content": "The command returned hello.",
-    }
+    final_response = {"role": "assistant", "content": "The command returned hello."}
 
-    call_model = recording_model(
-        [
-            first_response,
-            final_response,
-        ]
-    )
+    call_model = recording_model([first_response, final_response])
 
     monkeypatch.setattr(specialagent, "call_model", call_model)
     monkeypatch.setattr(
