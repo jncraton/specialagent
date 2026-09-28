@@ -14,11 +14,10 @@ def exec(command):
     Execute bash command
 
     >>> exec('echo "hello"')
-    'hello\\n'
+    'hello'
     """
 
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    return result.stdout + result.stderr
+    return subprocess.getoutput(command)
 
 
 def writeFile(filename, content):
@@ -115,7 +114,7 @@ def run_tool(name, args, identifier):
     Run tool with args producing formatted response object
 
     >>> run_tool("exec", {"command": "echo hello"}, "1")
-    {'role': 'tool', 'tool_call_id': '1', 'content': 'hello\\n'}
+    {'role': 'tool', 'tool_call_id': '1', 'content': 'hello'}
     """
 
     print(f"Calling {name} with {args}", file=sys.stderr)
@@ -134,7 +133,7 @@ def prefetch_sh(cmd):
     Return a pair of messages synthesizing a completed tool call
 
     >>> prefetch_sh("echo hello")[1]["content"]
-    'hello\\n'
+    'hello'
     """
     prefetch_sh.idx += 1
     return [

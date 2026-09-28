@@ -152,7 +152,7 @@ def test_agent_executes_tool_call_then_calls_model_again(
         {
             "role": "tool",
             "tool_call_id": "call-1",
-            "content": "hello\n",
+            "content": "hello",
         },
     ]
 
@@ -217,7 +217,7 @@ def test_agent_executes_multiple_tool_calls(tmp_path, monkeypatch):
         {
             "role": "tool",
             "tool_call_id": "bash-call",
-            "content": "one\n",
+            "content": "one",
         },
         {
             "role": "tool",
