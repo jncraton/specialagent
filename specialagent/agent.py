@@ -71,10 +71,10 @@ def build_tool(name):
     }
 
 
-def call_model(messages, tools=None):
+def call_model(messages):
     import urllib.request
 
-    tools = tools or [build_tool(fn) for fn in ("run_bash", "write_file", "replace")]
+    tools = [build_tool(fn) for fn in ("run_bash", "write_file", "replace")]
 
     req = urllib.request.Request(
         os.environ.get("LLM_BASE_URL", "http://127.0.0.1:8080/v1/chat/completions"),
