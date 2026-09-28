@@ -77,7 +77,7 @@ def call_model(messages):
     tools = [build_tool(fn) for fn in ("run_bash", "write_file", "replace")]
 
     req = urllib.request.Request(
-        os.environ.get("LLM_BASE_URL", "http://127.0.0.1:8080/v1/chat/completions"),
+        os.environ.get("LLM_BASE_URL", "http://localhost:8080/v1/chat/completions"),
         data=json.dumps(
             {
                 "model": os.environ.get("LLM_MODEL", ""),
