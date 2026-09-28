@@ -95,7 +95,7 @@ def call_model(messages):
 
     print(f"Prompt LLM with {len(req.data)} bytes...")
 
-    for backoff in [0, 1, 2] + [4] * 64:
+    for delay in range(20):
         try:
             with urllib.request.urlopen(req) as response:
                 res_data = json.loads(response.read().decode())
@@ -107,7 +107,7 @@ def call_model(messages):
                 return res_data["choices"][0]["message"]
         except urllib.error.HTTPError as e:
             print(f"HTTPError {e.code}: {e.read().decode('utf-8')}")
-        time.sleep(backoff)
+        time.sleep(delay)
 
 
 def run_tool(name, args, tool_call_id):
