@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm -f date.md
+
 # Run within firejail sandbox
 
 firejail \
