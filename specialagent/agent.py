@@ -12,7 +12,7 @@ from contextlib import suppress
 
 def run_bash(command):
     """
-    Execute bash command and returns output
+    Execute bash command
 
     >>> run_bash('echo "hello"')
     'hello\\n'
@@ -24,7 +24,7 @@ def run_bash(command):
 
 def write_file(filename, content):
     """
-    Write content to file specified by filename
+    Write content to file
     """
     Path(filename).write_text(content)
     return f"Wrote to {filename}"
