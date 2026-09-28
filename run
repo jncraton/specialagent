@@ -52,3 +52,5 @@ firejail \
   --rmenv=DISPLAY \
   --rmenv=TMUX \
   python3 specialagent/agent.py
+
+rm -f date.md
