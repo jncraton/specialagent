@@ -121,11 +121,7 @@ def run_tool(name, args, identifier):
 
     result = globals().get(name)(**args)
 
-    return {
-        "role": "tool",
-        "tool_call_id": str(identifier),
-        "content": result,
-    }
+    return {"role": "tool", "tool_call_id": str(identifier), "content": result}
 
 
 def prefetch_sh(cmd):
