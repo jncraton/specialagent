@@ -36,51 +36,33 @@ def test_quit_does_not_call_model_or_write_session(tmp_path, monkeypatch):
 def test_agent_returns_final_response(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
 
-    response = {
-        "role": "assistant",
-        "content": "The task is complete.",
-    }
-
-    call_model = recording_model([response])
+    call_model = recording_model([{"role": "assistant", "content": "done"}])
 
     monkeypatch.setattr(specialagent, "call_model", call_model)
-    monkeypatch.setattr(
-        specialagent,
-        "prefetch_sh",
-        lambda cmd: [],
-    )
+    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: [])
 
-    specialagent.agent("Do the task", system="test system")
+    specialagent.agent("p", system="s")
 
     call_model.assert_called_once()
 
     assert call_model.snapshots[0] == [
         {
             "role": "system",
-            "content": "test system",
+            "content": "s",
         },
-        {
-            "role": "user",
-            "content": "Do the task",
-        },
+        {"role": "user", "content": "p"},
     ]
 
-    assert "The task is complete." in capsys.readouterr().out
+    assert "done" in capsys.readouterr().out
 
     saved_messages = json.loads(
         (tmp_path / ".specialagent.last.session.json").read_text()
     )
 
     assert saved_messages == [
-        {
-            "role": "system",
-            "content": "test system",
-        },
-        {
-            "role": "user",
-            "content": "Do the task",
-        },
-        response,
+        {"role": "system", "content": "s"},
+        {"role": "user", "content": "p"},
+        {"role": "assistant", "content": "done"},
     ]
 
 
