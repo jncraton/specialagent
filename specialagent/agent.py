@@ -106,7 +106,7 @@ def call_model(messages):
 
                 return res_data["choices"][0]["message"]
         except urllib.error.HTTPError as e:
-            print(f"HTTPError {e.code}: {e.read().decode('utf-8')}")
+            print(f"HTTPError {e.code}: {e.read().decode()}")
         time.sleep(delay)
 
 
