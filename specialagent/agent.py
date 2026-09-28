@@ -54,7 +54,7 @@ def build_tool(name):
     Build tool description for initial API call
 
     >>> build_tool("write_file")
-    {'name': 'write_file', 'description': 'Write content to path', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['path', 'content']}}
+    {'name': 'write_file', 'description': 'Write content to path', 'parameters': {'type': 'object', 'additionalProperties': False, 'properties': {'path': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['path', 'content']}}
     """
 
     params = list(signature(globals()[name]).parameters.keys())
