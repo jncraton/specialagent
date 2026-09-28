@@ -12,7 +12,7 @@ from contextlib import suppress
 
 def run_bash(command):
     """
-    Executes bash command and returns output
+    Execute bash command and returns output
 
     >>> run_bash('echo "hello"')
     'hello\\n'
@@ -24,7 +24,7 @@ def run_bash(command):
 
 def write_file(filename, content):
     """
-    Writes content to file specified by filename
+    Write content to file specified by filename
     """
     Path(filename).write_text(content)
     return f"Wrote to {filename}"
@@ -32,7 +32,7 @@ def write_file(filename, content):
 
 def replace(filename, search, replace):
     """
-    Replaces text in file
+    Replace text in file
 
     >>> import tempfile
     >>> file = tempfile.NamedTemporaryFile(buffering=0)
@@ -189,7 +189,7 @@ def discover_skills():
 
 def get_prompt_files(prompt):
     """
-    Heuristic to grab everything that looks like a file from a prompt
+    Get everything that looks like a file from a prompt
 
     >>> get_prompt_files("Read readme.md. Check test/test.c, delete.")
     ['readme.md', 'test/test.c']
