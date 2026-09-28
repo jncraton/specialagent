@@ -23,7 +23,7 @@ firejail \
   --dns=8.8.8.8 \
   --dns=8.8.4.4 \
   --protocol=inet,unix \
-  --hostname="hostname" \
+  --hostname="localhost" \
   --private-tmp \
   --whitelist="$(pwd)" \
   --whitelist=~/.agents \
