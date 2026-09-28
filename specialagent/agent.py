@@ -93,7 +93,7 @@ def call_model(messages):
         method="POST",
     )
 
-    print(f"\nPrompting LLM with {len(req.data)} bytes...")
+    print(f"Prompt LLM with {len(req.data)} bytes...")
 
     for backoff in [0, 1, 2] + [4] * 64:
         try:
