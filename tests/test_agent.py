@@ -56,10 +56,8 @@ def test_agent_returns_final_response(tmp_path, monkeypatch, capsys):
         (tmp_path / ".specialagent.last.session.json").read_text()
     )
 
-    assert saved_messages == [
-        {"role": "system", "content": "s"},
-        {"role": "user", "content": "p"},
-        {"role": "assistant", "content": "done"},
+    assert saved_messages == call_model.snapshots[0] + [
+        {"role": "assistant", "content": "done"}
     ]
 
 
