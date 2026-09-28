@@ -38,7 +38,7 @@ def replace(filename, search, replace):
     >>> file.write(b'hello world')
     11
     >>> replace(file.name, 'world', 'there')
-    'Replaced 1 in ...
+    'replaced 1'
 
     >>> open(file.name).read()
     'hello there'
@@ -47,7 +47,7 @@ def replace(filename, search, replace):
     count = content.count(search)
     Path(filename).write_text(content.replace(search, replace))
 
-    return f"Replaced {count} in {filename}"
+    return f"replaced {count}"
 
 
 def build_tool(name):
