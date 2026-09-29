@@ -1,5 +1,3 @@
-import sys
-from io import StringIO
 from specialagent.cli import main
 
 
