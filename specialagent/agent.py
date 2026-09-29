@@ -58,7 +58,7 @@ def describe_tool(fn):
 
     return {
         "name": fn.__name__,
-        "description": fn.__doc__.splitlines()[1].strip(),
+        "description": fn.__doc__.strip().splitlines()[0],
         "parameters": {
             "type": "object",
             "additionalProperties": False,
