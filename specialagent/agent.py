@@ -48,24 +48,22 @@ def replace(filename, search, replace):
     return f"replaced {count}"
 
 
-def build_tool(name):
+def build_tool(fn):
     """
     Build tool description for initial API call
 
-    >>> build_tool("writeFile")
+    >>> build_tool(writeFile)
     {'name': 'writeFile', 'description': 'Write content to filename', 'parameters': {'type': 'object', 'additionalProperties': False, 'properties': {'filename': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['filename', 'content']}}
     """
 
-    params = list(signature(globals()[name]).parameters.keys())
-
     return {
-        "name": name,
-        "description": globals()[name].__doc__.splitlines()[1].strip(),
+        "name": fn.__name__,
+        "description": fn.__doc__.splitlines()[1].strip(),
         "parameters": {
             "type": "object",
             "additionalProperties": False,
-            "properties": {p: {"type": "string"} for p in params},
-            "required": params,
+            "properties": {p: {"type": "string"} for p in signature(fn).parameters},
+            "required": list(signature(fn).parameters),
         },
     }
 
@@ -73,7 +71,7 @@ def build_tool(name):
 def call_model(messages):
     import urllib.request
 
-    tools = [build_tool(fn) for fn in ("exec", "writeFile", "replace")]
+    tools = [build_tool(fn) for fn in (exec, writeFile, replace)]
 
     req = urllib.request.Request(
         os.environ.get("LLM_BASE_URL", "http://localhost:8080/v1/chat/completions"),
