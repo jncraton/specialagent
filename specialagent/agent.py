@@ -48,11 +48,11 @@ def replace(filename, search, replace):
     return f"replaced {count}"
 
 
-def build_tool(fn):
+def describe_tool(fn):
     """
-    Build tool description for initial API call
+    Create tool description
 
-    >>> build_tool(writeFile)
+    >>> describe_tool(writeFile)
     {'name': 'writeFile', 'description': 'Write content to filename', 'parameters': {'type': 'object', 'additionalProperties': False, 'properties': {'filename': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['filename', 'content']}}
     """
 
@@ -71,7 +71,7 @@ def build_tool(fn):
 def call_model(messages):
     import urllib.request
 
-    tools = [build_tool(fn) for fn in (exec, writeFile, replace)]
+    tools = [describe_tool(fn) for fn in (exec, writeFile, replace)]
 
     req = urllib.request.Request(
         os.environ.get("LLM_BASE_URL", "http://localhost:8080/v1/chat/completions"),
