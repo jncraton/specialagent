@@ -31,15 +31,12 @@ def editFile(filename, old, new):
     """
     Replace old with new substring in filename
 
-    >>> import tempfile
-    >>> file = tempfile.NamedTemporaryFile(buffering=0)
-    >>> file.write(b'hello world')
-    11
-    >>> editFile(file.name, 'world', 'there')
+    >>> editFile('readme.md', 'cucumber', 'localhost')
+    '0 replaced'
+    >>> editFile('readme.md', 'localhost', 'cucumber')
     '1 replaced'
-
-    >>> open(file.name).read()
-    'hello there'
+    >>> editFile('readme.md', 'cucumber', 'localhost')
+    '1 replaced'
     """
     content = Path(filename).read_text()
     Path(filename).write_text(content.replace(old, new))
