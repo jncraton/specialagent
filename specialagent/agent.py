@@ -118,31 +118,33 @@ def run_tool(name, args, identifier):
     return {"role": "tool", "tool_call_id": str(identifier), "content": result}
 
 
-def prefetch_sh(cmd):
+def prefetch_sh(*commands):
     """
-    Return a pair of messages synthesizing a completed tool call
+    Return assistant message with prefetched tool calls
 
-    >>> prefetch_sh("echo hello")[1]["content"]
-    'hello'
+    >>> prefetch_sh("echo hello")["tool_calls"][0]["function"]["arguments"]
+    '{"command": "echo hello"}'
     """
-    prefetch_sh.idx += 1
-    return [
-        {
-            "role": "assistant",
-            "content": None,
-            "tool_calls": [
-                {
-                    "id": str(prefetch_sh.idx),
-                    "type": "function",
-                    "function": {
-                        "name": "exec",
-                        "arguments": json.dumps({"command": cmd}),
-                    },
+    calls = []
+
+    for command in commands:
+        prefetch_sh.idx += 1
+        calls.append(
+            {
+                "id": str(prefetch_sh.idx),
+                "type": "function",
+                "function": {
+                    "name": "exec",
+                    "arguments": json.dumps({"command": command}),
                 },
-            ],
-        },
-        run_tool("exec", {"command": cmd}, prefetch_sh.idx),
-    ]
+            }
+        )
+
+    return {
+        "role": "assistant",
+        "content": None,
+        "tool_calls": calls,
+    }
 
 
 prefetch_sh.idx = 0
@@ -216,21 +218,19 @@ def agent(prompt="", system=None):
 
     prompt = prompt or editor_input(".specialagent.last.prompt.txt")
 
+    commands = [f"cat {s}" for s in get_prompt_skills(prompt, discover_skills())]
+    commands.append("(git ls-files || ls) | head -n 30")
+    commands.extend(
+        f"cat {f}"
+        for f in set(get_prompt_files(prompt)) | {"makefile", "Makefile"}
+        if os.path.isfile(f)
+    )
+
     messages = [
         {"role": "system", "content": system or get_system()},
         {"role": "user", "content": prompt},
+        prefetch_sh(*commands),
     ]
-
-    for skill in get_prompt_skills(prompt, discover_skills()):
-        messages += prefetch_sh(f"cat {skill}")
-
-    messages += prefetch_sh("(git ls-files || ls) | head -n 30")
-
-    for f in set(get_prompt_files(prompt)) | {"makefile", "Makefile"}:
-        if os.path.isfile(f):
-            messages += prefetch_sh(f"cat {f}")
-
-    messages.append(call_model(messages))
 
     while tools := messages[-1].get("tool_calls", []):
         for tool in tools:

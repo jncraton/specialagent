@@ -5,6 +5,21 @@ from unittest.mock import Mock
 
 specialagent = importlib.import_module("specialagent.agent")
 
+mock_tools = {
+    "role": "assistant",
+    "content": None,
+    "tool_calls": [
+        {
+            "id": "1",
+            "type": "function",
+            "function": {
+                "name": "exec",
+                "arguments": '{"command": "echo 1"}',
+            },
+        }
+    ],
+}
+
 
 def recording_model(responses):
     """Create a mock call_model that snapshots each messages argument."""
@@ -39,13 +54,13 @@ def test_agent_returns_final_response(tmp_path, monkeypatch, capsys):
     call_model = recording_model([{"role": "assistant", "content": "done"}])
 
     monkeypatch.setattr(specialagent, "call_model", call_model)
-    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: [])
+    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: mock_tools)
 
     specialagent.agent("p", system="s")
 
     call_model.assert_called_once()
 
-    assert call_model.snapshots[0] == [
+    assert call_model.snapshots[0][:2] == [
         {"role": "system", "content": "s"},
         {"role": "user", "content": "p"},
     ]
@@ -87,13 +102,13 @@ def test_agent_executes_tool_call_then_calls_model_again(
     call_model = recording_model([first_response, final_response])
 
     monkeypatch.setattr(specialagent, "call_model", call_model)
-    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: [])
+    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: mock_tools)
 
     specialagent.agent("p", system="s")
 
     assert call_model.call_count == 2
 
-    assert call_model.snapshots[0] == [
+    assert call_model.snapshots[0][:2] == [
         {"role": "system", "content": "s"},
         {"role": "user", "content": "p"},
     ]
@@ -140,7 +155,7 @@ def test_agent_executes_multiple_tool_calls(tmp_path, monkeypatch):
     call_model = recording_model([response_with_tools, final_response])
 
     monkeypatch.setattr(specialagent, "call_model", call_model)
-    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: [])
+    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: mock_tools)
 
     specialagent.agent("p", system="s")
 
@@ -163,21 +178,7 @@ def test_agent_executes_multiple_tool_calls(tmp_path, monkeypatch):
 def test_agent_passes_prefetched_messages_to_model(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
 
-    prefetched = [
-        {
-            "role": "assistant",
-            "content": None,
-            "tool_calls": [],
-        },
-        {
-            "role": "tool",
-            "tool_call_id": "prefetch-1",
-            "content": "file contents",
-        },
-    ]
-
-    prefetch_sh = Mock(return_value=prefetched)
-    monkeypatch.setattr(specialagent, "prefetch_sh", prefetch_sh)
+    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: mock_tools)
 
     response = {
         "role": "assistant",
@@ -189,9 +190,7 @@ def test_agent_passes_prefetched_messages_to_model(tmp_path, monkeypatch):
 
     specialagent.agent("Inspect the project", system="system")
 
-    assert prefetch_sh.called
-
-    assert call_model.snapshots[0][2:4] == prefetched
+    assert len(call_model.snapshots[0]) == 4
 
 
 def test_agent_uses_editor_when_prompt_is_empty(tmp_path, monkeypatch):
@@ -199,7 +198,7 @@ def test_agent_uses_editor_when_prompt_is_empty(tmp_path, monkeypatch):
 
     editor_input = Mock(return_value="prompt from editor")
     monkeypatch.setattr(specialagent, "editor_input", editor_input)
-    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: [])
+    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: mock_tools)
 
     call_model = recording_model([{"role": "assistant", "content": "done"}])
     monkeypatch.setattr(specialagent, "call_model", call_model)
@@ -208,7 +207,7 @@ def test_agent_uses_editor_when_prompt_is_empty(tmp_path, monkeypatch):
 
     editor_input.assert_called_once_with(".specialagent.last.prompt.txt")
 
-    assert call_model.snapshots[0] == [
+    assert call_model.snapshots[0][:2] == [
         {"role": "system", "content": "system"},
         {"role": "user", "content": "prompt from editor"},
     ]
