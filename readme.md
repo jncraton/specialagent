@@ -20,7 +20,7 @@ Designed with educational use in mind, this agent harness is intentionally only 
 
 - Tool use
   - `exec` - Run `bash` commands
-  - `write` - Overwrites the contents of a file
+  - `writeFile` - Overwrites the contents of a file
   - `editFile` - Find and replace in file
 - Prefetching
   - Run `cat {filename}` for any mentioned files that exist
