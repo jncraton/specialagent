@@ -21,7 +21,7 @@ Designed with educational use in mind, this agent harness is intentionally only 
 - Tool use
   - `exec` - Run `bash` commands
   - `write` - Overwrites the contents of a file
-  - `replace` - Find and replace in file
+  - `editFile` - Find and replace in file
 - Prefetching
   - Run `cat {filename}` for any mentioned files that exist
   - Run `cat {skill.md}` for any skills mentioned by name near the start of the prompt

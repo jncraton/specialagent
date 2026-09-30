@@ -27,23 +27,23 @@ def writeFile(filename, content):
     Path(filename).write_text(content)
 
 
-def replace(filename, search, replace):
+def editFile(filename, old, new):
     """
-    Replace text in filename
+    Replace old with new substring in filename
 
     >>> import tempfile
     >>> file = tempfile.NamedTemporaryFile(buffering=0)
     >>> file.write(b'hello world')
     11
-    >>> replace(file.name, 'world', 'there')
+    >>> editFile(file.name, 'world', 'there')
     'replaced 1'
 
     >>> open(file.name).read()
     'hello there'
     """
     content = Path(filename).read_text()
-    count = content.count(search)
-    Path(filename).write_text(content.replace(search, replace))
+    count = content.count(old)
+    Path(filename).write_text(content.replace(old, new))
 
     return f"replaced {count}"
 
@@ -71,7 +71,7 @@ def describe_tool(fn):
 def call_model(messages):
     import urllib.request
 
-    tools = [describe_tool(fn) for fn in (exec, writeFile, replace)]
+    tools = [describe_tool(fn) for fn in (exec, writeFile, editFile)]
 
     req = urllib.request.Request(
         os.environ.get("LLM_BASE_URL", "http://localhost:8080/v1/chat/completions"),
