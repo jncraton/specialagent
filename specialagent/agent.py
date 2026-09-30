@@ -42,10 +42,9 @@ def editFile(filename, old, new):
     'hello there'
     """
     content = Path(filename).read_text()
-    count = content.count(old)
     Path(filename).write_text(content.replace(old, new))
 
-    return f"replaced {count}"
+    return f"replaced {content.count(old)}"
 
 
 def describe_tool(fn):
