@@ -31,11 +31,11 @@ def editFile(filename, old, new):
     """
     Replace old with new substring in filename
 
-    >>> editFile('readme.md', 'cucumber', 'localhost')
+    >>> editFile('makefile','cucumber','lint')
     '0 replaced'
-    >>> editFile('readme.md', 'localhost', 'cucumber')
+    >>> editFile('makefile','lint','cucumber')
     '1 replaced'
-    >>> editFile('readme.md', 'cucumber', 'localhost')
+    >>> editFile('makefile','cucumber','lint')
     '1 replaced'
     """
     content = Path(filename).read_text()
