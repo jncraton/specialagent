@@ -120,16 +120,15 @@ def run_tool(name, args, identifier):
 
 def prefetch_sh(*commands):
     """
-    Return assistant message with prefetched tool calls
+    Generate prefetched tool calls
 
-    >>> prefetch_sh("echo hello")["tool_calls"][0]["function"]["arguments"]
+    >>> next(prefetch_sh("echo hello"))["function"]["arguments"]
     '{"command": "echo hello"}'
     """
-    calls = []
 
     for command in commands:
         prefetch_sh.idx += 1
-        calls.append(
+        yield (
             {
                 "id": str(prefetch_sh.idx),
                 "type": "function",
@@ -139,12 +138,6 @@ def prefetch_sh(*commands):
                 },
             }
         )
-
-    return {
-        "role": "assistant",
-        "content": None,
-        "tool_calls": calls,
-    }
 
 
 prefetch_sh.idx = 0
@@ -218,9 +211,9 @@ def agent(prompt="", system=None):
 
     prompt = prompt or editor_input(".specialagent.last.prompt.txt")
 
-    commands = [f"cat {s}" for s in get_prompt_skills(prompt, discover_skills())]
-    commands.append("(git ls-files || ls) | head -n 30")
-    commands.extend(
+    cmds = [f"cat {s}" for s in get_prompt_skills(prompt, discover_skills())]
+    cmds.append("(git ls-files || ls) | head -n 30")
+    cmds.extend(
         f"cat {f}"
         for f in set(get_prompt_files(prompt)) | {"makefile", "Makefile"}
         if os.path.isfile(f)
@@ -229,7 +222,7 @@ def agent(prompt="", system=None):
     messages = [
         {"role": "system", "content": system or get_system()},
         {"role": "user", "content": prompt},
-        prefetch_sh(*commands),
+        {"role": "assistant", "content": None, "tool_calls": list(prefetch_sh(*cmds))},
     ]
 
     while tools := messages[-1].get("tool_calls", []):

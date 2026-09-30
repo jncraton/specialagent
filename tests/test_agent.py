@@ -5,20 +5,16 @@ from unittest.mock import Mock
 
 specialagent = importlib.import_module("specialagent.agent")
 
-mock_tools = {
-    "role": "assistant",
-    "content": None,
-    "tool_calls": [
-        {
-            "id": "1",
-            "type": "function",
-            "function": {
-                "name": "exec",
-                "arguments": '{"command": "echo 1"}',
-            },
-        }
-    ],
-}
+mock_tools = [
+    {
+        "id": "1",
+        "type": "function",
+        "function": {
+            "name": "exec",
+            "arguments": '{"command": "echo 1"}',
+        },
+    }
+]
 
 
 def recording_model(responses):
