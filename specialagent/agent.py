@@ -36,7 +36,7 @@ def editFile(filename, old, new):
     >>> file.write(b'hello world')
     11
     >>> editFile(file.name, 'world', 'there')
-    'replaced 1'
+    '1 replaced'
 
     >>> open(file.name).read()
     'hello there'
@@ -44,7 +44,7 @@ def editFile(filename, old, new):
     content = Path(filename).read_text()
     Path(filename).write_text(content.replace(old, new))
 
-    return f"replaced {content.count(old)}"
+    return f"{content.count(old)} replaced"
 
 
 def describe_tool(fn):
