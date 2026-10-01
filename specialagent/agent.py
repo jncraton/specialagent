@@ -67,17 +67,19 @@ def call_model(messages):
 
     tools = [describe_tool(fn) for fn in (exec, writeFile, editFile)]
 
+    payload = {
+        "model": os.environ.get("LLM_MODEL", ""),
+        "messages": messages,
+        "tools": [{"type": "function", "function": tool} for tool in tools],
+        "temperature": 0,
+    }
+
+    if effort := os.environ.get("LLM_REASONING_EFFORT", ""):
+        payload["reasoning_effort"] = effort
+
     req = urllib.request.Request(
         os.environ.get("LLM_BASE_URL", "http://localhost:8080/v1/chat/completions"),
-        data=json.dumps(
-            {
-                "model": os.environ.get("LLM_MODEL", ""),
-                "messages": messages,
-                "tools": [{"type": "function", "function": tool} for tool in tools],
-                "temperature": 0,
-                "reasoning_effort": os.environ.get("LLM_REASONING_EFFORT", "medium"),
-            }
-        ).encode(),
+        data=json.dumps(payload).encode(),
         headers={
             "Content-Type": "application/json",
             "Authorization": f"Bearer {os.environ.get('LLM_API_KEY', '')}",
