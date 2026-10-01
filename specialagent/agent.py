@@ -198,14 +198,7 @@ def editor_input(path):
 
 
 def agent(prompt="", system=None):
-    """
-    Main agent loop
-
-    >>> agent("/quit")
-    """
-
-    if prompt == "/quit":
-        return
+    """Main agent loop"""
 
     prompt = prompt or editor_input(".specialagent.last.prompt.txt")
 

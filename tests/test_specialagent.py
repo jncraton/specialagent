@@ -3,7 +3,7 @@ from specialagent.cli import main
 
 def test_prompt_quit(capsys):
     try:
-        main(["--prompt", "/quit"])
+        main(["--help"])
     except SystemExit as e:
         exit_code = e.code
     else:

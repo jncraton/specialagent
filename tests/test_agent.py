@@ -32,18 +32,6 @@ def recording_model(responses):
     return mock
 
 
-def test_quit_does_not_call_model_or_write_session(tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
-
-    call_model = Mock()
-    monkeypatch.setattr(specialagent, "call_model", call_model)
-
-    specialagent.agent("/quit")
-
-    call_model.assert_not_called()
-    assert not (tmp_path / ".specialagent.last.session.json").exists()
-
-
 def test_agent_returns_final_response(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
 
