@@ -139,7 +139,7 @@ def prefetch_sh(*commands):
 
 def get_system(system=""):
     with suppress(FileNotFoundError):
-        system += open(os.path.expanduser("~/.agents/AGENTS.md")).read()
+        system += Path("~/.agents/AGENTS.md").expanduser().read_text()
         print(f"Loaded {len(system)} byte AGENTS.md")
 
     if skills := discover_skills():
