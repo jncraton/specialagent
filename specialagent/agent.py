@@ -21,9 +21,7 @@ def exec(command):
 
 
 def writeFile(filename, content):
-    """
-    Write content to filename
-    """
+    """Write content to filename"""
     Path(filename).write_text(content)
 
 
