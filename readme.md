@@ -50,5 +50,6 @@ In its default configuration, the agent will attempt to use the model hosted at 
 ```sh
 export LLM_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/chat/completions
 export LLM_API_KEY=your-api-key-here
+export LLM_REASONING_EFFORT=high
 export LLM_MODEL=gemma-4-31b-it
 ```

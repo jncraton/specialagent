@@ -77,6 +77,7 @@ def call_model(messages):
                 "messages": messages,
                 "tools": [{"type": "function", "function": tool} for tool in tools],
                 "temperature": 0,
+                "reasoning_effort": os.environ.get("LLM_REASONING_EFFORT", "medium"),
             }
         ).encode(),
         headers={
