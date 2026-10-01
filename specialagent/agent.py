@@ -92,10 +92,7 @@ def call_model(messages):
         try:
             with urllib.request.urlopen(req) as response:
                 res_data = json.load(response)
-                usage = res_data.get("usage", {})
-
-                print(f"- Read {usage.get('prompt_tokens', 0)} input tokens")
-                print(f"- Generated {usage.get('completion_tokens', 0)} tokens")
+                print(re.sub(r"[{}\'\"]", "", str(res_data.get("usage", {}))))
 
                 return res_data["choices"][0]["message"]
         except urllib.error.HTTPError as e:
