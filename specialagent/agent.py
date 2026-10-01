@@ -124,11 +124,10 @@ def prefetch_sh(*commands):
     '{"command": "echo hello"}'
     """
 
-    for command in commands:
-        prefetch_sh.idx += 1
+    for index, command in enumerate(commands):
         yield (
             {
-                "id": str(prefetch_sh.idx),
+                "id": str(index),
                 "type": "function",
                 "function": {
                     "name": "exec",
@@ -136,9 +135,6 @@ def prefetch_sh(*commands):
                 },
             }
         )
-
-
-prefetch_sh.idx = 0
 
 
 def get_system(system=""):
