@@ -7,46 +7,14 @@ import time
 from inspect import signature
 from pathlib import Path
 from contextlib import suppress
-
-
-def exec(command):
-    """
-    Execute bash command
-
-    >>> exec("echo hello")
-    'hello'
-    """
-
-    return subprocess.getoutput(command)
-
-
-def writeFile(filename, content):
-    """Write content to filename"""
-    Path(filename).write_text(content)
-
-
-def editFile(filename, old, new):
-    """
-    Replace old with new substring in filename
-
-    >>> editFile('makefile','cucumber','lint')
-    '0 replaced'
-    >>> editFile('makefile','lint','cucumber')
-    '1 replaced'
-    >>> editFile('makefile','cucumber','lint')
-    '1 replaced'
-    """
-    content = Path(filename).read_text()
-    Path(filename).write_text(content.replace(old, new))
-
-    return f"{content.count(old)} replaced"
+from . import tools
 
 
 def describe_tool(fn):
     """
     Create tool description
 
-    >>> describe_tool(writeFile)
+    >>> describe_tool(tools.writeFile)
     {'name': 'writeFile', 'description': 'Write content to filename', 'parameters': {'type': 'object', 'additionalProperties': False, 'properties': {'filename': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['filename', 'content']}}
     """
 
@@ -65,12 +33,14 @@ def describe_tool(fn):
 def call_model(messages):
     import urllib.request
 
-    tools = [describe_tool(fn) for fn in (exec, writeFile, editFile)]
+    tools_desc = [
+        describe_tool(fn) for fn in (tools.exec, tools.writeFile, tools.editFile)
+    ]
 
     payload = {
         "model": os.environ.get("LLM_MODEL", ""),
         "messages": messages,
-        "tools": [{"type": "function", "function": tool} for tool in tools],
+        "tools": [{"type": "function", "function": tool} for tool in tools_desc],
         "temperature": 0,
     }
 
@@ -111,7 +81,7 @@ def run_tool(name, args, identifier):
 
     print(f"Calling {name} with {args}", file=sys.stderr)
 
-    result = globals().get(name)(**args)
+    result = getattr(tools, name)(**args)
 
     return {"role": "tool", "tool_call_id": str(identifier), "content": result}
 

@@ -51,6 +51,6 @@ firejail \
   --rmenv=JOURNAL_STREAM \
   --rmenv=DISPLAY \
   --rmenv=TMUX \
-  python3 specialagent/agent.py
+  python3 -m specialagent
 
 rm -f date.md
