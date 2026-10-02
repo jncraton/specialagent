@@ -20,6 +20,12 @@ jobs:
       - name: Build Site
         run: make
 
+      - name: Build
+        run: uv build
+
+      - name: Publish
+        run: uv publish
+
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
