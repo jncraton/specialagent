@@ -115,10 +115,8 @@ def get_system(system=""):
     if skills := discover_skills():
         print(f"Found {len(skills)} skills")
 
-        system += (
-            "\n\ncat matching skills immediately:\n\n"
-            + "\n\n".join(f"{v['desc']}: cat {k}" for k, v in skills.items())
-        )
+        system += "\n\ncat matching skills immediately:\n\n"
+        system += "\n\n".join(f"{v['desc']}: cat {k}" for k, v in skills.items())
 
     return system
 
