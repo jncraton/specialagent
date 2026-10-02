@@ -191,7 +191,3 @@ def agent(prompt="", system=None):
 
     Path(".specialagent.last.session.json").write_text(json.dumps(messages))
     print(messages[-1]["content"])
-
-
-if __name__ == "__main__":
-    agent()
