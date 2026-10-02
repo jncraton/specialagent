@@ -1,5 +1,5 @@
 import subprocess
-from pathlib import Path
+import pathlib
 
 
 def exec(command):
@@ -15,7 +15,7 @@ def exec(command):
 
 def writeFile(filename, content):
     """Write content to filename"""
-    Path(filename).write_text(content)
+    pathlib.Path(filename).write_text(content)
 
 
 def editFile(filename, old, new):
@@ -29,7 +29,7 @@ def editFile(filename, old, new):
     >>> editFile('makefile','cucumber','lint')
     '1 replaced'
     """
-    content = Path(filename).read_text()
-    Path(filename).write_text(content.replace(old, new))
+    content = pathlib.Path(filename).read_text()
+    pathlib.Path(filename).write_text(content.replace(old, new))
 
     return f"{content.count(old)} replaced"
