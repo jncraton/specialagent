@@ -10,37 +10,37 @@ from contextlib import suppress
 from . import tools
 
 
-def describe_tool(fn):
+def describe_tools():
     """
     Create tool description
 
-    >>> describe_tool(tools.writeFile)
+    >>> describe_tools()[-1]
     {'name': 'writeFile', 'description': 'Write content to filename', 'parameters': {'type': 'object', 'additionalProperties': False, 'properties': {'filename': {'type': 'string'}, 'content': {'type': 'string'}}, 'required': ['filename', 'content']}}
     """
 
-    return {
-        "name": fn.__name__,
-        "description": fn.__doc__.strip().splitlines()[0],
-        "parameters": {
-            "type": "object",
-            "additionalProperties": False,
-            "properties": {p: {"type": "string"} for p in signature(fn).parameters},
-            "required": list(signature(fn).parameters),
-        },
-    }
+    return [
+        {
+            "name": fn.__name__,
+            "description": fn.__doc__.strip().splitlines()[0],
+            "parameters": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {p: {"type": "string"} for p in signature(fn).parameters},
+                "required": list(signature(fn).parameters),
+            },
+        }
+        for fn in map(lambda f: getattr(tools, f), dir(tools))
+        if callable(fn)
+    ]
 
 
 def call_model(messages):
     import urllib.request
 
-    tools_desc = [
-        describe_tool(fn) for fn in (tools.exec, tools.writeFile, tools.editFile)
-    ]
-
     payload = {
         "model": os.environ.get("LLM_MODEL", ""),
         "messages": messages,
-        "tools": [{"type": "function", "function": tool} for tool in tools_desc],
+        "tools": [{"type": "function", "function": tool} for tool in describe_tools()],
         "temperature": 0,
     }
 
