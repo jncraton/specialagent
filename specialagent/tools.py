@@ -33,3 +33,66 @@ def editFile(filename, old, new):
     pathlib.Path(filename).write_text(content.replace(old, new))
 
     return f"{content.count(old)} replaced"
+
+
+def fetch(url):
+    """
+    Get content from url
+
+    >>> fetch("https://raw.githubusercontent.com/jncraton/languagemodels/refs/heads/main/test/wp.html") # doctest: +ELLIPSIS
+    'Bolu Province ...'
+    """
+
+    from urllib.request import Request, urlopen
+    from html import unescape
+    from html.parser import HTMLParser
+    import re
+
+    class ParagraphExtractor(HTMLParser):
+        paras = [""]
+        ignoring = []
+        ignore = ("script", "style", "header", "footer")
+        ignore_attrs = {
+            ("hidden", "hidden"),
+        }
+        inlines = ("a", "b", "i", "span", "sup", "sub", "strong", "em", "code")
+        blocks = ("section", "div", "p")
+
+        def handle_starttag(self, tag, attrs):
+            if tag in self.ignore or self.ignore_attrs & set(attrs):
+                self.ignoring.append(tag)
+
+            if tag in self.blocks and self.paras[-1]:
+                self.paras.append("")
+
+        def handle_endtag(self, tag):
+            if self.ignoring and self.ignoring[-1] == tag:
+                self.ignoring.pop()
+
+            if tag in self.blocks and self.paras[-1]:
+                self.paras.append("")
+
+        def handle_data(self, data):
+            if not self.ignoring:
+                if self.paras and self.paras[-1]:
+                    self.paras[-1] += unescape(data).replace("\n", " ")
+                else:
+                    self.paras.append(data)
+
+        def get_plain(self):
+            plain = "\n\n".join([p.rstrip() for p in self.paras if p.strip()])
+            plain = re.sub(r"[ \t]+\n", "\n", plain)
+            plain = re.sub(r"(?<![ \t\n])[ \t]+", " ", plain)
+            plain = re.sub(r"\n\n\n+", "\n\n", plain)
+            return plain.strip()
+
+    request = Request(
+        url, headers={"User-Agent": "Mozilla/5.0 (compatible; specialagent)"}
+    )
+
+    with urlopen(request, timeout=15) as response:
+        src = response.read().decode("utf-8", errors="replace")
+
+    extractor = ParagraphExtractor()
+    extractor.feed(src)
+    return extractor.get_plain()
