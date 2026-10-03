@@ -86,22 +86,29 @@ def run_tool(name, args, identifier):
     return {"role": "tool", "tool_call_id": str(identifier), "content": result}
 
 
-def prefetch_sh(*commands):
+def fmt_calls(calls):
     """
     Generate prefetched tool calls
 
-    >>> next(prefetch_sh("echo hello"))["function"]["arguments"]
+    >>> next(fmt_calls([["exec", "echo hello"]]))["function"]["arguments"]
     '{"command": "echo hello"}'
     """
 
-    for index, command in enumerate(commands):
+    for index, call in enumerate(calls):
         yield (
             {
                 "id": str(index),
                 "type": "function",
                 "function": {
-                    "name": "exec",
-                    "arguments": json.dumps({"command": command}),
+                    "name": call[0],
+                    "arguments": json.dumps(
+                        {
+                            k: v
+                            for k, v in zip(
+                                signature(getattr(tools, call[0])).parameters, call[1:]
+                            )
+                        }
+                    ),
                 },
             }
         )
@@ -166,10 +173,10 @@ def agent(prompt="", system=None):
 
     prompt = prompt or editor_input(".specialagent.last.prompt.txt")
 
-    cmds = [f"cat {s}" for s in get_prompt_skills(prompt, discover_skills())]
-    cmds.append("(git ls-files || ls) | head -n 30")
+    cmds = [["exec", f"cat {s}"] for s in get_prompt_skills(prompt, discover_skills())]
+    cmds.append(["exec", "(git ls-files || ls) | head -n 30"])
     cmds.extend(
-        f"cat {f}"
+        ["exec", f"cat {f}"]
         for f in set(get_prompt_files(prompt)) | {"makefile", "Makefile"}
         if os.path.isfile(f)
     )
@@ -177,7 +184,7 @@ def agent(prompt="", system=None):
     messages = [
         {"role": "system", "content": system or get_system()},
         {"role": "user", "content": prompt},
-        {"role": "assistant", "content": None, "tool_calls": list(prefetch_sh(*cmds))},
+        {"role": "assistant", "content": None, "tool_calls": list(fmt_calls(cmds))},
     ]
 
     while tools := messages[-1].get("tool_calls", []):

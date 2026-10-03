@@ -38,7 +38,7 @@ def test_agent_returns_final_response(tmp_path, monkeypatch, capsys):
     call_model = recording_model([{"role": "assistant", "content": "done"}])
 
     monkeypatch.setattr(specialagent, "call_model", call_model)
-    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: mock_tools)
+    monkeypatch.setattr(specialagent, "fmt_calls", lambda cmd: mock_tools)
 
     specialagent.agent("p", system="s")
 
@@ -86,7 +86,7 @@ def test_agent_executes_tool_call_then_calls_model_again(
     call_model = recording_model([first_response, final_response])
 
     monkeypatch.setattr(specialagent, "call_model", call_model)
-    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: mock_tools)
+    monkeypatch.setattr(specialagent, "fmt_calls", lambda cmd: mock_tools)
 
     specialagent.agent("p", system="s")
 
@@ -139,7 +139,7 @@ def test_agent_executes_multiple_tool_calls(tmp_path, monkeypatch):
     call_model = recording_model([response_with_tools, final_response])
 
     monkeypatch.setattr(specialagent, "call_model", call_model)
-    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: mock_tools)
+    monkeypatch.setattr(specialagent, "fmt_calls", lambda cmd: mock_tools)
 
     specialagent.agent("p", system="s")
 
@@ -162,7 +162,7 @@ def test_agent_executes_multiple_tool_calls(tmp_path, monkeypatch):
 def test_agent_passes_prefetched_messages_to_model(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
 
-    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: mock_tools)
+    monkeypatch.setattr(specialagent, "fmt_calls", lambda cmd: mock_tools)
 
     response = {
         "role": "assistant",
@@ -182,7 +182,7 @@ def test_agent_uses_editor_when_prompt_is_empty(tmp_path, monkeypatch):
 
     editor_input = Mock(return_value="prompt from editor")
     monkeypatch.setattr(specialagent, "editor_input", editor_input)
-    monkeypatch.setattr(specialagent, "prefetch_sh", lambda cmd: mock_tools)
+    monkeypatch.setattr(specialagent, "fmt_calls", lambda cmd: mock_tools)
 
     call_model = recording_model([{"role": "assistant", "content": "done"}])
     monkeypatch.setattr(specialagent, "call_model", call_model)
