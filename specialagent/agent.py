@@ -161,6 +161,17 @@ def get_prompt_skills(prompt, skills):
     return [s for s in skills if s.split("/")[-2] in prompt[:100]]
 
 
+def get_prompt_urls(prompt):
+    """
+    Get urls in a prompt
+
+    >>> get_prompt_urls("fetch https://example.com and http://example.org/docs.")
+    ['https://example.com', 'http://example.org/docs']
+    """
+
+    return [u.rstrip(".,;:!?)]}") for u in re.findall(r"https?://\S+", prompt)]
+
+
 def editor_input(path):
     """Open $EDITOR with initial text and return the edited text."""
 
@@ -180,6 +191,8 @@ def agent(prompt="", system=None):
         for f in set(get_prompt_files(prompt)) | {"makefile", "Makefile"}
         if os.path.isfile(f)
     )
+
+    cmds.extend(["fetch", u] for u in get_prompt_urls(prompt))
 
     messages = [
         {"role": "system", "content": system or get_system()},
