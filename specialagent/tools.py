@@ -53,7 +53,7 @@ def fetch(url):
         ignoring = []
         pre = False
         ignore = ("script", "style", "header", "footer", "form", "nav", "svg")
-        blocks = ("section", "div", "p", "li", "dt", "pre")
+        blocks = ("section", "div", "p", "li", "dt", "pre", "tr")
 
         def handle_starttag(self, tag, attrs):
             if tag in self.ignore:
@@ -83,7 +83,7 @@ def fetch(url):
 
             if not self.ignoring:
                 if self.paras and self.paras[-1]:
-                    self.paras[-1] += data
+                    self.paras[-1] += " " + data
                 else:
                     self.paras.append(data)
 
