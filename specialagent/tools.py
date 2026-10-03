@@ -51,8 +51,9 @@ def fetch(url):
     class ParagraphExtractor(HTMLParser):
         paras = [""]
         ignoring = []
+        pre = False
         ignore = ("script", "style", "header", "footer", "form", "nav", "svg")
-        blocks = ("section", "div", "p", "li", "dt")
+        blocks = ("section", "div", "p", "li", "dt", "pre")
 
         def handle_starttag(self, tag, attrs):
             if tag in self.ignore:
@@ -61,6 +62,9 @@ def fetch(url):
             if tag in self.blocks and self.paras[-1]:
                 self.paras.append("")
 
+            if tag == "pre":
+                self.pre = True
+
         def handle_endtag(self, tag):
             if self.ignoring and self.ignoring[-1] == tag:
                 self.ignoring.pop()
@@ -68,10 +72,18 @@ def fetch(url):
             if tag in self.blocks and self.paras[-1]:
                 self.paras.append("")
 
+            if tag == "pre":
+                self.pre = False
+
         def handle_data(self, data):
+            data = unescape(data)
+
+            if not self.pre:
+                data = data.replace("\n", " ")
+
             if not self.ignoring:
                 if self.paras and self.paras[-1]:
-                    self.paras[-1] += unescape(data).replace("\n", " ")
+                    self.paras[-1] += data
                 else:
                     self.paras.append(data)
 
