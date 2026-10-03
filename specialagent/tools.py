@@ -52,11 +52,10 @@ def fetch(url):
         paras = [""]
         ignoring = []
         ignore = ("script", "style", "header", "footer", "form", "nav", "svg")
-        ignore_attrs = {("hidden", "hidden")}
         blocks = ("section", "div", "p", "li", "dt")
 
         def handle_starttag(self, tag, attrs):
-            if tag in self.ignore or self.ignore_attrs & set(attrs):
+            if tag in self.ignore:
                 self.ignoring.append(tag)
 
             if tag in self.blocks and self.paras[-1]:
