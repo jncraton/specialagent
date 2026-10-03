@@ -51,10 +51,8 @@ def fetch(url):
     class ParagraphExtractor(HTMLParser):
         paras = [""]
         ignoring = []
-        ignore = ("script", "style", "header", "footer")
-        ignore_attrs = {
-            ("hidden", "hidden"),
-        }
+        ignore = ("script", "style", "header", "footer", "form", "nav", "svg")
+        ignore_attrs = {("hidden", "hidden")}
         inlines = ("a", "b", "i", "span", "sup", "sub", "strong", "em", "code")
         blocks = ("section", "div", "p")
 
