@@ -68,8 +68,8 @@ def fetch(url):
             if tag == "img":
                 attrs = {k: v for k, v in attrs}
 
-                if "alt" in attrs and "src" in attrs:
-                    self.paras.append(f'![{attrs["alt"]}]({attrs["src"]})')
+                if "src" in attrs:
+                    self.paras.append(f'![{attrs.get("alt", "")}]({attrs["src"]})')
 
         def handle_endtag(self, tag):
             if self.ignoring and self.ignoring[-1] == tag:
