@@ -53,8 +53,7 @@ def fetch(url):
         ignoring = []
         ignore = ("script", "style", "header", "footer", "form", "nav", "svg")
         ignore_attrs = {("hidden", "hidden")}
-        inlines = ("a", "b", "i", "span", "sup", "sub", "strong", "em", "code")
-        blocks = ("section", "div", "p")
+        blocks = ("section", "div", "p", "li", "dt")
 
         def handle_starttag(self, tag, attrs):
             if tag in self.ignore or self.ignore_attrs & set(attrs):
