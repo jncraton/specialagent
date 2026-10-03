@@ -80,7 +80,7 @@ def fetch(url):
         def get_plain(self):
             plain = "\n\n".join([p.rstrip() for p in self.paras if p.strip()])
             plain = re.sub(r"[ \t]+\n", "\n", plain)
-            plain = re.sub(r"(?<![ \t\n])[ \t]+", " ", plain)
+            plain = re.sub(r"(?<=\S)[^\S\r\n]{2,}", " ", plain)
             plain = re.sub(r"\n\n\n+", "\n\n", plain)
             return plain.strip()
 
