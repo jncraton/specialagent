@@ -1,0 +1,773 @@
+
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>5.4. Linked Lists &mdash; CS3 Data Structures &amp; Algorithms</title>
+    
+    
+      <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../lib/normalize.css" type="text/css" />
+    <link rel="stylesheet" href="../../../lib/JSAV.css" type="text/css" />
+    <link rel="stylesheet" href="../../../lib/odsaMOD.css" type="text/css" />
+    <link rel="stylesheet" href="../../../lib/jquery.ui.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../lib/odsaStyle.css" type="text/css" />
+    
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT:    './',
+      VERSION:     '0.4.1',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE:  true
+    };
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": {
+        scale: "80"
+      }
+    });
+  </script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="index" title="CS3 Data Structures &amp; Algorithms" href="index.html" />
+    <link rel="next" title="5. Comparison of List Implementations" href="ListAnalysis.html" />
+    <link rel="prev" title="3. Array-Based List Implementation" href="ListArray.html" />
+
+  </head>
+
+  <body>
+
+
+    <div class="header">
+      
+
+    <script type="text/javascript" src="../../../lib/jquery.min.js"></script>
+    <script type="text/javascript" src="../../../lib/jquery.migrate.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localforage.min.js"></script>
+    <script type="text/javascript" src="_static/config.js"></script>
+  <script type="text/javascript" src="../../../lib/jquery.scrolldepth.js"></script>
+  <script type="text/javascript" src="../../../lib/timeme.js"></script>
+  <script type="text/javascript" src="../../../lib/jquery.ui.min.js"></script>
+  <script type="text/javascript" src="../../../lib/jquery.transit.js"></script>
+  <script type="text/javascript" src="../../../lib/raphael.js"></script>
+  <script type="text/javascript" src="../../../lib/JSAV.js"></script>
+  <script type="text/javascript" src="../../../lib/timeme.js"></script>
+  <script type="text/javascript" src="../../../lib/odsaUtils.js"></script>
+  <script type="text/javascript" src="../../../lib/odsaMOD.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+  <script type="text/javascript" src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
+  <script type="text/javascript" src="../../../lib/dataStructures.js"></script>
+  <script type="text/javascript" src="../../../lib/conceptMap.js"></script>
+  <script type="text/javascript" src="../../../lib/splice-iframe.js"></script>
+
+      
+
+
+      
+
+
+        <img class="leftlogo" src="_static/OpenDSALogoT64.png" alt="OpenDSA Logo"/>
+      <div class="title-wrapper">
+        <div class="title-inbetween" style="display: table-cell; vertical-align: middle;">
+          <div class="title-content">
+            <h1 class="heading" ><a href="index.html">
+              <span>CS3 Data Structures &amp; Algorithms</span></a></h1>
+            <h2 class="heading" ><span>Chapter 5 Linear Structures</span></h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="topnav">
+      <p>
+          <a class="abt" style="float:left;color:blue;" href="#" rel="nofollow">| About</a>&#160;&#160;
+
+        
+      «&#160;&#160;<a id="prevmod" href="ListArray.html">5.<span class="section-number">3. </span>Array-Based List Implementation</a>
+      &#160;&#160;::&#160;&#160;
+      <a  class="uplink" href="index.html">Contents</a>
+      &#160;&#160;::&#160;&#160;
+      <a  id="nextmod" href="ListAnalysis.html">5.<span class="section-number">5. </span>Comparison of List Implementations</a>&#160;&#160;»
+
+
+      </p>
+    </div>
+     
+    <div class="content">
+      
+      
+  <blockquote>
+<div><script type="text/javascript">
+ window.ODSA.SETTINGS.MODULE_SECTIONS = ['why-this-has-problems', 'a-better-solution', 'linked-list-implementation', 'linked-list-remove'];
+ $(function () {
+   var moduleName = "linked-lists";
+   var sections = ['why-this-has-problems', 'a-better-solution', 'linked-list-implementation', 'linked-list-remove'];
+   TimeMe.initialize({
+     idleTimeoutInSeconds: 10
+   });
+   sections.forEach(function (section, i) {
+     TimeMe.trackTimeOnElement(section);
+   });
+   var timeObj = {};
+   setInterval(function () {
+     timeObj[moduleName.substring(0, 5)] = TimeMe.getTimeOnCurrentPageInSeconds().toFixed(2);
+     sections.forEach(function (section, i) {
+       timeObj[i + "-" + section.substring(0, 5)] = TimeMe.getTimeOnElementInSeconds(section).toFixed(2);
+     });
+     for (var sec of sections) {
+     }
+   }, 2000);
+
+   // NOTE: Scroll depth tracking was investigated but not implemented
+   // Canvas LTI limitations documented in GitHub issue #523:
+   // - Cross-site scripting security limitations prevent access to Canvas parent scroller
+   // - Canvas automatically optimizes iframe height, eliminating internal scrolling
+   // - Two-scroller approach was tested but was too awkward for user experience
+   // - Future implementation would require Canvas-side cooperation
+ });
+</script></div></blockquote>
+<script>
+ODSA.SETTINGS.DISP_MOD_COMP = true;ODSA.SETTINGS.MODULE_NAME = "ListLinked";ODSA.SETTINGS.MODULE_LONG_NAME = "Linked Lists";ODSA.SETTINGS.MODULE_CHAPTER = "Linear Structures"; ODSA.SETTINGS.BUILD_DATE = "2026-08-12 10:09:27"; ODSA.SETTINGS.BUILD_CMAP = true;JSAV_OPTIONS['lang']='en';JSAV_EXERCISE_OPTIONS['code']='java';
+</script><link href="../../../AV/List/llistCON.css" rel="stylesheet" type="text/css" />
+<section id="linked-lists">
+<h1>5.<span class="section-number">4. </span>Linked Lists<a class="headerlink" href="#linked-lists" title="Link to this heading">¶</a></h1>
+<section id="id1">
+<h2>5.<span class="section-number">4.1. </span>Linked Lists<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p>In this module we present one of the two traditional implementations
+for lists, usually called a <a class="reference internal" href="Glossary.html#term-linked-list"><span class="xref std std-term">linked list</span></a>.
+The linked list uses <a class="reference internal" href="Glossary.html#term-dynamic-memory-allocation"><span class="xref std std-term">dynamic memory allocation</span></a>,
+that is, it allocates memory for new list elements as needed.
+The following diagram illustrates the linked list concept.
+Here there are three <a class="reference internal" href="Glossary.html#term-node"><span class="xref std std-term">nodes</span></a> that
+are “linked” together.
+Each node has two boxes.
+The box on the right holds a link to the next node in the list.
+Notice that the rightmost node has a diagonal slash through its link
+box, signifying that there is no link coming out of this box.</p>
+<div class="divdgm">
+<div id="llistRepCON"></div>
+</div><p>Because a list node is a distinct object (as opposed to simply a cell
+in an array), it is good practice to make a separate list node class.
+(We can also re-use the list node class to implement linked
+implementations for the <a class="reference internal" href="Glossary.html#term-stack"><span class="xref std std-term">stack</span></a> and
+<a class="reference internal" href="Queue.html#queue"><span class="std std-ref">queue</span></a> data structures.
+Here is an implementation for list nodes, called the <code class="docutils literal notranslate"><span class="pre">Link</span></code> class.
+Objects in the <code class="docutils literal notranslate"><span class="pre">Link</span></code> class contain an <code class="docutils literal notranslate"><span class="pre">element</span></code> field to
+store the element value, and a <code class="docutils literal notranslate"><span class="pre">next</span></code> field to store a pointer to
+the next node on the list.
+The list built from such nodes is called a <a class="reference internal" href="Glossary.html#term-singly-linked-list"><span class="xref std std-term">singly linked list</span></a>,
+or a <a class="reference internal" href="Glossary.html#term-one-way-list"><span class="xref std std-term">one-way list</span></a>, because each list node
+has a single pointer to the next node on the list.</p>
+<div id="Link_Link_code"><ul><li><a href="#Link_Link_code_Java">Java</a></li><li><a href="#Link_Link_code_Java_Generic">Java (Generic)</a></li></ul><div id="Link_Link_code_Java"><div class="highlight-java notranslate"><div class="highlight"><pre tabindex="0"><span></span><span class="kd">class</span> <span class="nc">Link</span><span class="w"> </span><span class="p">{</span><span class="w">         </span><span class="c1">// Singly linked list node class</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="n">e</span><span class="p">;</span><span class="w">  </span><span class="c1">// Value for this node</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="n">Link</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w">    </span><span class="c1">// Point to next node in list</span>
+
+<span class="w">  </span><span class="c1">// Constructors</span>
+<span class="w">  </span><span class="n">Link</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">it</span><span class="p">,</span><span class="w"> </span><span class="n">Link</span><span class="w"> </span><span class="n">inn</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">it</span><span class="p">;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inn</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="n">Link</span><span class="p">(</span><span class="n">Link</span><span class="w"> </span><span class="n">inn</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inn</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">Object</span><span class="w"> </span><span class="nf">element</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w">                  </span><span class="c1">// Return the value</span>
+<span class="w">  </span><span class="n">Object</span><span class="w"> </span><span class="nf">setElement</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">it</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">it</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="c1">// Set element value</span>
+<span class="w">  </span><span class="n">Link</span><span class="w"> </span><span class="nf">next</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w">                       </span><span class="c1">// Return next link</span>
+<span class="w">  </span><span class="n">Link</span><span class="w"> </span><span class="nf">setNext</span><span class="p">(</span><span class="n">Link</span><span class="w"> </span><span class="n">inn</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inn</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w">      </span><span class="c1">// Set next link</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div id="Link_Link_code_Java_Generic"><div class="highlight-java notranslate"><div class="highlight"><pre tabindex="0"><span></span><span class="kd">class</span> <span class="nc">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">         </span><span class="c1">// Singly linked list node class</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="n">E</span><span class="w"> </span><span class="n">e</span><span class="p">;</span><span class="w">          </span><span class="c1">// Value for this node</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w">    </span><span class="c1">// Point to next node in list</span>
+
+<span class="w">  </span><span class="c1">// Constructors</span>
+<span class="w">  </span><span class="n">Link</span><span class="p">(</span><span class="n">E</span><span class="w"> </span><span class="n">it</span><span class="p">,</span><span class="w"> </span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">inn</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">it</span><span class="p">;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inn</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="n">Link</span><span class="p">(</span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">inn</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inn</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">E</span><span class="w"> </span><span class="nf">element</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w">                        </span><span class="c1">// Return the value</span>
+<span class="w">  </span><span class="n">E</span><span class="w"> </span><span class="nf">setElement</span><span class="p">(</span><span class="n">E</span><span class="w"> </span><span class="n">it</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">it</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w">            </span><span class="c1">// Set element value</span>
+<span class="w">  </span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">next</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w">                     </span><span class="c1">// Return next link</span>
+<span class="w">  </span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">setNext</span><span class="p">(</span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">inn</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inn</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="c1">// Set next link</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></div><script>$(function() {$( "#Link_Link_code" ).tabs();});</script><p>The <code class="docutils literal notranslate"><span class="pre">Link</span></code> class is quite simple.
+There are two forms for its constructor, one with
+an initial element value and one without.
+Member functions allow the link user to get or set the <code class="docutils literal notranslate"><span class="pre">element</span></code>
+and <code class="docutils literal notranslate"><span class="pre">link</span></code> fields.</p>
+<div>
+<div id="llistBadCON" class="ssAV" data-points="0.0" data-threshold="1.0" data-type="ss" data-required="False" data-short-name="llistBadCON" data-long-name="Linked List Slideshow 1" data-exer-id="" alt="Linked List Slideshow 1" tabIndex="-1">
+ <span class="jsavcounter"></span>
+ <a class="jsavsettings" href="#">Settings</a>
+ <div class="jsavcontrols"></div>
+ <p class="jsavoutput jsavline"></p>
+ <div class="jsavcanvas" style="overflow-y: auto" tabindex="0"></div>
+ <div class="prof_indicators">
+  <img id="llistBadCON_check_mark" class="prof_check_mark" src="_static/Images/green_check.png" alt="Proficient" />
+  <span id="llistBadCON_cm_saving_msg" class="cm_saving_msg">Saving...</span>
+  <span id="llistBadCON_cm_error_msg" class="cm_error_msg">
+   <img id="llistBadCON_cm_warning_icon" class="cm_warning_icon" src="_static/Images/warning.png" alt="Error Saving" /><br />
+   Server Error<br />
+   <a href="#" class="resubmit_link">Resubmit</a>
+  </span>
+ </div>
+</div>
+<p></p>
+</div>
+<section id="why-this-has-problems">
+<h3>5.<span class="section-number">4.1.1. </span>Why This Has Problems<a class="headerlink" href="#why-this-has-problems" title="Link to this heading">¶</a></h3>
+<p>There are a number of problems with the representation just
+described.
+First, there are lots of special cases to code for.
+For example, when the list is empty we have
+no element for <code class="docutils literal notranslate"><span class="pre">head</span></code>, <code class="docutils literal notranslate"><span class="pre">tail</span></code>, and <code class="docutils literal notranslate"><span class="pre">curr</span></code> to point to.
+Implementing special cases for <code class="docutils literal notranslate"><span class="pre">insert</span></code> and <code class="docutils literal notranslate"><span class="pre">remove</span></code>
+increases code complexity, making it harder to understand,
+and thus increases the chance of introducing bugs.</p>
+<div>
+<div id="llistBadDelCON" class="ssAV" data-points="0.0" data-threshold="1.0" data-type="ss" data-required="False" data-short-name="llistBadDelCON" data-long-name="Linked List Slideshow 2" data-exer-id="" alt="Linked List Slideshow 2" tabIndex="-1">
+ <span class="jsavcounter"></span>
+ <a class="jsavsettings" href="#">Settings</a>
+ <div class="jsavcontrols"></div>
+ <p class="jsavoutput jsavline"></p>
+ <div class="jsavcanvas" style="overflow-y: auto" tabindex="0"></div>
+ <div class="prof_indicators">
+  <img id="llistBadDelCON_check_mark" class="prof_check_mark" src="_static/Images/green_check.png" alt="Proficient" />
+  <span id="llistBadDelCON_cm_saving_msg" class="cm_saving_msg">Saving...</span>
+  <span id="llistBadDelCON_cm_error_msg" class="cm_error_msg">
+   <img id="llistBadDelCON_cm_warning_icon" class="cm_warning_icon" src="_static/Images/warning.png" alt="Error Saving" /><br />
+   Server Error<br />
+   <a href="#" class="resubmit_link">Resubmit</a>
+  </span>
+ </div>
+</div>
+<p></p>
+</div>
+</section>
+<section id="a-better-solution">
+<h3>5.<span class="section-number">4.1.2. </span>A Better Solution<a class="headerlink" href="#a-better-solution" title="Link to this heading">¶</a></h3>
+<p>Fortunately, there is a fairly easy way to deal with all of the
+special cases, as well as the problem with deleting the last node.
+Many special cases can be eliminated by implementing
+linked lists with an additional <a class="reference internal" href="Glossary.html#term-header-node"><span class="xref std std-term">header node</span></a>
+as the first node of the list.
+This header node is a link node like any other, but its value is
+ignored and it is not considered to be an actual element of the list.
+The header node saves coding effort because we no longer need to
+consider special cases for empty lists or when the current position is
+at one end of the list.
+The cost of this simplification is the space for the header node.
+However, there are space savings due to smaller code size,
+because statements to handle the special cases are omitted.
+We get rid of the remaining special cases related to being at the end
+of the list by adding a “trailer” node that also never stores a
+value.</p>
+<p>The following diagram shows initial conditions for a linked list
+with header and trailer nodes.</p>
+<div class="divdgm">
+<div id="llistInitCON"></div>
+</div><p>Here is what a list with some elements looks like with the header and
+trailer nodes added.</p>
+<div class="divdgm">
+<div id="llistHeaderCON"></div>
+</div><p>Adding the trailer node also solves our problem with deleting the last
+node on the list, as we will see when we take a closer look at the
+remove method’s implementation.</p>
+</section>
+<section id="linked-list-implementation">
+<h3>5.<span class="section-number">4.1.3. </span>Linked List Implementation<a class="headerlink" href="#linked-list-implementation" title="Link to this heading">¶</a></h3>
+<p>Here is the implementation for the linked list class,
+named <code class="docutils literal notranslate"><span class="pre">LList</span></code>.</p>
+<div id="LList_LList_code"><ul><li><a href="#LList_LList_code_Java">Java</a></li><li><a href="#LList_LList_code_Java_Generic">Java (Generic)</a></li></ul><div id="LList_LList_code_Java"><div class="highlight-java notranslate"><div class="highlight"><pre tabindex="0"><span></span><span class="c1">// Linked list implementation</span>
+<span class="kd">class</span> <span class="nc">LList</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">List</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="n">Link</span><span class="w"> </span><span class="n">head</span><span class="p">;</span><span class="w">         </span><span class="c1">// Pointer to list header</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="n">Link</span><span class="w"> </span><span class="n">tail</span><span class="p">;</span><span class="w">         </span><span class="c1">// Pointer to last element</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="n">Link</span><span class="w"> </span><span class="n">curr</span><span class="p">;</span><span class="w">         </span><span class="c1">// Access to current element</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">listSize</span><span class="p">;</span><span class="w">      </span><span class="c1">// Size of list</span>
+
+<span class="w">  </span><span class="c1">// Constructors</span>
+<span class="w">  </span><span class="n">LList</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">this</span><span class="p">();</span><span class="w"> </span><span class="p">}</span><span class="w">     </span><span class="c1">// Constructor -- Ignore size</span>
+<span class="w">  </span><span class="n">LList</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">clear</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Remove all elements</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">clear</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Link</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span><span class="w"> </span><span class="c1">// Create trailer</span>
+<span class="w">    </span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Link</span><span class="p">(</span><span class="n">tail</span><span class="p">);</span><span class="w">        </span><span class="c1">// Create header</span>
+<span class="w">    </span><span class="n">listSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1">// Insert &quot;it&quot; at current position</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">it</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">curr</span><span class="p">.</span><span class="na">setNext</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Link</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">element</span><span class="p">(),</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">()));</span>
+<span class="w">    </span><span class="n">curr</span><span class="p">.</span><span class="na">setElement</span><span class="p">(</span><span class="n">it</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tail</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">();</span><span class="w">  </span><span class="c1">// New tail</span>
+<span class="w">    </span><span class="n">listSize</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1">// Append &quot;it&quot; to list</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">it</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">tail</span><span class="p">.</span><span class="na">setNext</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Link</span><span class="p">(</span><span class="kc">null</span><span class="p">));</span>
+<span class="w">    </span><span class="n">tail</span><span class="p">.</span><span class="na">setElement</span><span class="p">(</span><span class="n">it</span><span class="p">);</span>
+<span class="w">    </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tail</span><span class="p">.</span><span class="na">next</span><span class="p">();</span>
+<span class="w">    </span><span class="n">listSize</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Remove and return current element</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">remove</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tail</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">          </span><span class="c1">// Nothing to remove</span>
+<span class="w">    </span><span class="n">Object</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">element</span><span class="p">();</span><span class="w">             </span><span class="c1">// Remember value</span>
+<span class="w">    </span><span class="n">curr</span><span class="p">.</span><span class="na">setElement</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">().</span><span class="na">element</span><span class="p">());</span><span class="w"> </span><span class="c1">// Pull forward the next element</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tail</span><span class="p">)</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">;</span><span class="w">   </span><span class="c1">// Removed last, move tail</span>
+<span class="w">    </span><span class="n">curr</span><span class="p">.</span><span class="na">setNext</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">().</span><span class="na">next</span><span class="p">());</span><span class="w">       </span><span class="c1">// Point around unneeded link</span>
+<span class="w">    </span><span class="n">listSize</span><span class="o">--</span><span class="p">;</span><span class="w">                             </span><span class="c1">// Decrement element count</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">it</span><span class="p">;</span><span class="w">                              </span><span class="c1">// Return value</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">moveToStart</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="na">next</span><span class="p">();</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="c1">// Set curr at list start</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">moveToEnd</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tail</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w">          </span><span class="c1">// Set curr at list end</span>
+
+<span class="w">  </span><span class="c1">// Move curr one step left; no change if now at front</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">prev</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="p">.</span><span class="na">next</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="c1">// No previous element</span>
+<span class="w">    </span><span class="n">Link</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// March down list until we find the previous element</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">temp</span><span class="p">.</span><span class="na">next</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp</span><span class="p">.</span><span class="na">next</span><span class="p">();</span>
+<span class="w">    </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Move curr one step right; no change if now at end</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">next</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">tail</span><span class="p">)</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">length</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">listSize</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="c1">// Return list length</span>
+
+
+<span class="w">  </span><span class="c1">// Return the position of the current element</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">currPos</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Link</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="na">next</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">temp</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">      </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp</span><span class="p">.</span><span class="na">next</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1">// Move down list to &quot;pos&quot; position</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">moveToPos</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pos</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">pos</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">pos</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">listSize</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="na">next</span><span class="p">();</span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">pos</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Return true if current position is at end of the list</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isAtEnd</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tail</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Return current element value. Note that null gets returned if curr is at the tail</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">getValue</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">element</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Check if the list is empty</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isEmpty</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">listSize</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div id="LList_LList_code_Java_Generic"><div class="highlight-java notranslate"><div class="highlight"><pre tabindex="0"><span></span><span class="c1">// Linked list implementation</span>
+<span class="kd">class</span> <span class="nc">LList</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">head</span><span class="p">;</span><span class="w">      </span><span class="c1">// Pointer to list header</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tail</span><span class="p">;</span><span class="w">      </span><span class="c1">// Pointer to last element</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">curr</span><span class="p">;</span><span class="w">      </span><span class="c1">// Access to current element</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">listSize</span><span class="p">;</span><span class="w">      </span><span class="c1">// Size of list</span>
+
+<span class="w">  </span><span class="c1">// Constructors</span>
+<span class="w">  </span><span class="n">LList</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">      </span><span class="c1">// Constructor -- Ignore size</span>
+<span class="w">    </span><span class="k">this</span><span class="p">();</span><span class="w"> </span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">LList</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="n">clear</span><span class="p">();</span><span class="w"> </span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Remove all elements</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">clear</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span><span class="w"> </span><span class="c1">// Create trailer</span>
+<span class="w">    </span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="p">(</span><span class="n">tail</span><span class="p">);</span><span class="w">        </span><span class="c1">// Create header</span>
+<span class="w">    </span><span class="n">listSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1">// Insert &quot;it&quot; at current position</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="n">E</span><span class="w"> </span><span class="n">it</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">curr</span><span class="p">.</span><span class="na">setNext</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">element</span><span class="p">(),</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">()));</span>
+<span class="w">    </span><span class="n">curr</span><span class="p">.</span><span class="na">setElement</span><span class="p">(</span><span class="n">it</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tail</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">();</span><span class="w">  </span><span class="c1">// New tail</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">listSize</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1">// Append &quot;it&quot; to list</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="n">E</span><span class="w"> </span><span class="n">it</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">tail</span><span class="p">.</span><span class="na">setNext</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">));</span>
+<span class="w">    </span><span class="n">tail</span><span class="p">.</span><span class="na">setElement</span><span class="p">(</span><span class="n">it</span><span class="p">);</span>
+<span class="w">    </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tail</span><span class="p">.</span><span class="na">next</span><span class="p">();</span>
+<span class="w">    </span><span class="n">listSize</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Remove and return current element</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">E</span><span class="w"> </span><span class="nf">remove</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tail</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">          </span><span class="c1">// Nothing to remove</span>
+<span class="w">    </span><span class="n">E</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">element</span><span class="p">();</span><span class="w">                  </span><span class="c1">// Remember value</span>
+<span class="w">    </span><span class="n">curr</span><span class="p">.</span><span class="na">setElement</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">().</span><span class="na">element</span><span class="p">());</span><span class="w"> </span><span class="c1">// Pull forward the next element</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tail</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">;</span><span class="w">   </span><span class="c1">// Removed last, move tail</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">curr</span><span class="p">.</span><span class="na">setNext</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">().</span><span class="na">next</span><span class="p">());</span><span class="w">       </span><span class="c1">// Point around unneeded link</span>
+<span class="w">    </span><span class="n">listSize</span><span class="o">--</span><span class="p">;</span><span class="w">                             </span><span class="c1">// Decrement element count</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">it</span><span class="p">;</span><span class="w">                              </span><span class="c1">// Return value</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">moveToStart</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="na">next</span><span class="p">();</span><span class="w"> </span><span class="c1">// Set curr at list start</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">moveToEnd</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">      </span>
+<span class="w">    </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tail</span><span class="p">;</span><span class="w"> </span><span class="c1">// Set curr at list end</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Move curr one step left; no change if now at front</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">prev</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="p">.</span><span class="na">next</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="c1">// No previous element</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// March down list until we find the previous element</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">temp</span><span class="p">.</span><span class="na">next</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp</span><span class="p">.</span><span class="na">next</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Move curr one step right; no change if now at end</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">next</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">tail</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">();</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">length</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">listSize</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="c1">// Return list length</span>
+
+
+<span class="w">  </span><span class="c1">// Return the position of the current element</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">currPos</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Link</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="na">next</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">temp</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp</span><span class="p">.</span><span class="na">next</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1">// Move down list to &quot;pos&quot; position</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">moveToPos</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pos</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">pos</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">pos</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">listSize</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="na">next</span><span class="p">();</span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">pos</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Return true if current position is at end of the list</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isAtEnd</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tail</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Return current element value. Note that null gets returned if curr is at the tail</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">E</span><span class="w"> </span><span class="nf">getValue</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">element</span><span class="p">();</span><span class="w"> </span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1">//Tell if the list is empty or not</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isEmpty</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">listSize</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></div><script>$(function() {$( "#LList_LList_code" ).tabs();});</script><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div>
+<div id="llistVarsCON" class="ssAV" data-points="0.0" data-threshold="1.0" data-type="ss" data-required="False" data-short-name="llistVarsCON" data-long-name="Linked List Variables Slideshow" data-exer-id="" alt="Linked List Variables Slideshow" tabIndex="-1">
+ <span class="jsavcounter"></span>
+ <a class="jsavsettings" href="#">Settings</a>
+ <div class="jsavcontrols"></div>
+ <p class="jsavoutput jsavline"></p>
+ <div class="jsavcanvas" style="overflow-y: auto" tabindex="0"></div>
+ <div class="prof_indicators">
+  <img id="llistVarsCON_check_mark" class="prof_check_mark" src="_static/Images/green_check.png" alt="Proficient" />
+  <span id="llistVarsCON_cm_saving_msg" class="cm_saving_msg">Saving...</span>
+  <span id="llistVarsCON_cm_error_msg" class="cm_error_msg">
+   <img id="llistVarsCON_cm_warning_icon" class="cm_warning_icon" src="_static/Images/warning.png" alt="Error Saving" /><br />
+   Server Error<br />
+   <a href="#" class="resubmit_link">Resubmit</a>
+  </span>
+ </div>
+</div>
+<p></p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div>
+<div id="llistConsCON" class="ssAV" data-points="0.0" data-threshold="1.0" data-type="ss" data-required="False" data-short-name="llistConsCON" data-long-name="Linked List Constructors Slideshow" data-exer-id="" alt="Linked List Constructors Slideshow" tabIndex="-1">
+ <span class="jsavcounter"></span>
+ <a class="jsavsettings" href="#">Settings</a>
+ <div class="jsavcontrols"></div>
+ <p class="jsavoutput jsavline"></p>
+ <div class="jsavcanvas" style="overflow-y: auto" tabindex="0"></div>
+ <div class="prof_indicators">
+  <img id="llistConsCON_check_mark" class="prof_check_mark" src="_static/Images/green_check.png" alt="Proficient" />
+  <span id="llistConsCON_cm_saving_msg" class="cm_saving_msg">Saving...</span>
+  <span id="llistConsCON_cm_error_msg" class="cm_error_msg">
+   <img id="llistConsCON_cm_warning_icon" class="cm_warning_icon" src="_static/Images/warning.png" alt="Error Saving" /><br />
+   Server Error<br />
+   <a href="#" class="resubmit_link">Resubmit</a>
+  </span>
+ </div>
+</div>
+<p></p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div>
+<div id="llistInsertCON" class="ssAV" data-points="0.0" data-threshold="1.0" data-type="ss" data-required="False" data-short-name="llistInsertCON" data-long-name="Linked List Insert Slideshow" data-exer-id="" alt="Linked List Insert Slideshow" tabIndex="-1">
+ <span class="jsavcounter"></span>
+ <a class="jsavsettings" href="#">Settings</a>
+ <div class="jsavcontrols"></div>
+ <p class="jsavoutput jsavline"></p>
+ <div class="jsavcanvas" style="overflow-y: auto" tabindex="0"></div>
+ <div class="prof_indicators">
+  <img id="llistInsertCON_check_mark" class="prof_check_mark" src="_static/Images/green_check.png" alt="Proficient" />
+  <span id="llistInsertCON_cm_saving_msg" class="cm_saving_msg">Saving...</span>
+  <span id="llistInsertCON_cm_error_msg" class="cm_error_msg">
+   <img id="llistInsertCON_cm_warning_icon" class="cm_warning_icon" src="_static/Images/warning.png" alt="Error Saving" /><br />
+   Server Error<br />
+   <a href="#" class="resubmit_link">Resubmit</a>
+  </span>
+ </div>
+</div>
+<p></p>
+</div>
+<p>Here are some special cases for linked list insertion: Inserting at
+the end, and inserting to an empty list.</p>
+<div>
+<div id="llistSpecialCON" class="ssAV" data-points="0.0" data-threshold="1.0" data-type="ss" data-required="False" data-short-name="llistSpecialCON" data-long-name="Linked List Special Insert Slideshow" data-exer-id="" alt="Linked List Special Insert Slideshow" tabIndex="-1">
+ <span class="jsavcounter"></span>
+ <a class="jsavsettings" href="#">Settings</a>
+ <div class="jsavcontrols"></div>
+ <p class="jsavoutput jsavline"></p>
+ <div class="jsavcanvas" style="overflow-y: auto" tabindex="0"></div>
+ <div class="prof_indicators">
+  <img id="llistSpecialCON_check_mark" class="prof_check_mark" src="_static/Images/green_check.png" alt="Proficient" />
+  <span id="llistSpecialCON_cm_saving_msg" class="cm_saving_msg">Saving...</span>
+  <span id="llistSpecialCON_cm_error_msg" class="cm_error_msg">
+   <img id="llistSpecialCON_cm_warning_icon" class="cm_warning_icon" src="_static/Images/warning.png" alt="Error Saving" /><br />
+   Server Error<br />
+   <a href="#" class="resubmit_link">Resubmit</a>
+  </span>
+ </div>
+</div>
+<p></p>
+</div>
+<div
+    id="LlistInsertPRO"
+    class="embedContainer"
+    data-exer-name="LlistInsertPRO"
+    data-long-name="Linked List Insert Exercise"
+    data-short-name="LlistInsertPRO"
+    data-frame-src="../../../Exercises/List/LlistInsertPRO.html?localMode=true&amp;module=ListLinked&amp;selfLoggingEnabled=false&amp;JOP-lang=en&amp;JXOP-code=java"
+    data-frame-width="950"
+    data-frame-height="900"
+    data-vertical-scrolling="no"
+    data-external="false"
+    data-points="1.0"
+    data-required="True"
+    data-showhide="show"
+    data-threshold="5"
+    data-type="ka"
+    data-exer-id="">
+  
+  <div class="center">
+    <div id="LlistInsertPRO_iframe"></div>
+  </div>
+</div>
+</section>
+</section>
+<section id="linked-list-remove">
+<h2>5.<span class="section-number">4.2. </span>Linked List Remove<a class="headerlink" href="#linked-list-remove" title="Link to this heading">¶</a></h2>
+<div>
+<div id="llistRemoveCON" class="ssAV" data-points="0.0" data-threshold="1.0" data-type="ss" data-required="False" data-short-name="llistRemoveCON" data-long-name="Linked List Remove Slideshow" data-exer-id="" alt="Linked List Remove Slideshow" tabIndex="-1">
+ <span class="jsavcounter"></span>
+ <a class="jsavsettings" href="#">Settings</a>
+ <div class="jsavcontrols"></div>
+ <p class="jsavoutput jsavline"></p>
+ <div class="jsavcanvas" style="overflow-y: auto" tabindex="0"></div>
+ <div class="prof_indicators">
+  <img id="llistRemoveCON_check_mark" class="prof_check_mark" src="_static/Images/green_check.png" alt="Proficient" />
+  <span id="llistRemoveCON_cm_saving_msg" class="cm_saving_msg">Saving...</span>
+  <span id="llistRemoveCON_cm_error_msg" class="cm_error_msg">
+   <img id="llistRemoveCON_cm_warning_icon" class="cm_warning_icon" src="_static/Images/warning.png" alt="Error Saving" /><br />
+   Server Error<br />
+   <a href="#" class="resubmit_link">Resubmit</a>
+  </span>
+ </div>
+</div>
+<p></p>
+</div>
+<div
+    id="LlistRemovePRO"
+    class="embedContainer"
+    data-exer-name="LlistRemovePRO"
+    data-long-name="Linked List Remove Exercise"
+    data-short-name="LlistRemovePRO"
+    data-frame-src="../../../Exercises/List/LlistRemovePRO.html?localMode=true&amp;module=ListLinked&amp;selfLoggingEnabled=false&amp;JOP-lang=en&amp;JXOP-code=java"
+    data-frame-width="950"
+    data-frame-height="900"
+    data-vertical-scrolling="no"
+    data-external="false"
+    data-points="2"
+    data-required="True"
+    data-showhide="show"
+    data-threshold="5"
+    data-type="ka"
+    data-exer-id="">
+  
+  <div class="center">
+    <div id="LlistRemovePRO_iframe"></div>
+  </div>
+</div>
+<div>
+<div id="llistOtherCON" class="ssAV" data-points="0.0" data-threshold="1.0" data-type="ss" data-required="False" data-short-name="llistOtherCON" data-long-name="Linked List Position Slideshow" data-exer-id="" alt="Linked List Position Slideshow" tabIndex="-1">
+ <span class="jsavcounter"></span>
+ <a class="jsavsettings" href="#">Settings</a>
+ <div class="jsavcontrols"></div>
+ <p class="jsavoutput jsavline"></p>
+ <div class="jsavcanvas" style="overflow-y: auto" tabindex="0"></div>
+ <div class="prof_indicators">
+  <img id="llistOtherCON_check_mark" class="prof_check_mark" src="_static/Images/green_check.png" alt="Proficient" />
+  <span id="llistOtherCON_cm_saving_msg" class="cm_saving_msg">Saving...</span>
+  <span id="llistOtherCON_cm_error_msg" class="cm_error_msg">
+   <img id="llistOtherCON_cm_warning_icon" class="cm_warning_icon" src="_static/Images/warning.png" alt="Error Saving" /><br />
+   Server Error<br />
+   <a href="#" class="resubmit_link">Resubmit</a>
+  </span>
+ </div>
+</div>
+<p></p>
+</div>
+<p>Implementations for the remaining operations each require
+<span class="math notranslate nohighlight">\(\Theta(1)\)</span> time.</p>
+<script type="text/javascript" src="../../../AV/List/llist.js"></script>
+<script type="text/javascript" src="../../../AV/List/llistRepCON.js"></script>
+<script type="text/javascript" src="../../../AV/List/llistBadCON.js"></script>
+<script type="text/javascript" src="../../../AV/List/llistBadDelCON.js"></script>
+<script type="text/javascript" src="../../../AV/List/llistInitCON.js"></script>
+<script type="text/javascript" src="../../../AV/List/llistHeaderCON.js"></script>
+<script type="text/javascript" src="../../../AV/List/llistVarsCON.js"></script>
+<script type="text/javascript" src="../../../AV/List/llistConsCON.js"></script>
+<script type="text/javascript" src="../../../AV/List/llistInsertCON.js"></script>
+<script type="text/javascript" src="../../../AV/List/llistSpecialCON.js"></script>
+<script type="text/javascript" src="../../../AV/List/llistRemoveCON.js"></script>
+<script type="text/javascript" src="../../../AV/List/llistOtherCON.js"></script>
+</section>
+</section>
+
+
+    </div>
+    <div class="bottomnav">
+    <p><span class="email_div" style="display:inline;"><a style="float:left;color:blue;" rel="nofollow" href="../../../lib/Privacy.html" target="_blank"> Privacy |</a> <a style="float:left;color:blue;" rel="nofollow" href="../../../lib/license.html" target="_blank">| License</a></span>&#160;&#160;
+    
+      «&#160;&#160;<a id="prevmod1" href="ListArray.html">5.<span class="section-number">3. </span>Array-Based List Implementation</a>
+      &#160;&#160;::&#160;&#160;
+      <a  class="uplink" href="index.html">Contents</a>
+      &#160;&#160;::&#160;&#160;
+      <a  id="nextmod1" href="ListAnalysis.html">5.<span class="section-number">5. </span>Comparison of List Implementations</a>&#160;&#160;»
+
+</p>
+    </div>
+    <img style="float:right;" src="_static/nsf1.gif" height="62" width="62" alt=""/>
+
+
+    <div class="footer">
+      <p>
+        <span class="email_div" style="display:inline;">
+          <a id="contact_us" class="contact" style="float:left;color:blue;" rel="nofollow" href="mailto:">Contact Us |</a>
+          <a id="bugreport-link" style="float:left;color:blue;" class="bugreport-link" href="#">| Report a bug</a>
+        </span>
+      </p>
+        &copy; Copyright 2011-2025 by OpenDSA Project Contributors and distributed under an MIT license.
+      Last updated on Aug 12, 2026.
+      Created using <a target="_blank" href="http://sphinx-doc.org/">Sphinx</a> 8.2.0.
+    </div>
+    
+<div id="bugreport-box" class="bugreport-popup ">
+  <a href="#" class="close"><img src="_static/Images/close_pop.png" class="btn_close" title="Close Window" alt="Close Window" /></a>
+  <form method="post" class="report" action="https://#">
+    <fieldset class="textbox">
+      <div id="bug_error" class="error"></div>
+      <label>
+        <span>Summary*:</span>
+        <input type="text" id="b_title" placeholder="Summary" />
+
+      </label>
+
+      <label class="os">
+        <span>Operating system*:</span>
+        <select id="b_os">
+          <option value="windows">Windows</option>
+          <option value="macos">Mac OS</option>
+          <option value="linux">Linux</option>
+          <option value="ios">iOS</option>
+          <option value="android">Android</option>
+          <option value="other">Other</option>
+        </select>
+      </label>
+
+      <label class="browser">
+        <span>Browser*:</span>
+        <select id="b_browser">
+          <option value="chrome">Chrome</option>
+          <option value="safari">Safari</option>
+          <option value="internetexplorer">Internet Explorer</option>
+          <option value="opera">Opera</option>
+          <option value="other">Other</option>
+        </select>
+      </label>
+
+      <label class="description">
+        <span>Description*:</span><br>
+        <textarea id="b_description" rows="5" cols="25" placeholder="***BUG** Please enter: (1) a consice description of the problem. (2) steps to reproduce bug. (3) the version of your browser and operating system."></textarea>
+      </label>
+
+      <label class="screenshot">
+        <span>Attach a screenshot (optional):</span>
+        <input type="file" id="b_screenshot" accept="image/*" placeholder="Attach a screenshot (optional)">
+      </label>
+
+      <p>
+        <input type="submit" id="bug-submit-button" value="Submit &rarr;"/>
+      </p>
+    </fieldset>
+  </form>
+</div>
+
+  </body>
+</html>
