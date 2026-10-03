@@ -39,7 +39,7 @@ def fetch(url):
     """
     Get content from url
 
-    >>> fetch("https://raw.githubusercontent.com/jncraton/languagemodels/refs/heads/main/test/wp.html") # doctest: +ELLIPSIS
+    >>> fetch(pathlib.Path("tests/wp.html").resolve().as_uri()) # doctest: +ELLIPSIS
     'Bolu Province ...'
     """
 
