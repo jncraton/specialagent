@@ -10,7 +10,9 @@ def exec(command):
     'hello'
     """
 
-    return subprocess.getoutput(command)
+    status, output = subprocess.getstatusoutput("timeout 5 " + command)
+
+    return output if status != 124 else "timeout"
 
 
 def writeFile(filename, content):
