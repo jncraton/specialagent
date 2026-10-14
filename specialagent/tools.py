@@ -10,7 +10,7 @@ def exec(command):
     'hello'
     """
 
-    status, output = subprocess.getstatusoutput("timeout 5 " + command)
+    status, output = subprocess.getstatusoutput(f"timeout 5 sh -c '{command}'")
 
     return output if status != 124 else "timeout"
 
