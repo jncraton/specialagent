@@ -11,7 +11,6 @@ def get_tools():
     """
     tools = []
     module_name = "specialagent.tools"
-
     current_dir = os.path.dirname(os.path.abspath(__file__))
     module_path = os.path.join(current_dir, "specialagent", "tools.py")
 
@@ -44,15 +43,7 @@ def update_readme():
     if not match:
         return
 
-    prefix = match.group(1)
-    body = match.group(2)
-    suffix = match.group(3)
-
-    new_body = ""
-    for name, doc in tools:
-        clean_doc = doc.split("\n")[0]
-        new_body += f"- `{name}` - {clean_doc}\n"
-
+    new_body = "\n".join([f"- `{name}` - {doc.splitlines()[0]}" for name, doc in tools])
     new_content = content[: match.start(2)] + new_body + content[match.end(2) :]
 
     with open("readme.md", "w") as f:
