@@ -17,10 +17,10 @@ Designed with educational use in mind, this agent harness is intentionally only 
 ## Features
 
 ### Tool use
-
-- `exec` - Run `bash` commands
-- `writeFile` - Overwrites the contents of a file
-- `editFile` - Find and replace in file
+- `editFile` - Replace old with new substring in filename
+- `exec` - Execute bash command
+- `fetch` - Get content from url
+- `writeFile` - Write content to filename
 
 ### Prefetching
 
