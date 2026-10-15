@@ -1,7 +1,5 @@
 #!/bin/bash
 
-rm -f date.md
-
 # Run within firejail sandbox
 
 firejail \
@@ -52,5 +50,3 @@ firejail \
   --rmenv=DISPLAY \
   --rmenv=TMUX \
   python3 -m specialagent
-
-rm -f date.md
