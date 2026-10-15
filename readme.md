@@ -17,6 +17,7 @@ Designed with educational use in mind, this agent harness is intentionally only 
 ## Features
 
 ### Tool use
+
 - `editFile` - Replace old with new substring in filename
 - `exec` - Execute bash command
 - `fetch` - Get content from url
