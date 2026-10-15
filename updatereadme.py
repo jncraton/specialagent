@@ -40,7 +40,7 @@ def update_readme():
     with open("readme.md", "r") as f:
         content = f.read()
 
-    match = re.search(r"(### Tool use\n)(.*?)(\n#)", content, re.DOTALL)
+    match = re.search(r"(### Tool use\n\n)(.*?)(\n#)", content, re.DOTALL)
     if not match:
         return
 
