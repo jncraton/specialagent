@@ -208,6 +208,6 @@ def agent(prompt="", system=None):
             messages.append(run_tool(tool["function"]["name"], args, tool["id"]))
 
         messages.append(call_model(messages))
+        print("Assistant message:", messages[-1]["content"] or "")
 
     Path(".specialagent.last.session.json").write_text(json.dumps(messages))
-    print(messages[-1]["content"])
