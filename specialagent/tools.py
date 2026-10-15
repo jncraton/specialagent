@@ -9,10 +9,19 @@ def exec(command):
     >>> exec("echo hello")
     'hello'
     """
+    try:
+        result = subprocess.run(
+            command,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            timeout=5,
+        )
+    except subprocess.TimeoutExpired:
+        return "timeout"
 
-    status, output = subprocess.getstatusoutput(f"timeout 5 sh -c '{command}'")
-
-    return output if status != 124 else "timeout"
+    return result.stdout.rstrip()
 
 
 def writeFile(filename, content):
