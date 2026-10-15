@@ -48,7 +48,7 @@ def editFile(filename, old, new):
 
 def fetch(url):
     """
-    Get content from url
+    Get url content
 
     >>> fetch(pathlib.Path("tests/opendsa.html").resolve().as_uri()) # doctest: +ELLIPSIS
     '5.4. Linked Lists — CS3 Data Structures & Algorithms...setNext...'
