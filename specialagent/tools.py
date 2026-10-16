@@ -126,7 +126,9 @@ def fetch(url):
         charset = response.headers.get_content_charset() or "utf-8"
         src = response.read().decode(charset, errors="replace")
 
-    if content_type in ("text/plain", "application/json") or content_type.endswith("+json"):
+    if content_type in ("text/plain", "application/json") or content_type.endswith(
+        "+json"
+    ):
         return src
 
     if content_type in ("text/html", "application/xhtml+xml"):
