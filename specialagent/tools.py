@@ -60,11 +60,14 @@ def fetch(url):
     import re
 
     class ParagraphExtractor(HTMLParser):
-        paras = [""]
-        ignoring = []
-        pre = False
         ignore = ("script", "style", "header", "footer", "form", "nav", "svg")
         blocks = ("section", "div", "p", "li", "dt", "pre", "tr")
+
+        def __init__(self):
+            super().__init__()
+            self.paras = [""]
+            self.ignoring = []
+            self.pre = False
 
         def handle_starttag(self, tag, attrs):
             if tag in self.ignore:
