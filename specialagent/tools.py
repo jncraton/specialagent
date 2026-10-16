@@ -80,8 +80,7 @@ def fetch(url):
                 self.pre = True
 
             if tag == "img":
-                attrs = {k: v for k, v in attrs}
-
+                attrs = dict(attrs)
                 if "src" in attrs:
                     self.paras.append(f'![{attrs.get("alt", "")}]({attrs["src"]})')
 
