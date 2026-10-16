@@ -86,6 +86,10 @@ def fetch(url):
                 if "src" in attrs:
                     self.paras.append(f'![{attrs.get("alt", "")}]({attrs["src"]})')
 
+            if tag == "main":
+                self.paras = [""]
+                self.ignoring = []
+
         def handle_endtag(self, tag):
             if self.ignoring and self.ignoring[-1] == tag:
                 self.ignoring.pop()
@@ -95,6 +99,9 @@ def fetch(url):
 
             if tag == "pre":
                 self.pre = False
+
+            if tag == "main":
+                self.ignoring.append(True)
 
         def handle_data(self, data):
             data = unescape(data)
