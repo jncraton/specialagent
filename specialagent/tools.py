@@ -53,9 +53,7 @@ def fetch(url):
     >>> fetch(pathlib.Path("tests/opendsa.html").resolve().as_uri()) # doctest: +ELLIPSIS
     '5.4. Linked Lists — CS3 Data Structures & Algorithms...setNext...'
     >>> fetch(pathlib.Path("tests/neptune.jpg").resolve().as_uri())
-    Traceback (most recent call last):
-    ...
-    ValueError: Unsupported content type: image/jpeg
+    'image/jpeg found'
     """
 
     from urllib.request import Request, urlopen
@@ -134,4 +132,4 @@ def fetch(url):
         extractor.feed(src)
         return extractor.get_plain()
 
-    raise ValueError(f"Unsupported content type: {content_type}")
+    return f"{content_type} found"
