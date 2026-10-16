@@ -81,7 +81,7 @@ def fetch(url):
             if tag == "pre":
                 self.pre = True
 
-            if tag == "img":
+            if tag == "img" and not self.ignoring:
                 attrs = dict(attrs)
                 if "src" in attrs:
                     self.paras.append(f'![{attrs.get("alt", "")}]({attrs["src"]})')
