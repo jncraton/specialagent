@@ -86,6 +86,9 @@ def fetch(url):
                 if "src" in attrs:
                     self.paras.append(f'![{attrs.get("alt", "")}]({attrs["src"]})')
 
+            if tag in {"h1", "h2", "h3"} and not self.ignoring:
+                self.paras.append("#" * int(tag[1]) + " ")
+
             if tag == "main":
                 self.paras = [""]
                 self.ignoring = []
