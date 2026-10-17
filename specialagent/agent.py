@@ -41,6 +41,7 @@ def call_model(messages):
         "model": os.environ.get("LLM_MODEL", ""),
         "messages": messages,
         "tools": [{"type": "function", "function": tool} for tool in describe_tools()],
+        "parallel_tool_calls": True,
         "temperature": 0,
     }
 
