@@ -116,7 +116,7 @@ def fetch(url):
                 if self.paras and self.paras[-1]:
                     self.paras[-1] += " " + data
                 else:
-                    self.paras.append(data)
+                    self.paras.append(data if self.pre else data.lstrip())
 
         def get_plain(self):
             plain = "\n\n".join([p.rstrip() for p in self.paras if p.strip()])
