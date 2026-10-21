@@ -126,7 +126,7 @@ def get_system(system=""):
         system += "\n\ncat matching skills immediately:\n\n"
         system += "\n\n".join(f"{v['desc']}: cat {k}" for k, v in skills.items())
 
-    system += "\n\Summarize work in under five words"
+    system += "\n\nSummarize work in under five words"
 
     return system
 
