@@ -188,7 +188,7 @@ def agent(prompt="", system=None):
     prompt = prompt or editor_input(".specialagent.last.prompt.txt")
 
     cmds = [["exec", f"cat {s}"] for s in get_prompt_skills(prompt, discover_skills())]
-    cmds.append(["exec", "(git ls-files || ls) | head -n 30"])
+    cmds.append(["exec", "git ls-files" if os.path.exists(".git") else "ls"])
     cmds.extend(
         ["exec", f"cat {f}"]
         for f in set(get_prompt_files(prompt)) | {"makefile", "Makefile"}
