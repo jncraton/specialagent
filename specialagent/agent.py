@@ -198,10 +198,10 @@ def agent(prompt="", system=None):
         {"role": "assistant", "content": None, "tool_calls": list(fmt_calls(cmds))},
     ]
 
-    while tools := messages[-1].get("tool_calls", []):
-        for tool in tools:
-            args = json.loads(tool["function"]["arguments"])
-            messages.append(run_tool(tool["function"]["name"], args, tool["id"]))
+    while calls := messages[-1].get("tool_calls", []):
+        for call in calls:
+            args = json.loads(call["function"]["arguments"])
+            messages.append(run_tool(call["function"]["name"], args, call["id"]))
 
         messages.append(call_model(messages))
         if content := messages[-1].get("content", ""):
