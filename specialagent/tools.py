@@ -63,6 +63,20 @@ def fetch(url):
 
     class ParagraphExtractor(HTMLParser):
         ignore = ("script", "style", "header", "footer", "form", "nav", "svg")
+        ignore_attrs = {
+            ("role", "navigation"),
+            ("class", "noprint"),
+            # Mostly Wikimedia specific
+            ("id", "catlinks"),
+            ("aria-labelledby", "Notes"),
+            ("aria-labelledby", "See_also"),
+            ("aria-labelledby", "Further_reading"),
+            ("aria-labelledby", "External_links"),
+            ("aria-labelledby", "Sources"),
+            ("aria-labelledby", "References"),
+            ("class", "mw-editsection"),
+            ("rel", "dc:references"),
+        }
         blocks = ("section", "div", "p", "li", "dt", "pre", "tr")
 
         def __init__(self):
@@ -72,7 +86,11 @@ def fetch(url):
             self.pre = False
 
         def handle_starttag(self, tag, attrs):
-            if tag in self.ignore:
+            if (
+                tag in self.ignore
+                or self.ignore_attrs & set(attrs)
+                or (self.ignoring and tag in {"section", "div", "span"})
+            ):
                 self.ignoring.append(tag)
 
             if tag in self.blocks and self.paras[-1]:
