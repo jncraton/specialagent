@@ -83,7 +83,7 @@ def fetch(url):
 
             if tag == "img" and not self.ignoring:
                 attrs = dict(attrs)
-                if "src" in attrs:
+                if "src" in attrs and "alt" in attrs and attrs["alt"]:
                     self.paras.append(f'![{attrs.get("alt", "")}]({attrs["src"]})')
 
             if tag in {"h1", "h2", "h3"} and not self.ignoring:
