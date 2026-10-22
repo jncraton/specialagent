@@ -190,9 +190,7 @@ def agent(prompt="", system=None):
     cmds = [["exec", f"cat {s}"] for s in get_prompt_skills(prompt, discover_skills())]
     cmds.append(["exec", "git ls-files" if os.path.exists(".git") else "ls"])
     cmds.extend(
-        ["exec", f"cat {f}"]
-        for f in set(get_prompt_files(prompt)) | {"makefile", "Makefile"}
-        if os.path.isfile(f)
+        ["exec", f"cat {f}"] for f in set(get_prompt_files(prompt)) if os.path.isfile(f)
     )
 
     cmds.extend(["fetch", u] for u in get_prompt_urls(prompt))
