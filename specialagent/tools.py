@@ -61,6 +61,17 @@ def fetch(url):
     from html.parser import HTMLParser
     import re
 
+    def caveman(plain):
+        plain = re.sub(r"[^a-zA-Z0-9\.\!\?\n \(\)]", "", plain, flags=re.I)
+        plain = re.sub(
+            r"\b(the|a|an|in|on|by|for|with|do|is|are|be|had|have|has|as|that|of|to|this|these|it|you|your|I|we|there|may)\b ?",
+            "",
+            plain,
+            flags=re.I,
+        )
+        plain = re.sub(r"\n[ \t]+", "\n", plain)
+        return plain
+
     class ParagraphExtractor(HTMLParser):
         ignore = ("script", "style", "header", "footer", "form", "nav", "svg")
         ignore_attrs = {
