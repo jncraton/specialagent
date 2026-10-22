@@ -8,9 +8,9 @@ A minimalist [LLM](https://en.wikipedia.org/wiki/Large_language_model)-driven [a
 
 > An agent is just something that acts (agent comes from the Latin [agere](https://en.wiktionary.org/wiki/ago#Verb), to do). Of course, all computer programs do something, but computer agents are expected to do more: operate autonomously, perceive their environment, persist over a prolonged time period, adapt to change, and create and pursue goals.
 >
-> [Russel & Norvig, 1995](https://en.wikipedia.org/wiki/Artificial_Intelligence:_A_Modern_Approach)
+> [Russell & Norvig, 1995](https://en.wikipedia.org/wiki/Artificial_Intelligence:_A_Modern_Approach)
 
-Designed with educational use in mind, this agent harness is intentionally only a few hundred lines of readable, dependency-free Python. It acts on its environment by running shell commands and receives output of those commands as percepts to drive subsequent actions.
+Designed with educational use in mind, this agent harness is intentionally only a few hundred lines of readable, dependency-free Python. It acts on its environment by running shell commands and receives the output of those commands as percepts to drive subsequent actions.
 
 ![Agent Diagram](https://upload.wikimedia.org/wikipedia/commons/3/3f/IntelligentAgent-SimpleReflex.png)
 
@@ -46,7 +46,7 @@ pipx specialagent
 
 ## Configuration
 
-In its default configuration, the agent will attempt to use the model hosted at `http://localhost:8080/v1/chat/completions` (the llama.cpp default). Alternatives may be provided by env variables. For example, to use Gemma 4 31B hosted on AI Studio:
+In its default configuration, the agent will attempt to use the model hosted at `http://localhost:8080/v1/chat/completions` (the llama.cpp default). Alternatives may be provided via environment variables. For example, to use Gemma 4 31B hosted on AI Studio:
 
 ```sh
 export LLM_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/chat/completions
