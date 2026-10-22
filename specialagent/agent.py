@@ -103,12 +103,9 @@ def fmt_calls(calls):
                 "function": {
                     "name": call[0],
                     "arguments": json.dumps(
-                        {
-                            k: v
-                            for k, v in zip(
-                                signature(getattr(tools, call[0])).parameters, call[1:]
-                            )
-                        }
+                        dict(
+                            zip(signature(getattr(tools, call[0])).parameters, call[1:])
+                        )
                     ),
                 },
             }
