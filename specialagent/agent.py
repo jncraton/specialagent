@@ -64,7 +64,7 @@ def call_model(messages):
         try:
             with urllib.request.urlopen(req) as response:
                 res_data = json.load(response)
-                print(re.sub(r"[{}\'\"]", "", str(res_data.get("usage", {}))))
+                print(" ", re.sub(r"[{}\'\"]", "", str(res_data.get("usage", {}))))
 
                 return res_data["choices"][0]["message"]
         except urllib.error.HTTPError as e:
