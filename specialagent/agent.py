@@ -58,7 +58,7 @@ def call_model(messages):
         method="POST",
     )
 
-    print(f"Prompt LLM with {len(req.data)} bytes...")
+    print(f"Prompt {os.environ.get('LLM_MODEL', 'LLM')} with {len(req.data)} bytes...")
 
     for delay in range(20):
         try:
