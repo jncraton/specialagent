@@ -80,7 +80,7 @@ def run_tool(name, args, identifier):
     {'role': 'tool', 'tool_call_id': '1', 'content': 'hello'}
     """
 
-    print(f"Calling {name} with {args}", file=sys.stderr)
+    print(f"> {name} {args.get('command') or args.get('filename')}", file=sys.stderr)
 
     result = getattr(tools, name)(**args)
 
