@@ -1,6 +1,5 @@
 import json
 import os
-import sys
 import re
 import subprocess
 import time
@@ -79,8 +78,6 @@ def run_tool(name, args, identifier):
     >>> run_tool("exec", {"command": "echo hello"}, "1")
     {'role': 'tool', 'tool_call_id': '1', 'content': 'hello'}
     """
-
-    print(f"> {name} {args.get('command') or args.get('filename')}", file=sys.stderr)
 
     result = getattr(tools, name)(**args)
 
@@ -200,7 +197,9 @@ def agent(prompt="", system=None):
 
     while calls := messages[-1].get("tool_calls", []):
         for call in calls:
+            name = call["function"]["name"]
             args = json.loads(call["function"]["arguments"])
+            print(f"Call {name} {args.get('command') or args.get('filename')}")
             messages.append(run_tool(call["function"]["name"], args, call["id"]))
 
         messages.append(call_model(messages))
