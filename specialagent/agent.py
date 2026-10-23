@@ -203,7 +203,7 @@ def agent(prompt="", system=None):
             messages.append(run_tool(call["function"]["name"], args, call["id"]))
 
         messages.append(call_model(messages))
-        if content := messages[-1].get("content", ""):
+        if content := messages[-1].get("content"):
             print(f"LLM response: {content:.50} ({len(content)} bytes)")
 
     Path(".specialagent.last.session.json").write_text(json.dumps(messages))
