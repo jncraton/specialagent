@@ -199,8 +199,9 @@ def agent(prompt="", system=None):
         for call in calls:
             name = call["function"]["name"]
             args = json.loads(call["function"]["arguments"])
-            print(f"Call {name} {args.get('command') or args.get('filename')}")
-            messages.append(run_tool(call["function"]["name"], args, call["id"]))
+            first_arg = next(iter(signature(getattr(tools, name)).parameters.values()))
+            print(f"{name.title()} {args.get(str(first_arg))}")
+            messages.append(run_tool(name, args, call["id"]))
 
         messages.append(call_model(messages))
         if content := messages[-1].get("content"):
