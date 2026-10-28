@@ -181,18 +181,23 @@ def agent(prompt="", system=None):
 
     prompt = prompt or editor_input(".specialagent.last.prompt.txt")
 
-    cmds = [["exec", f"cat {s}"] for s in get_prompt_skills(prompt, discover_skills())]
-    cmds.append(["exec", "git ls-files" if os.path.exists(".git") else "ls"])
-    cmds.extend(
+    skills = [
+        ["exec", f"cat {s}"] for s in get_prompt_skills(prompt, discover_skills())
+    ]
+    ls = [["exec", "git ls-files" if os.path.exists(".git") else "ls"]]
+    files = [
         ["exec", f"cat {f}"] for f in set(get_prompt_files(prompt)) if os.path.isfile(f)
-    )
-
-    cmds.extend(["fetch", u] for u in get_prompt_urls(prompt))
+    ]
+    urls = [["fetch", u] for u in get_prompt_urls(prompt)]
 
     messages = [
         {"role": "system", "content": system or get_system()},
         {"role": "user", "content": prompt},
-        {"role": "assistant", "content": None, "tool_calls": list(fmt_calls(cmds))},
+        {
+            "role": "assistant",
+            "content": None,
+            "tool_calls": list(fmt_calls(skills + ls + files + urls)),
+        },
     ]
 
     while calls := messages[-1].get("tool_calls", []):
