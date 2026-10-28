@@ -186,14 +186,12 @@ def agent(prompt="", system=None):
     files = [["exec", f"cat {f}"] for f in set(get_files(prompt)) if os.path.isfile(f)]
     urls = [["fetch", u] for u in get_urls(prompt)]
 
+    initial_tools = list(fmt_calls(skills + ls + files + urls))
+
     messages = [
         {"role": "system", "content": system or get_system()},
         {"role": "user", "content": prompt},
-        {
-            "role": "assistant",
-            "content": None,
-            "tool_calls": list(fmt_calls(skills + ls + files + urls)),
-        },
+        {"role": "assistant", "content": None, "tool_calls": initial_tools},
     ]
 
     while calls := messages[-1].get("tool_calls", []):
