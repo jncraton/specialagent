@@ -136,33 +136,33 @@ def discover_skills():
     }
 
 
-def get_prompt_files(prompt):
+def get_files(prompt):
     """
     Get everything that looks like a file from a prompt
 
-    >>> get_prompt_files("Read readme.md. Check test/test.c, delete.")
+    >>> get_files("Read readme.md. Check test/test.c, delete.")
     ['readme.md', 'test/test.c']
     """
 
     return re.findall(r"\b[\w/-]+\.[\w./-]+\b", prompt)
 
 
-def get_prompt_skills(prompt, skills):
+def get_skills(prompt, skills):
     """
     Get skill directly mentioned by name in a prompt
 
-    >>> get_prompt_skills("Use search and gen-deck", {"s/search/SKILL.md": "", "s/bad/SKILL.md": "", "s/gen-deck/SKILL.md": ""})
+    >>> get_skills("Use search and gen-deck", {"s/search/SKILL.md": "", "s/bad/SKILL.md": "", "s/gen-deck/SKILL.md": ""})
     ['s/search/SKILL.md', 's/gen-deck/SKILL.md']
     """
 
     return [s for s in skills if s.split("/")[-2] in prompt[:100]]
 
 
-def get_prompt_urls(prompt):
+def get_urls(prompt):
     """
     Get urls in a prompt
 
-    >>> get_prompt_urls("fetch https://example.com and http://example.org/docs.")
+    >>> get_urls("fetch https://example.com and http://example.org/docs.")
     ['https://example.com', 'http://example.org/docs']
     """
 
@@ -181,14 +181,10 @@ def agent(prompt="", system=None):
 
     prompt = prompt or editor_input(".specialagent.last.prompt.txt")
 
-    skills = [
-        ["exec", f"cat {s}"] for s in get_prompt_skills(prompt, discover_skills())
-    ]
+    skills = [["exec", f"cat {s}"] for s in get_skills(prompt, discover_skills())]
     ls = [["exec", "git ls-files" if os.path.exists(".git") else "ls"]]
-    files = [
-        ["exec", f"cat {f}"] for f in set(get_prompt_files(prompt)) if os.path.isfile(f)
-    ]
-    urls = [["fetch", u] for u in get_prompt_urls(prompt)]
+    files = [["exec", f"cat {f}"] for f in set(get_files(prompt)) if os.path.isfile(f)]
+    urls = [["fetch", u] for u in get_urls(prompt)]
 
     messages = [
         {"role": "system", "content": system or get_system()},
