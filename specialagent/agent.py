@@ -109,12 +109,12 @@ def fmt_calls(calls):
         )
 
 
-def get_system(system=""):
+def get_system(system="", list_skills=True):
     with suppress(FileNotFoundError):
         system += Path("~/.agents/AGENTS.md").expanduser().read_text()
         print(f"Loaded {len(system)} byte AGENTS.md")
 
-    if skills := discover_skills():
+    if skills := list_skills and discover_skills():
         print(f"Found {len(skills)} skills")
 
         system += "\n\ncat matching skills immediately:\n\n"
