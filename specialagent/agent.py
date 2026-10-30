@@ -189,7 +189,7 @@ def agent(prompt="", system=None):
     initial_tools = list(fmt_calls(skills + ls + files + urls))
 
     messages = [
-        {"role": "system", "content": system or get_system()},
+        {"role": "system", "content": system or get_system(list_skills=not skills)},
         {"role": "user", "content": prompt},
         {"role": "assistant", "content": None, "tool_calls": initial_tools},
     ]
