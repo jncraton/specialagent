@@ -140,11 +140,11 @@ def get_files(prompt):
     """
     Get everything that looks like a file from a prompt
 
-    >>> get_files("Read readme.md. Check test/test.c, delete.")
-    ['readme.md', 'test/test.c']
+    >>> get_files("Read ../readme.md. Check test/test.c, delete. Access a makefile.")
+    ['Read', 'readme.md', 'Check', 'test/test.c', 'delete', 'Access', 'makefile']
     """
 
-    return re.findall(r"\b[\w/-]+\.[\w./-]+\b", prompt)
+    return re.findall(r"\b[\w./]{2,}\b", prompt)
 
 
 def get_skills(prompt, skills):
