@@ -76,7 +76,7 @@ def fetch(url):
         return re.sub(r"[?&]utm_[^&]*", "", url, flags=re.I).rstrip("?&")
 
     class ParagraphExtractor(HTMLParser):
-        ignore = ("script", "style", "header", "footer", "form", "nav", "svg")
+        ignore = ("script", "style", "header", "footer", "form", "nav", "svg", "aside")
         ignore_attrs = {
             ("role", "navigation"),
             ("class", "noprint"),
