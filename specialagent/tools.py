@@ -72,6 +72,9 @@ def fetch(url):
         plain = re.sub(r"\n[ \t]+", "\n", plain)
         return plain
 
+    def strip_utm(url):
+        return re.sub(r"[?&]utm_[^&]*", "", url, flags=re.I).rstrip("?&")
+
     class ParagraphExtractor(HTMLParser):
         ignore = ("script", "style", "header", "footer", "form", "nav", "svg")
         ignore_attrs = {
@@ -113,7 +116,9 @@ def fetch(url):
             if tag == "img" and not self.ignoring:
                 attrs = dict(attrs)
                 if "src" in attrs and len(attrs.get("alt", "")) > 10:
-                    self.paras.append(f'![{attrs.get("alt", "")}]({attrs["src"]})')
+                    self.paras.append(
+                        f'![{attrs.get("alt", "")}]({strip_utm(attrs["src"])})'
+                    )
 
             if tag in {"h1", "h2", "h3"} and not self.ignoring:
                 self.paras.append("#" * int(tag[1]) + " ")
