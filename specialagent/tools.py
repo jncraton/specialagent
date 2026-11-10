@@ -100,9 +100,11 @@ def fetch(url):
             self.pre = False
 
         def handle_starttag(self, tag, attrs):
+            attrs_match = set(attrs)
+            attrs_match |= {("class", c) for c in dict(attrs).get("class", "").split()}
             if (
                 tag in self.ignore
-                or self.ignore_attrs & set(attrs)
+                or self.ignore_attrs & attrs_match
                 or (self.ignoring and tag in {"section", "div", "span"})
             ):
                 self.ignoring.append(tag)
