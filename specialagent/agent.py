@@ -136,20 +136,25 @@ def discover_skills():
     }
 
 
-def is_text_file(path):
+def is_small_text_file(path, maxlen=10000):
     """
-    Check if a file exists and is plain text
+    Return length of text file or -1 if file is not plain text
 
-    >>> is_text_file("makefile")
+    >>> is_small_text_file("makefile")
     True
 
-    >>> is_text_file(".git")
+    >>> is_small_text_file("tests/opendsa.html") # too big
+    False
+
+    >>> is_small_text_file(".git") # directory
+    False
+
+    >>> is_small_text_file("notfound") # missing
     False
     """
 
     try:
-        Path(path).read_text(encoding="utf-8")
-        return True
+        return len(Path(path).read_text(encoding="utf-8")) < maxlen
     except (OSError, UnicodeDecodeError):
         return False
 
@@ -188,9 +193,9 @@ def agent(prompt="", system=None):
 
     prompt = prompt or editor_input(".specialagent.last.prompt.txt")
 
-    skills = [["exec", f"cat {s}"] for s in get_skills(prompt, discover_skills())]
+    skills = [["exec", "cat " + s] for s in get_skills(prompt, discover_skills())]
     ls = [["exec", "git ls-files" if os.path.exists(".git") else "ls"]]
-    files = [["exec", f"cat {f}"] for f in set(prompt.split()) if is_text_file(f)]
+    files = [["exec", "cat " + f] for f in set(prompt.split()) if is_small_text_file(f)]
     urls = [["fetch", u] for u in get_urls(prompt)]
 
     initial_tools = list(fmt_calls(skills + ls + files + urls))
