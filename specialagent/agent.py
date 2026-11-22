@@ -136,15 +136,22 @@ def discover_skills():
     }
 
 
-def get_files(prompt):
+def is_text_file(path):
     """
-    Get everything that looks like a file from a prompt
+    Check if a file exists and is plain text
 
-    >>> get_files("Read ../readme.md. Check test/test.c, delete. Access a makefile.")
-    ['Read', 'readme.md', 'Check', 'test/test.c', 'delete', 'Access', 'makefile']
+    >>> is_text_file("makefile")
+    True
+
+    >>> is_text_file(".git")
+    False
     """
 
-    return re.findall(r"\b[\w./]{2,}\b", prompt)
+    try:
+        Path(path).read_text(encoding="utf-8")
+        return True
+    except (OSError, UnicodeDecodeError):
+        return False
 
 
 def get_skills(prompt, skills):
@@ -183,7 +190,7 @@ def agent(prompt="", system=None):
 
     skills = [["exec", f"cat {s}"] for s in get_skills(prompt, discover_skills())]
     ls = [["exec", "git ls-files" if os.path.exists(".git") else "ls"]]
-    files = [["exec", f"cat {f}"] for f in set(get_files(prompt)) if os.path.isfile(f)]
+    files = [["exec", f"cat {f}"] for f in set(prompt.split()) if is_text_file(f)]
     urls = [["fetch", u] for u in get_urls(prompt)]
 
     initial_tools = list(fmt_calls(skills + ls + files + urls))
