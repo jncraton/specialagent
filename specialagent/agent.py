@@ -114,7 +114,7 @@ def get_system(system="", list_skills=True):
         system += Path("~/.agents/AGENTS.md").expanduser().read_text()
         print(f"Loaded {len(system)} byte AGENTS.md")
 
-    if skills := list_skills and discover_skills():
+    if skills := list_skills and get_skills():
         print(f"Found {len(skills)} skills")
 
         system += "\n\ncat matching skills immediately:\n\n"
@@ -125,7 +125,7 @@ def get_system(system="", list_skills=True):
     return system
 
 
-def discover_skills():
+def get_skills():
     return {
         f"{Path('~') / Path(path).relative_to(Path.home())}": {
             "desc": content.partition("description:")[2].splitlines()[0].strip(),
@@ -159,17 +159,6 @@ def is_small_text_file(path, maxlen=10000):
         return False
 
 
-def get_skills(prompt, skills):
-    """
-    Get skill directly mentioned by name in a prompt
-
-    >>> get_skills("Use search and gen-deck", {"s/search/SKILL.md": "", "s/bad/SKILL.md": "", "s/gen-deck/SKILL.md": ""})
-    ['s/search/SKILL.md', 's/gen-deck/SKILL.md']
-    """
-
-    return [s for s in skills if s.split("/")[-2] in prompt[:100]]
-
-
 def get_urls(prompt):
     """
     Get urls in a prompt
@@ -193,7 +182,7 @@ def agent(prompt="", system=None):
 
     prompt = prompt or editor_input(".specialagent.last.prompt.txt")
 
-    skills = [["exec", "cat " + s] for s in get_skills(prompt, discover_skills())]
+    skills = [["exec", "cat " + s] for s in get_skills() if s.split("/")[-2] in prompt]
     ls = [["exec", "git ls-files" if os.path.exists(".git") else "ls"]]
     files = [["exec", "cat " + f] for f in set(prompt.split()) if is_small_text_file(f)]
     urls = [["fetch", u] for u in get_urls(prompt)]
